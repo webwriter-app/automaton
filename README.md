@@ -1,5 +1,5 @@
-# Automaton (`@webwriter/automaton@3.0.0`)
-[License: MIT](LICENSE) | Version: 3.0.0
+# Automaton (`@webwriter/automaton@3.0.1`)
+[License: MIT](LICENSE) | Version: 3.0.1
 
 Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).
 
