@@ -294,6 +294,8 @@ export const ATTRIBUTE_CONVERTERS = {
 
 							if (i > 0) {
 								transitionString += ",";
+							} else {
+								transitionString += "[";
 							}
 
 							transitionString += `${symbol}{${abbreviateStackOperation(
@@ -302,6 +304,7 @@ export const ATTRIBUTE_CONVERTERS = {
 								op.symbol
 							)}|${encodeURIComponent(op.condition)}}`;
 						}
+						transitionString += "]";
 					} else if (
 						transition.symbols &&
 						transition.symbols.length > 0
