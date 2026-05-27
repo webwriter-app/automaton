@@ -645,6 +645,10 @@ export class StackExtension extends LitElementWw {
                                         this.changeStackSymbol(i, (e.target as HTMLInputElement).value)}
                                     value=${s.symbol}
                                     ?disabled=${!this.isEditable() || !this.change}
+                                    autocomplete="off"
+                                    autocorrect="off"
+                                    autocapitalize="off"
+                                    spellcheck="false"
                                 ></sl-input>
                             </sl-tooltip>
                         </div>

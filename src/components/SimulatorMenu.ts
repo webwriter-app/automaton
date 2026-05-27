@@ -183,6 +183,10 @@ export class SimulatorMenu extends LitElementWw {
                 id="wordInput"
                 placeholder=${msg("Input Word e.g. aaabbb, step;step;stop")}
                 clearable
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
             >
                 <span slot="prefix" class="simulator__input__prefix">${biAlphabet}</span>
             </sl-input>

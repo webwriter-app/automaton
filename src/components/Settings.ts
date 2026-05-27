@@ -271,6 +271,10 @@ export class Settings {
                         this.parentComponent.testLanguage = (e.target as SlInput).value;
                         this.parentComponent.requestUpdate();
                     }}
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
                 ></sl-input>
                 <sl-input
                     label=${msg("Test Words")}
@@ -284,6 +288,10 @@ export class Settings {
                         this.parentComponent.testWords = (e.target as SlInput).value.split(',');
                         this.parentComponent.requestUpdate();
                     }}
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
                 ></sl-input>
                 <sl-input
                     label=${msg("Predefined Alphabet")}
@@ -300,6 +308,10 @@ export class Settings {
 
                         this.parentComponent.requestUpdate();
                     }}
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
                 ></sl-input>
             </sl-details>
             <sl-details summary=${msg("Advanced")}>

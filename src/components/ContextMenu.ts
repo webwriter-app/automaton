@@ -78,6 +78,10 @@ export class ContextMenu {
                     this.selected.data = { ...this.selected.data, label: e.target.value };
                 }}
                 ?disabled=${!this.parentComponent.settings.permissions.node.change}
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
             ></sl-input>
             <sl-divider style="--spacing: var(--sl-spacing-x-small)"></sl-divider>
             <div class="context-menu__checkboxes">
@@ -168,6 +172,10 @@ export class ContextMenu {
                                             this.selected.updateFn({ ...transition, symbols });
                                             transition = { ...transition, symbols };
                                         }}
+                                        autocomplete="off"
+                                        autocorrect="off"
+                                        autocapitalize="off"
+                                        spellcheck="false"
                                     ></sl-input>
                                 `}
                             ${isPda ? html`
@@ -186,6 +194,10 @@ export class ContextMenu {
                                         this.selected.updateFn({ ...transition, stackOperations: stackOperations });
                                         transition = { ...transition, stackOperations: stackOperations };
                                     }}
+                                    autocomplete="off"
+                                    autocorrect="off"
+                                    autocapitalize="off"
+                                    spellcheck="false"
                                 ></sl-input>
                                 <sl-input
                                     placeholder=${msg("If")}
@@ -202,6 +214,10 @@ export class ContextMenu {
                                         this.selected.updateFn({ ...transition, stackOperations: stackOperations });
                                         transition = { ...transition, stackOperations: stackOperations };
                                     }}
+                                    autocomplete="off"
+                                    autocorrect="off"
+                                    autocapitalize="off"
+                                    spellcheck="false"
                                 ></sl-input>
 
                                 <sl-button-group label=${msg("Stack Actions")}>
