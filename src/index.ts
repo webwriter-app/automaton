@@ -205,6 +205,9 @@ export class AutomatonComponent extends LitElementWw {
 	@property({ type: Boolean, attribute: false })
 	private accessor _helpOverlay: boolean = false;
 
+	@state()
+	private accessor _topMenuCollapsed: boolean = false;
+
 	private set helpOverlay(h: boolean) {
 		this._helpOverlay = h;
 		this.toolMenu.visible = h ? true : this.toolMenu.visible;
@@ -284,6 +287,9 @@ export class AutomatonComponent extends LitElementWw {
 		this.topMenu.graph = this._graph;
 		this.topMenu.setHelpOverlay = (h: boolean) => {
 			this.helpOverlay = h;
+		};
+		this.topMenu.setCollapsed = (c: boolean) => {
+			this._topMenuCollapsed = c;
 		};
 		this.simulatorMenu.automaton = this.automaton;
 		this.simulatorMenu.graph = this._graph;
@@ -472,50 +478,57 @@ export class AutomatonComponent extends LitElementWw {
 					>${msg("Mode Switch")}</sl-tag
 				>
 
-				<sl-tag size="small" style="top: 228px;right:10px"
-					>${msg("Fullscreen")}</sl-tag
-				>
-				<div
-					class="line"
-					style="top: 55px;right: 30px;height: 164px;"
-				></div>
+				${this._topMenuCollapsed ? html`
+					<sl-tag size="small" style="top:18px;right:60px"
+						>${msg("Menu")}</sl-tag
+					>
+					<div class="line" style="top:28px;right:50px;width:10px"></div>
+				` : html`
+					<sl-tag size="small" style="top: 228px;right:10px"
+						>${msg("Fullscreen")}</sl-tag
+					>
+					<div
+						class="line"
+						style="top: 55px;right: 30px;height: 164px;"
+					></div>
 
-				<sl-tag size="small" style="top:18px;right:325px"
-					>${msg("Type")}</sl-tag
-				>
-				<div class="line" style="top:28px;right:310px;width:10px"></div>
+					<sl-tag size="small" style="top:18px;right:325px"
+						>${msg("Type")}</sl-tag
+					>
+					<div class="line" style="top:28px;right:310px;width:10px"></div>
 
-				<sl-tag size="small" style="top:60px;right:325px"
-					>${msg("Transformations")}</sl-tag
-				>
-				<div
-					class="line"
-					style="top:55px;right:230px;width:90px;height:15px"
-				></div>
+					<sl-tag size="small" style="top:60px;right:325px"
+						>${msg("Transformations")}</sl-tag
+					>
+					<div
+						class="line"
+						style="top:55px;right:230px;width:90px;height:15px"
+					></div>
 
-				<sl-tag size="small" style="top: 186px;right: 325px;"
-					>${msg("Help")}</sl-tag
-				>
-				<div
-					class="line"
-					style="top: 55px;right: 80px;width: 240px;height: 141px;"
-				></div>
+					<sl-tag size="small" style="top: 186px;right: 325px;"
+						>${msg("Help")}</sl-tag
+					>
+					<div
+						class="line"
+						style="top: 55px;right: 80px;width: 240px;height: 141px;"
+					></div>
 
-				<sl-tag size="small" style="top: 144px;right: 325px;"
-					>${msg("Test Cases")}</sl-tag
-				>
-				<div
-					class="line"
-					style="top: 55px;right: 130px;width: 190px;height: 99px;"
-				></div>
+					<sl-tag size="small" style="top: 144px;right: 325px;"
+						>${msg("Test Cases")}</sl-tag
+					>
+					<div
+						class="line"
+						style="top: 55px;right: 130px;width: 190px;height: 99px;"
+					></div>
 
-				<sl-tag size="small" style="top: 102px;right: 325px;"
-					>${msg("Definition")}</sl-tag
-				>
-				<div
-					class="line"
-					style="top: 55px;right: 180px;width: 140px;height: 57px;"
-				></div>
+					<sl-tag size="small" style="top: 102px;right: 325px;"
+						>${msg("Definition")}</sl-tag
+					>
+					<div
+						class="line"
+						style="top: 55px;right: 180px;width: 140px;height: 57px;"
+					></div>
+				`}
 			</div>
 
 			<div
@@ -531,17 +544,19 @@ export class AutomatonComponent extends LitElementWw {
 					>${msg("Add Transition by drag and drop")}</sl-tag
 				>
 
-				<sl-tag size="small" style="bottom: 110px;right: 30px;"
-					>${msg("Move the elements by drag and drop")}</sl-tag
-				>
-				<sl-tag size="small" style="bottom: 70px;right: 30px;"
-					>${msg("To edit a node right click the node")}</sl-tag
-				>
-				<sl-tag size="small" style="bottom: 30px;right: 30px;"
-					>${msg(
-						"To edit a transition right click the transition"
-					)}</sl-tag
-				>
+				${!this._topMenuCollapsed ? html`
+					<sl-tag size="small" style="bottom: 110px;right: 30px;"
+						>${msg("Move the elements by drag and drop")}</sl-tag
+					>
+					<sl-tag size="small" style="bottom: 70px;right: 30px;"
+						>${msg("To edit a node right click the node")}</sl-tag
+					>
+					<sl-tag size="small" style="bottom: 30px;right: 30px;"
+						>${msg(
+							"To edit a transition right click the transition"
+						)}</sl-tag
+					>
+				` : ""}
 			</div>
 
 			<div

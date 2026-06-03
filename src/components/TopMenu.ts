@@ -6,6 +6,7 @@ import {
     biCodeSlash,
     biFullscreen,
     biFullscreenExit,
+    biList,
     biQuestionLg,
 } from '../styles/icons';
 
@@ -49,6 +50,14 @@ export class TopMenu extends LitElementWw {
     @state()
     private accessor _helpOverlay: boolean = false;
 
+    @state()
+    private accessor _collapsed: boolean = false;
+
+    @state()
+    private accessor _menuOpen: boolean = false;
+
+    private _resizeObserver?: ResizeObserver;
+
     @property({ type: Object, attribute: false })
     private accessor _graph!: Graph;
     public set graph(graph: Graph) {
@@ -59,6 +68,11 @@ export class TopMenu extends LitElementWw {
     private accessor _setHelpOverlay!: (visible: boolean) => (void);
     public set setHelpOverlay(f: (visible: boolean) => (void)) {
         this._setHelpOverlay = f;
+    }
+
+    private _setCollapsed?: (collapsed: boolean) => void;
+    public set setCollapsed(f: (collapsed: boolean) => void) {
+        this._setCollapsed = f;
     }
 
     public static get styles() {
@@ -77,6 +91,26 @@ export class TopMenu extends LitElementWw {
         };
     }
 
+    connectedCallback(): void {
+        super.connectedCallback();
+        const host = (this.getRootNode() as ShadowRoot)?.host ?? this.parentElement;
+        if (host) {
+            this._resizeObserver = new ResizeObserver((entries) => {
+                const width = entries[0]?.contentRect.width ?? Infinity;
+                const collapsed = width < 500;
+                this._collapsed = collapsed;
+                this._setCollapsed?.(collapsed);
+                if (!collapsed) this._menuOpen = false;
+            });
+            this._resizeObserver.observe(host);
+        }
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this._resizeObserver?.disconnect();
+    }
+
     protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
         // Important for when the user exits fullscreen mode by pressing ESC or F11
         document.addEventListener('fullscreenchange', () => {
@@ -85,9 +119,33 @@ export class TopMenu extends LitElementWw {
     }
 
     render() {
-        const formalDefinition = this._component?.automaton?.getFormalDefinition();
+        if (this._collapsed) {
+            return html`
+                <div class="topmenu topmenu--hamburger" style=${this._helpOverlay ? 'z-index: 2500' : ''}>
+                    <sl-popup placement="bottom-end" distance="8" ?active=${this._menuOpen || this._helpOverlay}>
+                        <sl-button
+                            slot="anchor"
+                            class="topmenu__button"
+                            circle
+                            style=${this._helpOverlay ? 'z-index: 2500' : ''}
+                            @click=${() => { this._menuOpen = !this._menuOpen; }}
+                        >${biList}</sl-button>
+                        <div class="topmenu__collapsed_panel">
+                            ${this.renderButtonGroups(true)}
+                        </div>
+                    </sl-popup>
+                </div>`;
+        }
 
-        return html` <div class="topmenu">
+        return html`<div class="topmenu">${this.renderButtonGroups()}</div>`;
+    }
+
+    private renderButtonGroups(collapsed = false) {
+        const formalDefinition = this._component?.automaton?.getFormalDefinition();
+        const tooltipPlacement = collapsed ? 'top' : 'left';
+        const popupPlacement = collapsed ? 'left-end' : 'bottom-end';
+
+        return html`
             <div class="topmenu__button_group">
                 <sl-button
                     class="topmenu__button"
@@ -130,7 +188,7 @@ export class TopMenu extends LitElementWw {
                 >
             </div>
             <div class="topmenu__button_group">
-                <sl-popup placement="bottom-end" distance="8" arrow>
+                <sl-popup placement=${popupPlacement} distance="8" arrow ?shift=${collapsed}>
                     <sl-button
                         slot="anchor"
                         class="topmenu__button"
@@ -183,7 +241,7 @@ export class TopMenu extends LitElementWw {
                 </sl-popup>
             </div>
             <div class="topmenu__button_group">
-                <sl-popup placement="bottom-end" distance="8" arrow style="--arrow-color: var(--sl-panel-border-color)">
+                <sl-popup placement=${popupPlacement} distance="8" arrow ?shift=${collapsed} ?flip=${collapsed} auto-size="vertical" style="--arrow-color: var(--sl-panel-border-color)">
                     <sl-button
                         slot="anchor"
                         class="topmenu__button"
@@ -244,7 +302,7 @@ export class TopMenu extends LitElementWw {
                 <div class="topmenu__buttons">
                     ${this._component.allowedTransformations.includes('sink') && this._component.mode !== 'simulate'
                         ? html`
-                            <sl-tooltip content=${msg("Add Sinkstate")} placement="left">
+                            <sl-tooltip content=${msg("Add Sinkstate")} placement=${tooltipPlacement} ?hoist=${collapsed}>
                                 <sl-button
                                     class="topmenu__button"
                                     size="small"
@@ -259,7 +317,7 @@ export class TopMenu extends LitElementWw {
                 </div>
             </div>
             <div class="topmenu__button_group">
-                <sl-tooltip content=${msg("Automaton Type")} placement="left">
+                <sl-tooltip content=${msg("Automaton Type")} placement=${tooltipPlacement} ?hoist=${collapsed}>
                     <sl-button class="topmenu__button" circle ?disabled=${this._component.allowedTypes.length === 0 || this._component.mode === 'simulate'}>
                         ${this._component.automaton.type === 'dfa'
                             ? msg('DFA') : this._component.automaton.type === 'nfa'
@@ -269,7 +327,7 @@ export class TopMenu extends LitElementWw {
                 <div class="topmenu__buttons">
                     ${this._component.allowedTypes.length > 0 && this._component.mode !== 'simulate'
                          ? html`
-                            <sl-tooltip content=${msg("DFA")} placement="left">
+                            <sl-tooltip content=${msg("DFA")} placement=${tooltipPlacement} ?hoist=${collapsed}>
                                 <sl-button
                                     class="topmenu__button"
                                     size="small"
@@ -279,7 +337,7 @@ export class TopMenu extends LitElementWw {
                                     >${msg("DFA")}</sl-button
                                 >
                             </sl-tooltip>
-                            <sl-tooltip content=${msg("NFA")} placement="left">
+                            <sl-tooltip content=${msg("NFA")} placement=${tooltipPlacement} ?hoist=${collapsed}>
                                 <sl-button
                                     class="topmenu__button"
                                     size="small"
@@ -289,7 +347,7 @@ export class TopMenu extends LitElementWw {
                                     >${msg("NFA")}</sl-button
                                 >
                             </sl-tooltip>
-                            <sl-tooltip content=${msg("PDA")} placement="left">
+                            <sl-tooltip content=${msg("PDA")} placement=${tooltipPlacement} ?hoist=${collapsed}>
                                 <sl-button
                                     class="topmenu__button"
                                     size="small"
@@ -301,8 +359,7 @@ export class TopMenu extends LitElementWw {
                             </sl-tooltip>
                         ` : ''}
                 </div>
-            </div>
-        </div>`;
+            </div>`;
     }
 
     private getTransitionsTable() {
