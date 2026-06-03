@@ -2,13 +2,17 @@
   <file original="lit-localize-inputs" datatype="plaintext" source-language="en" target-language="ko">
     <body>
       <trans-unit id="h2e7f32ac617924d0">
-        <source>Missing transition for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
+        <source>Missing transition for 
+          <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/>
+        </source>
         <target>누락된 전환 
           <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/>
         </target>
       </trans-unit>
       <trans-unit id="h5130af20b6d54f05">
-        <source>Multiple transitions for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
+        <source>Multiple transitions for 
+          <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/>
+        </source>
         <target>다음에 대한 다중 전환 
           <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/>
         </target>
@@ -106,14 +110,21 @@
         <target>PDA</target>
       </trans-unit>
       <trans-unit id="h56d667fd1fb9d47d">
-        <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</source>
+        <source>Please fix the following 
+          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors
+          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:
+        </source>
         <target>다음을 수정하세요. 
           <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>오류
           <x id="1" equiv-text="&lt;/sl-badge&gt;"/> 를 수정하여 시뮬레이션을 실행하세요:
         </target>
       </trans-unit>
       <trans-unit id="h6c2fe3d409d7ba36">
-        <source>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</source>
+        <source>No valid path found. The automaton 
+          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects
+          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word 
+          <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.
+        </source>
         <target>유효한 경로를 찾을 수 없습니다. 오토마톤 
           <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>거부
           <x id="1" equiv-text="&lt;/sl-badge&gt;"/> 단어 
@@ -121,7 +132,13 @@
         </target>
       </trans-unit>
       <trans-unit id="h25e62c96f8182fcc">
-        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+        <source>
+          <x id="0" equiv-text="&lt;span&gt;"/>The automaton 
+          <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts
+          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word 
+          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
+          <x id="4" equiv-text="&lt;/span&gt;"/>
+        </source>
         <target>
           <x id="0" equiv-text="&lt;span&gt;"/>오토마톤 
           <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>수락
@@ -131,7 +148,13 @@
         </target>
       </trans-unit>
       <trans-unit id="h28031e78bb7297a9">
-        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+        <source>
+          <x id="0" equiv-text="&lt;span&gt;"/>The automaton 
+          <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects
+          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word 
+          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
+          <x id="4" equiv-text="&lt;/span&gt;"/>
+        </source>
         <target>
           <x id="0" equiv-text="&lt;span&gt;"/>오토마톤 
           <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>거부
@@ -407,6 +430,10 @@
       <trans-unit id="s74a96f52fd23c3e8">
         <source>Multiple initial states defined</source>
         <target>여러 초기 상태 정의</target>
+      </trans-unit>
+      <trans-unit id="s6d8c02aee480af7a">
+        <source>Menu</source>
+        <target>메뉴</target>
       </trans-unit>
     </body>
   </file>

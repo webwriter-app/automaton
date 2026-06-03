@@ -78,6 +78,7 @@
 's66da3efd9a45b25a': `Prüfe Leerheit`,
 's6a7a6503441d48ee': `Um einen Übergang zu bearbeiten, klicken Sie mit der rechten Maustaste auf den Übergang`,
 's6c80030e2762459d': `push`,
+'s6d8c02aee480af7a': `Menü`,
 's6ea31a50ccf59dcf': `Übergang hinzufügen (Strg+E)`,
 's71813a5a8d63ac81': `Eingabewort`,
 's74a96f52fd23c3e8': `Mehrere Startzustände definiert`,

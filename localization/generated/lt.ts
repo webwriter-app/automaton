@@ -78,6 +78,7 @@
 's66da3efd9a45b25a': `Tuščias patikrinimas`,
 's6a7a6503441d48ee': `Jei norite redaguoti perėjimą, dešiniuoju pelės klavišu spustelėkite perėjimą`,
 's6c80030e2762459d': `stumti`,
+'s6d8c02aee480af7a': `Meniu`,
 's6ea31a50ccf59dcf': `Pridėti kraštą (Ctrl+E)`,
 's71813a5a8d63ac81': `Įvesties žodis`,
 's74a96f52fd23c3e8': `Apibrėžtos kelios pradinės būsenos`,

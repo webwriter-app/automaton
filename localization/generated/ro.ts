@@ -78,6 +78,7 @@
 's66da3efd9a45b25a': `Verificare gol`,
 's6a7a6503441d48ee': `Pentru a edita o tranziție, faceți clic dreapta pe tranziție`,
 's6c80030e2762459d': `împingere`,
+'s6d8c02aee480af7a': `Meniu`,
 's6ea31a50ccf59dcf': `Adăugați margine (Ctrl+E)`,
 's71813a5a8d63ac81': `Cuvânt de intrare`,
 's74a96f52fd23c3e8': `Mai multe stări inițiale definite`,

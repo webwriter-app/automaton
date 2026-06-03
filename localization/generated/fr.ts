@@ -78,6 +78,7 @@
 's66da3efd9a45b25a': `Contrôle du vide`,
 's6a7a6503441d48ee': `Pour modifier une transition, cliquez avec le bouton droit de la souris sur la transition`,
 's6c80030e2762459d': `pousser`,
+'s6d8c02aee480af7a': `Menu`,
 's6ea31a50ccf59dcf': `Ajouter un bord (Ctrl+E)`,
 's71813a5a8d63ac81': `Mot d'entrée`,
 's74a96f52fd23c3e8': `Plusieurs états initiaux définis`,

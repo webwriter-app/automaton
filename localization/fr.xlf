@@ -2,13 +2,17 @@
   <file original="lit-localize-inputs" datatype="plaintext" source-language="en" target-language="fr">
     <body>
       <trans-unit id="h2e7f32ac617924d0">
-        <source>Missing transition for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
+        <source>Missing transition for 
+          <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/>
+        </source>
         <target>Transition manquante pour 
           <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/>
         </target>
       </trans-unit>
       <trans-unit id="h5130af20b6d54f05">
-        <source>Multiple transitions for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
+        <source>Multiple transitions for 
+          <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/>
+        </source>
         <target>Transitions multiples pour 
           <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/>
         </target>
@@ -106,14 +110,21 @@
         <target>PDA</target>
       </trans-unit>
       <trans-unit id="h56d667fd1fb9d47d">
-        <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</source>
+        <source>Please fix the following 
+          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors
+          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:
+        </source>
         <target>Veuillez corriger les erreurs suivantes 
           <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>erreurs suivantes
           <x id="1" equiv-text="&lt;/sl-badge&gt;"/> pour exécuter la simulation :
         </target>
       </trans-unit>
       <trans-unit id="h6c2fe3d409d7ba36">
-        <source>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</source>
+        <source>No valid path found. The automaton 
+          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects
+          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word 
+          <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.
+        </source>
         <target>Aucun chemin valide n'a été trouvé. L'automate 
           <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejette
           <x id="1" equiv-text="&lt;/sl-badge&gt;"/> le mot 
@@ -121,7 +132,13 @@
         </target>
       </trans-unit>
       <trans-unit id="h25e62c96f8182fcc">
-        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+        <source>
+          <x id="0" equiv-text="&lt;span&gt;"/>The automaton 
+          <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts
+          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word 
+          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
+          <x id="4" equiv-text="&lt;/span&gt;"/>
+        </source>
         <target>
           <x id="0" equiv-text="&lt;span&gt;"/>L'automate 
           <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepte
@@ -131,7 +148,13 @@
         </target>
       </trans-unit>
       <trans-unit id="h28031e78bb7297a9">
-        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+        <source>
+          <x id="0" equiv-text="&lt;span&gt;"/>The automaton 
+          <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects
+          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word 
+          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
+          <x id="4" equiv-text="&lt;/span&gt;"/>
+        </source>
         <target>
           <x id="0" equiv-text="&lt;span&gt;"/>L'automate 
           <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejette
@@ -407,6 +430,10 @@
       <trans-unit id="s74a96f52fd23c3e8">
         <source>Multiple initial states defined</source>
         <target>Plusieurs états initiaux définis</target>
+      </trans-unit>
+      <trans-unit id="s6d8c02aee480af7a">
+        <source>Menu</source>
+        <target>Menu</target>
       </trans-unit>
     </body>
   </file>

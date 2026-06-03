@@ -78,6 +78,7 @@
 's66da3efd9a45b25a': `Boş Çek`,
 's6a7a6503441d48ee': `Bir geçişi düzenlemek için geçişe sağ tıklayın`,
 's6c80030e2762459d': `itmek`,
+'s6d8c02aee480af7a': `Menü`,
 's6ea31a50ccf59dcf': `Kenar ekleme (Ctrl+E)`,
 's71813a5a8d63ac81': `Giriş sözcüğü`,
 's74a96f52fd23c3e8': `Tanımlanmış çoklu başlangıç durumları`,

@@ -78,6 +78,7 @@
 's66da3efd9a45b25a': `Cheque vacío`,
 's6a7a6503441d48ee': `Para editar una transición, haz clic en ella con el botón derecho del ratón`,
 's6c80030e2762459d': `pulse`,
+'s6d8c02aee480af7a': `Menú`,
 's6ea31a50ccf59dcf': `Añadir borde (Ctrl+E)`,
 's71813a5a8d63ac81': `Palabra de entrada`,
 's74a96f52fd23c3e8': `Definición de varios estados iniciales`,

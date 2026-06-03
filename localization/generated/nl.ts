@@ -78,6 +78,7 @@
 's66da3efd9a45b25a': `Lege check`,
 's6a7a6503441d48ee': `Om een overgang te bewerken klik je met de rechtermuisknop op de overgang`,
 's6c80030e2762459d': `druk op`,
+'s6d8c02aee480af7a': `Menu`,
 's6ea31a50ccf59dcf': `Rand toevoegen (Ctrl+E)`,
 's71813a5a8d63ac81': `Invoerwoord`,
 's74a96f52fd23c3e8': `Meerdere begintoestanden gedefinieerd`,

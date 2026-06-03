@@ -78,6 +78,7 @@
 's66da3efd9a45b25a': `Prazno preverjanje`,
 's6a7a6503441d48ee': `Če želite urediti prehod, desno kliknite prehod`,
 's6c80030e2762459d': `potisnite`,
+'s6d8c02aee480af7a': `Meni`,
 's6ea31a50ccf59dcf': `Dodaj rob (Ctrl+E)`,
 's71813a5a8d63ac81': `Vhodna beseda`,
 's74a96f52fd23c3e8': `Opredelitev več začetnih stanj`,

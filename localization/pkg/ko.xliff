@@ -1,1 +1,27 @@
-﻿<?xml version="1.0" encoding="utf-8"?><xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.1" srcLang="en" trgLang="ko"><file id="." original="."><unit id="description"><segment><source>Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).</source><target>다양한 종류의 오토마타를 빌드하고 시각화하며 상호 작용할 수 있습니다(DFA, NFA, PDA).</target></segment></unit></file><file id="./widgets/webwriter-automaton" original="./widgets/webwriter-automaton"><unit id="label"><segment><source>Automaton</source><target>Automaton</target></segment></unit></file><file id="./snippets/dfa-simple" original="./snippets/dfa-simple"><unit id="label"><segment><source>DFA simple</source><target>DFA 간편</target></segment></unit></file><file id="./snippets/dfa-complex" original="./snippets/dfa-complex"><unit id="label"><segment><source>DFA complex</source><target>DFA 컴플렉스</target></segment></unit></file><file id="./snippets/nfa-simple" original="./snippets/nfa-simple"><unit id="label"><segment><source>NFA simple</source><target>NFA 간편</target></segment></unit></file><file id="./snippets/nfa-complex" original="./snippets/nfa-complex"><unit id="label"><segment><source>NFA complex</source><target>NFA 컴플렉스</target></segment></unit></file><file id="./snippets/pda-simple" original="./snippets/pda-simple"><unit id="label"><segment><source>PDA simple</source><target>간단한 PDA</target></segment></unit></file><file id="./snippets/pda-complex" original="./snippets/pda-complex"><unit id="label"><segment><source>PDA complex</source><target>PDA 컴플렉스</target></segment></unit></file></xliff>
+<?xml version="1.0" encoding="utf-8" ?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.1" srcLang="en" trgLang="ko">
+<file id="." original=".">
+<unit id="description"><segment><source>Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).</source><target>다양한 종류의 오토마타를 빌드하고 시각화하며 상호 작용할 수 있습니다(DFA, NFA, PDA).</target></segment></unit>
+</file>
+<file id="./widgets/webwriter-automaton" original="./widgets/webwriter-automaton">
+<unit id="label"><segment><source>Automaton</source><target>Automaton</target></segment></unit>
+</file>
+<file id="./snippets/dfa-simple" original="./snippets/dfa-simple">
+<unit id="label"><segment><source>DFA simple</source><target>DFA 간편</target></segment></unit>
+</file>
+<file id="./snippets/dfa-complex" original="./snippets/dfa-complex">
+<unit id="label"><segment><source>DFA complex</source><target>DFA 컴플렉스</target></segment></unit>
+</file>
+<file id="./snippets/nfa-simple" original="./snippets/nfa-simple">
+<unit id="label"><segment><source>NFA simple</source><target>NFA 간편</target></segment></unit>
+</file>
+<file id="./snippets/nfa-complex" original="./snippets/nfa-complex">
+<unit id="label"><segment><source>NFA complex</source><target>NFA 컴플렉스</target></segment></unit>
+</file>
+<file id="./snippets/pda-simple" original="./snippets/pda-simple">
+<unit id="label"><segment><source>PDA simple</source><target>간단한 PDA</target></segment></unit>
+</file>
+<file id="./snippets/pda-complex" original="./snippets/pda-complex">
+<unit id="label"><segment><source>PDA complex</source><target>PDA 컴플렉스</target></segment></unit>
+</file>
+</xliff>

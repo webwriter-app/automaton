@@ -80,6 +80,7 @@
 's21b06c38fc4164db': `Advanced`,
 's1b5a859826f8be7d': `Verbose`,
 's7df224ba56fb8e1e': `Mode Switch`,
+'s6d8c02aee480af7a': `Menu`,
 's4b10acae683d2978': `Fullscreen`,
 'sd2223afb7d6b100d': `Type`,
 's352719d86112de9a': `Help`,

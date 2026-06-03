@@ -78,6 +78,7 @@
 's66da3efd9a45b25a': `Controllo vuoto`,
 's6a7a6503441d48ee': `Per modificare una transizione fare clic con il tasto destro del mouse sulla transizione`,
 's6c80030e2762459d': `spingere`,
+'s6d8c02aee480af7a': `Menu`,
 's6ea31a50ccf59dcf': `Aggiungi bordo (Ctrl+E)`,
 's71813a5a8d63ac81': `Parola d'ingresso`,
 's74a96f52fd23c3e8': `Definizione di più stati iniziali`,

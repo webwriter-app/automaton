@@ -78,6 +78,7 @@
 's66da3efd9a45b25a': `Pusty czek`,
 's6a7a6503441d48ee': `Aby edytować przejście, kliknij je prawym przyciskiem myszy`,
 's6c80030e2762459d': `pchnięcie`,
+'s6d8c02aee480af7a': `Menu`,
 's6ea31a50ccf59dcf': `Dodaj krawędź (Ctrl+E)`,
 's71813a5a8d63ac81': `Słowo wejściowe`,
 's74a96f52fd23c3e8': `Zdefiniowano wiele stanów początkowych`,

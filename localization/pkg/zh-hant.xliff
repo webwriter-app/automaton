@@ -1,1 +1,27 @@
-﻿<?xml version="1.0" encoding="utf-8"?><xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.1" srcLang="en" trgLang="zh-Hant"><file id="." original="."><unit id="description"><segment><source>Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).</source><target>建立、視覺化不同種類的自動機 (DFA、NFA、PDA)，並與之互動。</target></segment></unit></file><file id="./widgets/webwriter-automaton" original="./widgets/webwriter-automaton"><unit id="label"><segment><source>Automaton</source><target>自動化</target></segment></unit></file><file id="./snippets/dfa-simple" original="./snippets/dfa-simple"><unit id="label"><segment><source>DFA simple</source><target>簡單的 DFA</target></segment></unit></file><file id="./snippets/dfa-complex" original="./snippets/dfa-complex"><unit id="label"><segment><source>DFA complex</source><target>DFA 複合</target></segment></unit></file><file id="./snippets/nfa-simple" original="./snippets/nfa-simple"><unit id="label"><segment><source>NFA simple</source><target>NFA 簡單</target></segment></unit></file><file id="./snippets/nfa-complex" original="./snippets/nfa-complex"><unit id="label"><segment><source>NFA complex</source><target>NFA 複合體</target></segment></unit></file><file id="./snippets/pda-simple" original="./snippets/pda-simple"><unit id="label"><segment><source>PDA simple</source><target>簡易 PDA</target></segment></unit></file><file id="./snippets/pda-complex" original="./snippets/pda-complex"><unit id="label"><segment><source>PDA complex</source><target>PDA 複合體</target></segment></unit></file></xliff>
+<?xml version="1.0" encoding="utf-8" ?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.1" srcLang="en" trgLang="zh-hant">
+<file id="." original=".">
+<unit id="description"><segment><source>Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).</source><target>建立、視覺化不同種類的自動機 (DFA、NFA、PDA)，並與之互動。</target></segment></unit>
+</file>
+<file id="./widgets/webwriter-automaton" original="./widgets/webwriter-automaton">
+<unit id="label"><segment><source>Automaton</source><target>自動化</target></segment></unit>
+</file>
+<file id="./snippets/dfa-simple" original="./snippets/dfa-simple">
+<unit id="label"><segment><source>DFA simple</source><target>簡單的 DFA</target></segment></unit>
+</file>
+<file id="./snippets/dfa-complex" original="./snippets/dfa-complex">
+<unit id="label"><segment><source>DFA complex</source><target>DFA 複合</target></segment></unit>
+</file>
+<file id="./snippets/nfa-simple" original="./snippets/nfa-simple">
+<unit id="label"><segment><source>NFA simple</source><target>NFA 簡單</target></segment></unit>
+</file>
+<file id="./snippets/nfa-complex" original="./snippets/nfa-complex">
+<unit id="label"><segment><source>NFA complex</source><target>NFA 複合體</target></segment></unit>
+</file>
+<file id="./snippets/pda-simple" original="./snippets/pda-simple">
+<unit id="label"><segment><source>PDA simple</source><target>簡易 PDA</target></segment></unit>
+</file>
+<file id="./snippets/pda-complex" original="./snippets/pda-complex">
+<unit id="label"><segment><source>PDA complex</source><target>PDA 複合體</target></segment></unit>
+</file>
+</xliff>

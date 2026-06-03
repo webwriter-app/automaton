@@ -78,6 +78,7 @@
 's66da3efd9a45b25a': `Tyhjä tarkastus`,
 's6a7a6503441d48ee': `Voit muokata siirtymää napsauttamalla siirtymää hiiren kakkospainikkeella`,
 's6c80030e2762459d': `työnnä`,
+'s6d8c02aee480af7a': `Valikko`,
 's6ea31a50ccf59dcf': `Lisää reuna (Ctrl+E)`,
 's71813a5a8d63ac81': `Syöttösana`,
 's74a96f52fd23c3e8': `Useita alkutiloja määritelty`,

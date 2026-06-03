@@ -78,6 +78,7 @@
 's66da3efd9a45b25a': `Tühi kontroll`,
 's6a7a6503441d48ee': `Ülemineku redigeerimiseks klõpsake üleminekul paremale`,
 's6c80030e2762459d': `push`,
+'s6d8c02aee480af7a': `Menüü`,
 's6ea31a50ccf59dcf': `Serva lisamine (Ctrl+E)`,
 's71813a5a8d63ac81': `Sisendsõna`,
 's74a96f52fd23c3e8': `Määratletud mitu algseisundit`,

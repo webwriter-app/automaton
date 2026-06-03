@@ -78,6 +78,7 @@
 's66da3efd9a45b25a': `Cek Kosong`,
 's6a7a6503441d48ee': `Untuk mengedit transisi, klik kanan transisi tersebut`,
 's6c80030e2762459d': `mendorong`,
+'s6d8c02aee480af7a': `Menu`,
 's6ea31a50ccf59dcf': `Menambahkan tepi (Ctrl+E)`,
 's71813a5a8d63ac81': `Kata masukan`,
 's74a96f52fd23c3e8': `Beberapa status awal ditentukan`,

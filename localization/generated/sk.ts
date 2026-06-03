@@ -78,6 +78,7 @@
 's66da3efd9a45b25a': `Prázdna kontrola`,
 's6a7a6503441d48ee': `Ak chcete upraviť prechod, kliknite pravým tlačidlom myši na prechod`,
 's6c80030e2762459d': `stlačte`,
+'s6d8c02aee480af7a': `Ponuka`,
 's6ea31a50ccf59dcf': `Pridať okraj (Ctrl+E)`,
 's71813a5a8d63ac81': `Vstupné slovo`,
 's74a96f52fd23c3e8': `Definovanie viacerých počiatočných stavov`,

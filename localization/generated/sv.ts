@@ -78,6 +78,7 @@
 's66da3efd9a45b25a': `Tom check`,
 's6a7a6503441d48ee': `Om du vill redigera en övergång högerklickar du på övergången`,
 's6c80030e2762459d': `tryck`,
+'s6d8c02aee480af7a': `Meny`,
 's6ea31a50ccf59dcf': `Lägg till kant (Ctrl+E)`,
 's71813a5a8d63ac81': `Inmatningsord`,
 's74a96f52fd23c3e8': `Flera initiala tillstånd definierade`,

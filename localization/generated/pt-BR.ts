@@ -78,6 +78,7 @@
 's66da3efd9a45b25a': `Verificação de vazio`,
 's6a7a6503441d48ee': `Para editar uma transição, clique com o botão direito do mouse na transição`,
 's6c80030e2762459d': `empurrar`,
+'s6d8c02aee480af7a': `Menu`,
 's6ea31a50ccf59dcf': `Adicionar borda (Ctrl+E)`,
 's71813a5a8d63ac81': `Palavra de entrada`,
 's74a96f52fd23c3e8': `Vários estados iniciais definidos`,

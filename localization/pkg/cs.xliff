@@ -1,1 +1,27 @@
-﻿<?xml version="1.0" encoding="utf-8"?><xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.1" srcLang="en" trgLang="cs"><file id="." original="."><unit id="description"><segment><source>Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).</source><target>Sestavujte, vizualizujte a pracujte s různými druhy automatů (DFA, NFA, PDA).</target></segment></unit></file><file id="./widgets/webwriter-automaton" original="./widgets/webwriter-automaton"><unit id="label"><segment><source>Automaton</source><target>Automat</target></segment></unit></file><file id="./snippets/dfa-simple" original="./snippets/dfa-simple"><unit id="label"><segment><source>DFA simple</source><target>Jednoduché DFA</target></segment></unit></file><file id="./snippets/dfa-complex" original="./snippets/dfa-complex"><unit id="label"><segment><source>DFA complex</source><target>Komplex DFA</target></segment></unit></file><file id="./snippets/nfa-simple" original="./snippets/nfa-simple"><unit id="label"><segment><source>NFA simple</source><target>NFA jednoduché</target></segment></unit></file><file id="./snippets/nfa-complex" original="./snippets/nfa-complex"><unit id="label"><segment><source>NFA complex</source><target>Komplex NFA</target></segment></unit></file><file id="./snippets/pda-simple" original="./snippets/pda-simple"><unit id="label"><segment><source>PDA simple</source><target>Jednoduché PDA</target></segment></unit></file><file id="./snippets/pda-complex" original="./snippets/pda-complex"><unit id="label"><segment><source>PDA complex</source><target>Komplex PDA</target></segment></unit></file></xliff>
+<?xml version="1.0" encoding="utf-8" ?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.1" srcLang="en" trgLang="cs">
+<file id="." original=".">
+<unit id="description"><segment><source>Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).</source><target>Sestavujte, vizualizujte a pracujte s různými druhy automatů (DFA, NFA, PDA).</target></segment></unit>
+</file>
+<file id="./widgets/webwriter-automaton" original="./widgets/webwriter-automaton">
+<unit id="label"><segment><source>Automaton</source><target>Automat</target></segment></unit>
+</file>
+<file id="./snippets/dfa-simple" original="./snippets/dfa-simple">
+<unit id="label"><segment><source>DFA simple</source><target>Jednoduché DFA</target></segment></unit>
+</file>
+<file id="./snippets/dfa-complex" original="./snippets/dfa-complex">
+<unit id="label"><segment><source>DFA complex</source><target>Komplex DFA</target></segment></unit>
+</file>
+<file id="./snippets/nfa-simple" original="./snippets/nfa-simple">
+<unit id="label"><segment><source>NFA simple</source><target>NFA jednoduché</target></segment></unit>
+</file>
+<file id="./snippets/nfa-complex" original="./snippets/nfa-complex">
+<unit id="label"><segment><source>NFA complex</source><target>Komplex NFA</target></segment></unit>
+</file>
+<file id="./snippets/pda-simple" original="./snippets/pda-simple">
+<unit id="label"><segment><source>PDA simple</source><target>Jednoduché PDA</target></segment></unit>
+</file>
+<file id="./snippets/pda-complex" original="./snippets/pda-complex">
+<unit id="label"><segment><source>PDA complex</source><target>Komplex PDA</target></segment></unit>
+</file>
+</xliff>

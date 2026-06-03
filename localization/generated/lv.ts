@@ -78,6 +78,7 @@
 's66da3efd9a45b25a': `Tukša pārbaude`,
 's6a7a6503441d48ee': `Lai rediģētu pāreju, noklikšķiniet uz pārejas ar peles labo pogu`,
 's6c80030e2762459d': `push`,
+'s6d8c02aee480af7a': `Izvēlne`,
 's6ea31a50ccf59dcf': `Pievienot malu (Ctrl+E)`,
 's71813a5a8d63ac81': `Ievadvārds`,
 's74a96f52fd23c3e8': `Definēti vairāki sākotnējie stāvokļi`,

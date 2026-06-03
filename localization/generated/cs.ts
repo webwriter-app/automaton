@@ -78,6 +78,7 @@
 's66da3efd9a45b25a': `Prázdná kontrola`,
 's6a7a6503441d48ee': `Chcete-li upravit přechod, klikněte na něj pravým tlačítkem myši.`,
 's6c80030e2762459d': `push`,
+'s6d8c02aee480af7a': `Nabídka`,
 's6ea31a50ccf59dcf': `Přidat okraj (Ctrl+E)`,
 's71813a5a8d63ac81': `Vstupní slovo`,
 's74a96f52fd23c3e8': `Definováno více počátečních stavů`,
