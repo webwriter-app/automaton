@@ -48,6 +48,7 @@
   ],
   "license": "MIT",
   "author": "Jorik van Genuchten",
+  "repository": "github:webwriter-app/automaton",
   "scripts": {
     "prepublishOnly": "npx @webwriter/build"
   },
