@@ -278,6 +278,15 @@
             },
             {
               "kind": "field",
+              "name": "_topMenuCollapsed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "helpOverlay",
               "privacy": "private"
             },
@@ -494,7 +503,9 @@
             "package": "@webwriter/lit"
           },
           "tagName": "webwriter-automaton",
-          "customElement": true
+          "customElement": true,
+          "modulePath": "src/index.ts",
+          "definitionPath": "src/index.ts"
         }
       ],
       "exports": [

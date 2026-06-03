@@ -1,5 +1,5 @@
-# Automaton (`@webwriter/automaton@3.0.1`)
-[License: MIT](LICENSE) | Version: 3.0.1
+# Automaton (`@webwriter/automaton@3.0.2`)
+[License: MIT](LICENSE) | Version: 3.0.2
 
 Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).
 
@@ -8,12 +8,12 @@ Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).
 
 | Name | Import Path |
 | :--: | :---------: |
-| Dfa Simple | @webwriter/automaton/snippets/dfa-simple.html |
-| Dfa Complex | @webwriter/automaton/snippets/dfa-complex.html |
-| Nfa Simple | @webwriter/automaton/snippets/nfa-simple.html |
-| Nfa Complex | @webwriter/automaton/snippets/nfa-complex.html |
-| Pda Simple | @webwriter/automaton/snippets/pda-simple.html |
-| Pda Complex | @webwriter/automaton/snippets/pda-complex.html |
+| Dfa Simple | `@webwriter/automaton/snippets/dfa-simple.html` |
+| Dfa Complex | `@webwriter/automaton/snippets/dfa-complex.html` |
+| Nfa Simple | `@webwriter/automaton/snippets/nfa-simple.html` |
+| Nfa Complex | `@webwriter/automaton/snippets/nfa-complex.html` |
+| Pda Simple | `@webwriter/automaton/snippets/pda-simple.html` |
+| Pda Complex | `@webwriter/automaton/snippets/pda-complex.html` |
 
 
 
@@ -74,4 +74,4 @@ npm install @webwriter/automaton
 
 
 ---
-*Generated with @webwriter/build@1.6.0*
+*Generated with @webwriter/build@1.9.0*
