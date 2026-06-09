@@ -1,6 +1,7 @@
 {
   "name": "@webwriter/automaton",
   "version": "3.0.2",
+  "repository": "github:webwriter-app/automaton",
   "description": "Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).",
   "keywords": [
     "webwriter-widget",
