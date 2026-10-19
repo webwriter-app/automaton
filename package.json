@@ -49,7 +49,6 @@
   ],
   "license": "MIT",
   "author": "Jorik van Genuchten",
-  "repository": "github:webwriter-app/automaton",
   "scripts": {
     "prepublishOnly": "npx @webwriter/build"
   },
@@ -88,7 +87,12 @@
     },
     "./icon": "./icon.svg",
     "./editing-config.json": "./editing-config.json",
-    "./custom-elements.json": "./custom-elements.json"
+    "./custom-elements.json": "./custom-elements.json",
+    "./snippets/live-sessions.html": "./snippets/live-sessions.html",
+    "./tests/live-sessions.*": {
+      "source": "./tests/live-sessions.test.ts",
+      "default": "./dist/tests/live-sessions.*"
+    }
   },
   "editingConfig": {
     ".": {},
@@ -98,7 +102,10 @@
     "./snippets/nfa-simple": {},
     "./snippets/nfa-complex": {},
     "./snippets/pda-simple": {},
-    "./snippets/pda-complex": {}
+    "./snippets/pda-complex": {},
+    "./snippets/live-sessions": {
+      "label": "Live session: all views"
+    }
   },
   "customElements": "custom-elements.json"
 }

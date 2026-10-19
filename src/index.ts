@@ -59,6 +59,9 @@ import { NFA } from "./automata/nfa";
 import { PDA, StackExtension } from "./automata/pda";
 
 import { debounce } from "lodash";
+import { aggregate, responseGraph, type GraphState } from "./aggregate";
+import { ParticipantData } from "./participant-data";
+import { AutomatonAggregateElement } from "./aggregate-element";
 
 // @ts-ignore
 import LOCALIZE from "../localization/generated";
@@ -74,6 +77,53 @@ export type AutomatonType = "dfa" | "nfa" | "pda";
 @customElement("webwriter-automaton")
 @localized()
 export class AutomatonComponent extends LitElementWw {
+	/** All seven live-session views of the same accepted participant data. */
+	static aggregate = aggregate;
+	private applyingData = false;
+	private detachGraphListeners?: () => void;
+	private cancelGraphWrite?: () => void;
+	private participantData = new ParticipantData(this, () => this.applyParticipantData());
+
+	/** Explicit reference graph, using the same encoding as nodes/transitions. */
+	@property({attribute: "reference-nodes"}) accessor referenceNodes: string | undefined;
+	@property({attribute: "reference-transitions"}) accessor referenceTransitions: string | undefined;
+	@property({attribute: "reference-type"}) accessor referenceType: AutomatonType | undefined;
+
+	private graphState(): GraphState {
+		return {type: this.automaton.type,
+			nodes: this.automaton.nodes.get().filter(node => node.id !== Graph.initialGhostNode.id)
+				.map(node => ({...stripNode(node), initial: !!node.initial, final: !!node.final})),
+			transitions: this.automaton.transitions.get().filter(edge => edge.from !== Graph.initialGhostNode.id).map(stripTransition)};
+	}
+
+	private applyParticipantData() {
+		this.cancelGraphWrite?.();
+		if(!this.participantData?.ready || !this.isConnected) return;
+		const fallback = {type: this.type, nodes: this.nodes, transitions: this.transitions};
+		this.applyGraph(this.isContentEditable ? fallback : responseGraph(this.participantData.value, fallback));
+	}
+
+	private applyGraph(graph: GraphState) {
+		const normalized = {...graph, nodes: graph.nodes.map(node => ({...stripNode(node), initial: !!node.initial, final: !!node.final})), transitions: graph.transitions.map(stripTransition)};
+		if(JSON.stringify(this.graphState()) === JSON.stringify(normalized)) return;
+		this.applyingData = true;
+		try {
+			const Constructor = graph.type === "dfa" ? DFA : graph.type === "nfa" ? NFA : PDA;
+			this.automaton = new Constructor(normalized.nodes, normalized.transitions);
+		}
+		finally { this.applyingData = false; }
+		this.requestUpdate();
+	}
+
+	connectedCallback() {
+		super.connectedCallback();
+		this.setUpListeners(this.automaton);
+	}
+
+	disconnectedCallback() {
+		this.detachGraphListeners?.();
+		super.disconnectedCallback();
+	}
 	@query("#graphCanvas") private accessor graphCanvas!: HTMLElement;
 	@query("#toolMenu") private accessor toolMenu!: ToolMenu;
 	@query("#simulatorMenu") private accessor simulatorMenu!: SimulatorMenu;
@@ -216,10 +266,11 @@ export class AutomatonComponent extends LitElementWw {
 	/** @internal */
 	public set automaton(a: Automaton) {
 		this._automaton = a;
-		this.type = a.type;
+		if(this.isContentEditable) this.type = a.type;
 		this.setUpListeners(this._automaton);
 		this._graph?.setAutomaton(this._automaton);
 		if (this.simulatorMenu) this.simulatorMenu.automaton = this._automaton;
+		if(!this.applyingData && !this.isContentEditable && this.participantData?.ready) this.participantData.write({graph: this.graphState()});
 		Logger.log("Automaton set", this._automaton.transitions.get());
 	}
 	/** @internal */
@@ -233,6 +284,7 @@ export class AutomatonComponent extends LitElementWw {
 
 	protected static get scopedElements() {
 		return {
+			"webwriter-automaton-aggregate": AutomatonAggregateElement,
 			"sl-button": SlButton,
 			"sl-button-group": SlButtonGroup,
 			"sl-details": SlDetails,
@@ -320,14 +372,11 @@ export class AutomatonComponent extends LitElementWw {
 	): void {
 		super.willUpdate(_changedProperties);
 
-		if (_changedProperties.has("type")) {
-			if (this.type === "dfa")
-				this.automaton = new DFA(this.nodes, this.transitions);
-			if (this.type === "nfa")
-				this.automaton = new NFA(this.nodes, this.transitions);
-			if (this.type === "pda")
-				this.automaton = new PDA(this.nodes, this.transitions);
+		if (["type", "nodes", "transitions", "contentEditable"].some(key => _changedProperties.has(key))) {
+			const fallback = {type: this.type, nodes: this.nodes, transitions: this.transitions};
+			this.applyGraph(!this.isContentEditable && this.participantData.ready ? responseGraph(this.participantData.value, fallback) : fallback);
 		}
+
 
 		if (_changedProperties.has("allowedModes")) {
 			if (
@@ -374,13 +423,7 @@ export class AutomatonComponent extends LitElementWw {
 			}
 		}
 
-		if (
-			_changedProperties.has("nodes") ||
-			_changedProperties.has("transitions")
-		) {
-			this.automaton.updateAutomaton(this.nodes, this.transitions);
-			if (this._graph) this._graph.updateGhostNodePosition();
-		}
+
 
 		if (this.automaton && this.automaton.extension) {
 			(this.automaton.extension as StackExtension).add =
@@ -416,7 +459,15 @@ export class AutomatonComponent extends LitElementWw {
 	 */
 	public render(): TemplateResult {
 		return html`
-			${this.renderEditor()}
+			<div ?inert=${!this.isContentEditable && !this.participantData.ready}
+				style=${this.isContentEditable ? "height:100%" : "height:calc(100% - 85px)"}>${this.renderEditor()}</div>
+			${!this.isContentEditable ? html`<div style="padding:6px 10px;box-sizing:border-box;height:85px;font:13px system-ui">
+				${this.participantData.ready ? html`<label>Explain your automaton (optional)
+					<textarea style="display:block;box-sizing:border-box;width:100%;height:45px;resize:none;font:inherit"
+						.value=${this.participantData.value.explanation ?? ""}
+						@input=${(event: Event) => this.participantData.write({graph: this.graphState(), explanation: (event.target as HTMLTextAreaElement).value})}></textarea>
+				</label>` : html`<p role="status">${this.participantData.error || "Loading response data…"}</p>`}
+			</div>` : ""}
 			${this.isContentEditable
 				? guard([this.settings], () => this.renderSettings())
 				: ""}
@@ -633,24 +684,24 @@ export class AutomatonComponent extends LitElementWw {
 	 * @param a The automaton object.
 	 */
 	private setUpListeners(a: Automaton) {
-		/**
-		 * Updates the attributes of the graph by filtering and mapping the nodes and transitions
-		 * based on certain conditions.
-		 */
-		const updateAttributes = () => {
-			this.nodes = this.automaton.nodes
-				.get()
-				.filter((n) => n.id !== Graph.initialGhostNode.id)
-				.map(stripNode);
-			this.nodes = [...this.nodes];
-			this.transitions = this.automaton.transitions
-				.get()
-				.filter((t) => t.from !== Graph.initialGhostNode.id)
-				.map(stripTransition);
-			this.transitions = [...this.transitions];
+		this.detachGraphListeners?.();
+		const persist = debounce(() => {
+			if(a !== this.automaton || !this.isConnected || this.applyingData) return;
+			const graph = this.graphState();
+			if(this.isContentEditable) {
+				this.nodes = graph.nodes;
+				this.transitions = graph.transitions;
+			}
+			else if(this.participantData.ready) this.participantData.write({graph});
+		}, 200);
+		const changed = () => { if(!this.applyingData && a === this.automaton) persist(); };
+		a.nodes.on("*", changed);
+		a.transitions.on("*", changed);
+		this.cancelGraphWrite = () => persist.cancel();
+		this.detachGraphListeners = () => {
+			persist.cancel();
+			a.nodes.off("*", changed);
+			a.transitions.off("*", changed);
 		};
-
-		a.nodes.on("*", debounce(updateAttributes, 200));
-		a.transitions.on("*", debounce(updateAttributes, 200));
 	}
 }
