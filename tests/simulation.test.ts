@@ -90,6 +90,7 @@ describe("Simulation Tests", () => {
 			widget.setAttribute("showhelp", "false");
 			widget.setAttribute("testwords", '["a","ab"]');
 			widget.setAttribute("forcedalphabet", '["a","b"]');
+			widget.setAttribute("verbose", "");
 
 			assert.deepEqual(widget.selectedPermissions, ["node-delete", "edge-add", "edge-change", "stack-change"]);
 			assert.deepEqual(widget.allowedTypeOptions, ["dfa", "nfa"]);
@@ -101,8 +102,11 @@ describe("Simulation Tests", () => {
 			assert.containsAllKeys(AutomatonComponent.options, [
 				"selectedPermissions", "allowedTypeOptions", "allowedTransformationOptions",
 				"allowedModeOptions", "helpEnabled", "formalDefinitionEnabled", "transitionsTableEnabled",
-				"testLanguage", "testWordsInput", "forcedAlphabetInput", "verbose",
+				"testLanguage", "testWordsInput", "forcedAlphabetInput",
 			]);
+			assert.notProperty(AutomatonComponent.options, "verbose");
+			assert.isTrue(widget.verbose);
+			widget.removeAttribute("verbose");
 
 			for (const editable of ["true", "false"]) {
 				widget.setAttribute("contenteditable", editable);
@@ -125,7 +129,6 @@ describe("Simulation Tests", () => {
 			widget.setAttribute("testlanguage", "a+");
 			widget.testWordsInput = "a,aa";
 			widget.forcedAlphabetInput = "a,b,a,invalid";
-			widget.setAttribute("verbose", "");
 			await widget.updateComplete;
 
 			assert.equal(widget.getAttribute("permissions"), "421");
@@ -140,8 +143,6 @@ describe("Simulation Tests", () => {
 			assert.equal(widget.testLanguage, "a+");
 			assert.equal(widget.getAttribute("testwords"), '["a","aa"]');
 			assert.equal(widget.getAttribute("forcedalphabet"), '["a","b"]');
-			assert.isTrue(widget.verbose);
-			widget.removeAttribute("verbose");
 			widget.removeAttribute("testlanguage");
 			assert.equal(widget.testLanguage, "");
 

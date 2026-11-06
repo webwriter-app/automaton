@@ -43,7 +43,6 @@ export function optionGroups() {
         editing: { label: msg('Editing'), collapsible: true },
         view: { label: msg('View'), collapsible: true },
         automation: { label: msg('Automation'), collapsible: true },
-        advanced: { label: msg('Advanced'), advanced: true },
     };
 }
 
@@ -96,6 +95,5 @@ export function options() {
         testLanguage: { type: String, group: 'automation', label: { _: msg('Test Language') } },
         testWordsInput: { type: String, attribute: false, group: 'automation', label: { _: msg('Test Words') } },
         forcedAlphabetInput: { type: String, attribute: false, group: 'automation', label: { _: msg('Predefined Alphabet') } },
-        verbose: { type: Boolean, group: 'advanced', label: { _: msg('Verbose') } },
     } satisfies Record<string, OptionDeclaration & { group: string; control?: 'switch' }>;
 }
