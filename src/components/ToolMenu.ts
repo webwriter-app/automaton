@@ -144,11 +144,12 @@ export class ToolMenu extends LitElementWw {
     }
 
     public insertNode(position: Position, add: (node: Node) => void) {
+        const { automaton } = this._graph;
         const node = {
             ...position,
-            id: this._graph.automaton.getNewNodeId(),
-            label: this._graph.automaton.getNewNodeLabel(),
-            initial: false,
+            id: automaton.getNewNodeId(),
+            label: automaton.getNewNodeLabel(),
+            initial: automaton.nodes.getIds().every(id => id === Graph.initialGhostNode.id),
             final: false,
         };
         add(node);

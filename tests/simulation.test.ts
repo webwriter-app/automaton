@@ -380,17 +380,24 @@ describe("Simulation Tests", () => {
 			const [selected] = network.getSelectedNodes();
 			const node = widget.automaton.getNode(Number(selected));
 			assert.exists(node);
+			assert.isTrue(node!.initial, "The first added node is initial");
+			assert.equal(widget.automaton.getTransition(-1)?.to, selected, "The initial arrow points to the new node");
 			assert.closeTo(node!.x!, center.x, 1);
 			assert.closeTo(node!.y!, center.y, 1);
 			const bar = root.querySelector(".editing-bar")!.getBoundingClientRect();
 			const button = plus.getBoundingClientRect();
 			assert.closeTo(bar.height, button.height, 1);
 			assert.closeTo(bar.bottom, button.bottom, 1);
+			plus.click();
+			await widget.updateComplete;
+			const [second] = network.getSelectedNodes();
+			assert.isFalse(widget.automaton.getNode(Number(second))!.initial);
+			assert.equal(widget.automaton.getInitialNode().id, selected);
 
 			widget.permissions = "377";
 			await widget.updateComplete;
 			plus.click();
-			assert.lengthOf(widget.automaton.nodes.getIds().filter(id => id !== -1), 1, "Insertion observes current permissions");
+			assert.lengthOf(widget.automaton.nodes.getIds().filter(id => id !== -1), 2, "Insertion observes current permissions");
 		});
 
 		it("edits the selected node or transition in the bottom bar", async () => {
