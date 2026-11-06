@@ -229,7 +229,7 @@ export abstract class Automaton {
 
         this.nodes.update({
             id,
-            color: COLORS.red,
+            color: COLORS.warning,
         });
     }
 

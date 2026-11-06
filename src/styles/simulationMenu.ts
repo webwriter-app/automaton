@@ -2,26 +2,21 @@ import { css } from 'lit';
 
 export const simulationMenuStyles = css`
     .simulator {
-        padding: 10px;
-        gap: 10px;
+        gap: 6px;
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
-    }
-
-    @container automaton (width < 500px) {
-        .simulator {
-            grid-template-columns: minmax(0, 1fr);
-        }
-
-        .simulator_buttons {
-            justify-self: end;
-        }
+        align-items: end;
     }
 
     .simulator__label {
         grid-column: 1 / -1;
+        margin-inline-end: var(--simulator-feedback-end, 0);
+        padding: 6px 8px;
+        border: 1px solid var(--sl-panel-border-color);
+        border-radius: var(--sl-border-radius-medium);
+        background: var(--sl-color-neutral-0);
 
-        font-size: var(--sl-font-size-medium);
+        font-size: var(--sl-font-size-small);
 
         max-height: min(120px, 25cqh);
         overflow: auto;
@@ -59,6 +54,7 @@ export const simulationMenuStyles = css`
 
     .simulator__input {
         min-width: 0;
+        --sl-input-font-size-medium: var(--sl-font-size-small);
     }
 
     .simulator__input.danger::part(base) {
@@ -88,12 +84,16 @@ export const simulationMenuStyles = css`
         justify-content: center;
     }
 
+    .simulator_buttons sl-button::part(label) {
+        padding-inline: 10px;
+    }
+
     .simulator__input-display {
         box-sizing: border-box;
         border: solid var(--sl-input-border-width) var(--sl-input-border-color);
 
         border-radius: var(--sl-input-border-radius-medium);
-        font-size: var(--sl-input-font-size-medium);
+        font-size: var(--sl-font-size-small);
         height: var(--sl-input-height-medium);
 
         display: inline-flex;

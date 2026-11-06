@@ -378,8 +378,7 @@ export class Graph {
         this._ac.addEventListener('keydown', (e: KeyboardEvent) => {
             if (e.key === 'm' && e.ctrlKey) {
                 e.preventDefault();
-                if (this.component.allowedModes.includes(this.component.mode === 'simulate' ? 'edit' : 'simulate'))
-                    this.toggleMode();
+                this.toggleMode();
             }
 
             if (!this._interactive) return;
@@ -493,7 +492,7 @@ export class Graph {
     public renderErrorDisplay() {
         return html`<sl-alert
             class="errordisplay"
-            variant="danger"
+            variant="warning"
             style=${styleMap({
                 display: this._currentError ? 'block' : 'none',
                 left: `${this._currentError?.offset.x}px`,

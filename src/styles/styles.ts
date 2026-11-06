@@ -67,6 +67,12 @@ const baseStyles = css`
         min-width: 0;
     }
 
+    #simulatorMenu {
+        position: absolute;
+        inset: auto 10px calc(10px + (var(--sl-input-height-large) - var(--sl-input-height-medium)) / 2);
+        z-index: 1500;
+    }
+
     .workspace > stack-extension {
         position: absolute;
         inset: 60px 10px 10px auto;
@@ -74,6 +80,16 @@ const baseStyles = css`
         align-items: flex-end;
         width: 62px;
         pointer-events: none;
+    }
+
+    @container automaton (width < 800px) {
+        .workspace[data-mode="simulate"] > stack-extension {
+            bottom: calc(20px + var(--sl-input-height-large));
+        }
+
+        .workspace:has(> stack-extension) #simulatorMenu {
+            --simulator-feedback-end: 68px;
+        }
     }
 
     @container automaton (width >= 800px) {
@@ -114,10 +130,35 @@ const baseStyles = css`
 
     .mode_switch__error_indicator {
         position: absolute;
-        bottom: -5px;
-        right: -7px;
-        color: var(--sl-color-danger-600);
-        z-index: 1000;
+        bottom: -8px;
+        right: -6px;
+        display: grid;
+        place-items: center;
+        padding: 4px;
+        border: 0;
+        background: transparent;
+        color: var(--sl-color-warning-600);
+        cursor: help;
+    }
+
+    .mode_switch__error_indicator span {
+        display: flex;
+    }
+
+    .mode_switch__warnings {
+        --max-width: min(18rem, 85cqw);
+    }
+
+    .mode_switch__warnings ul {
+        margin: 0;
+        padding-inline-start: 1em;
+        max-height: 120px;
+        overflow: auto;
+        overflow-wrap: anywhere;
+    }
+
+    .mode_switch__warnings::part(body) {
+        pointer-events: auto;
     }
 
     .mode_switch__buttons {

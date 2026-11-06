@@ -408,8 +408,23 @@ export class AutomatonComponent extends LitElementWw {
 			_changedProperties.has("nodes") ||
 			_changedProperties.has("transitions")
 		) {
-			this.automaton.updateAutomaton(this.nodes, this.transitions);
+			const nodes = _changedProperties.has("nodes") ? this.nodes : [];
+			const transitions = _changedProperties.has("transitions") ? this.transitions : [];
+			const previousNodes = _changedProperties.get("nodes") as Node[] | undefined;
+			const previousTransitions = _changedProperties.get("transitions") as Transition[] | undefined;
+
+			const nodeIds = new Set(nodes.map(node => node.id));
+			for (const node of previousNodes ?? []) {
+				if (!nodeIds.has(node.id)) this.automaton.removeNode(node.id);
+			}
+			const transitionIds = new Set(transitions.map(transition => transition.id));
+			for (const transition of previousTransitions ?? []) {
+				if (!transitionIds.has(transition.id)) this.automaton.removeTransition(transition.id);
+			}
+
+			this.automaton.updateAutomaton(nodes, transitions);
 			if (this._graph) this._graph.updateGhostNodePosition();
+			this._graph?.requestUpdate();
 		}
 
 		if (this.automaton.extension) {
@@ -448,7 +463,7 @@ export class AutomatonComponent extends LitElementWw {
 	public render(): TemplateResult {
 		return html`
 			<div class=${this._topMenuCollapsed ? "editor editor--compact" : "editor"}>
-				<div class="workspace">
+				<div class="workspace" data-mode=${this.mode}>
 					<div class="graph">
 						${this._helpOverlay && !this._topMenuCollapsed ? this.renderHelpOverlay() : ""}
 						<div id="graphCanvas"></div>
@@ -461,15 +476,13 @@ export class AutomatonComponent extends LitElementWw {
 								display: this.mode === "edit" ? "flex" : "none",
 							})}
 						></webwriter-automaton-toolmenu>
+						<webwriter-automaton-simulatormenu
+							id="simulatorMenu"
+							?hidden=${this.mode !== "simulate" || this._graph?.errors.length !== 0}
+						></webwriter-automaton-simulatormenu>
 					</div>
 					${guard([this.automaton], () => this.automaton.extension)}
 				</div>
-				<webwriter-automaton-simulatormenu
-					id="simulatorMenu"
-					style=${styleMap({
-						display: this.mode === "simulate" ? "block" : "none",
-					})}
-				></webwriter-automaton-simulatormenu>
 				${this._helpOverlay && this._topMenuCollapsed ? this.renderCompactHelp() : ""}
 			</div>
 		`;
@@ -606,7 +619,7 @@ export class AutomatonComponent extends LitElementWw {
 					<button
 						type="button"
 						aria-pressed=${this.mode === "simulate"}
-						?disabled=${!this.allowedModes.includes("simulate")}
+						?disabled=${!this.canSimulate()}
 						@click=${() => { this.mode = "simulate"; }}
 					>
 						<span aria-hidden="true">${biBoxes}</span>
@@ -614,22 +627,34 @@ export class AutomatonComponent extends LitElementWw {
 					</button>
 				</div>
 			</sl-tooltip>
-			<div
-				class="mode_switch__error_indicator"
-				style=${this._graph?.errors.length > 0
-					? "display: block"
-					: "display: none"}
-			>
-				${biExclamationTriangle}
-			</div>
+			${this.showHelp === "true" && this._graph?.errors.length ? html`
+				<sl-tooltip class="mode_switch__warnings" placement="bottom-end">
+					<button type="button" class="mode_switch__error_indicator" aria-label=${msg("Warnings")} contenteditable="false">
+						<span aria-hidden="true">${biExclamationTriangle}</span>
+					</button>
+					<ul slot="content">
+						${this._graph.errors.map(error => html`
+							<li>${error.node ? html`<b>${error.node.label}:</b> ` : ""}${error.message}</li>
+						`)}
+					</ul>
+				</sl-tooltip>
+			` : ""}
 		</div>`;
 	}
 
 	/**
 	 * Toggles the mode between 'edit' and 'simulate'.
 	 */
+	private canSimulate() {
+		return this.allowedModes.includes("simulate") && this._graph?.errors.length === 0;
+	}
+
 	private toggleMode() {
-		this.mode = this.mode === "edit" ? "simulate" : "edit";
+		if (this.mode === "edit") {
+			if (this.canSimulate()) this.mode = "simulate";
+		} else if (this.allowedModes.includes("edit")) {
+			this.mode = "edit";
+		}
 	}
 
 	/**

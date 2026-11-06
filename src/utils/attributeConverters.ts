@@ -51,7 +51,7 @@ export const ATTRIBUTE_CONVERTERS = {
 			return value
 				.split(";")
 				.map((nodeString) => {
-					const node: Partial<Node> = {};
+					const node: Partial<Node> = { initial: false, final: false };
 					let remaining = nodeString.trim();
 
 					// Parse initial and final flags

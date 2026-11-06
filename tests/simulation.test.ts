@@ -158,6 +158,52 @@ describe("Simulation Tests", () => {
 	});
 
 	describe("Responsive layout", () => {
+		it("explains invalid graphs and enables simulation once they are valid", async () => {
+			const widget = document.createElement("webwriter-automaton") as AutomatonComponent;
+			document.body.append(widget);
+			await widget.updateComplete;
+			await widget.updateComplete;
+			const root = widget.shadowRoot!;
+			const simulate = root.querySelector<HTMLButtonElement>(".mode_switch__buttons button:last-child")!;
+			const shortcut = () => widget.dispatchEvent(new KeyboardEvent("keydown", { key: "m", ctrlKey: true }));
+			assert.isTrue(simulate.disabled);
+			simulate.click();
+			shortcut();
+			assert.equal(widget.mode, "edit");
+
+			const warning = root.querySelector<SlTooltip>(".mode_switch__warnings")!;
+			const indicator = warning.querySelector("button")!.getBoundingClientRect();
+			const simulateBounds = simulate.getBoundingClientRect();
+			assert.isBelow(indicator.top, simulateBounds.bottom);
+			assert.isBelow(indicator.left, simulateBounds.right);
+			await warning.show();
+			assert.include(warning.querySelector("ul")!.textContent, "No initial state defined");
+			await warning.hide();
+
+			widget.setAttribute("nodes", "#0(0|0)");
+			widget.setAttribute("transitions", "0-0[]");
+			await widget.updateComplete;
+			assert.isTrue(simulate.disabled, "An invalid transition blocks simulation");
+			widget.setAttribute("transitions", "0-0[a]");
+			await widget.updateComplete;
+			assert.isFalse(simulate.disabled);
+			assert.isNull(root.querySelector(".mode_switch__warnings"));
+			shortcut();
+			await widget.updateComplete;
+			assert.equal(widget.mode, "simulate");
+
+			widget.setAttribute("nodes", "0(0|0)");
+			await widget.updateComplete;
+			assert.isTrue(simulate.disabled, "Removing the initial flag blocks simulation");
+			assert.isTrue(root.querySelector<HTMLElement>("#simulatorMenu")!.hidden);
+			widget.setAttribute("nodes", "#0(0|0)");
+			await widget.updateComplete;
+			assert.isFalse(simulate.disabled);
+			widget.removeAttribute("nodes");
+			await widget.updateComplete;
+			assert.isTrue(simulate.disabled, "Removing the graph blocks simulation again");
+		});
+
 		it("fits the compact menu, German help and mode buttons at 300 by 300 pixels", async () => {
 			const widget = await createConfiguredDFA();
 			widget.style.width = "300px";
@@ -258,9 +304,12 @@ describe("Simulation Tests", () => {
 		it("adapts the menus, graph and PDA stack to the widget width", async () => {
 			const widget = await createConfiguredPDA();
 			widget.style.height = "300px";
-			widget.mode = "simulate";
 			await widget.updateComplete;
 			const root = widget.shadowRoot!;
+			const plus = root.querySelector("#toolMenu")!.shadowRoot!.querySelector("sl-button")!;
+			const plusBounds = plus.getBoundingClientRect();
+			widget.mode = "simulate";
+			await widget.updateComplete;
 			const graph = root.querySelector("#graphCanvas")!;
 			const topMenu = root.querySelector("#topMenu")!.shadowRoot!;
 			const simulator = root.querySelector("#simulatorMenu")!.shadowRoot!;
@@ -285,12 +334,20 @@ describe("Simulation Tests", () => {
 				const input = simulator.querySelector("#wordInput")!.getBoundingClientRect();
 				const buttons = Array.from(simulator.querySelectorAll(".simulator_buttons"))
 					.find(group => group.getClientRects().length)!.getBoundingClientRect();
-				assert.equal(buttons.top >= input.bottom, compact, `${width}px simulator rows`);
+				assert.closeTo(input.top, buttons.top, 1, `${width}px single simulator row`);
+				assert.closeTo(input.top + input.height / 2, plusBounds.top + plusBounds.height / 2,
+					1, `${width}px simulator bar aligns with the add button`);
+				assert.isBelow(input.height, plusBounds.height, `${width}px simulator bar is shorter than the add button`);
+				assert.isAbove(input.width, 75, `${width}px word input has room`);
 				assert.isAtMost(buttons.right, widget.getBoundingClientRect().right, `${width}px playback controls fit`);
 				const canvas = graph.getBoundingClientRect();
 				const stackPanel = panel.getBoundingClientRect();
 				assert.closeTo(graph.querySelector("canvas")!.getBoundingClientRect().width, canvas.width, 1);
-				assert.isAtLeast(input.top, canvas.bottom, `${width}px input clears the canvas`);
+				assert.isBelow(input.top, canvas.bottom, `${width}px simulator overlays the canvas`);
+				assert.isAtMost(input.bottom, canvas.bottom);
+				if (width < 800) {
+					assert.isAtMost(stackPanel.bottom, input.top, `${width}px stack clears the simulator bar`);
+				}
 				assert.equal(stackPanel.left >= canvas.right, width >= 800, `${width}px stack docking`);
 				assert.equal(getComputedStyle(toggle).display !== "none", compact, `${width}px stack toggle`);
 				assert.equal(getComputedStyle(items()).display === "none", compact, `${width}px stack visibility`);
