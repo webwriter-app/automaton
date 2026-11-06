@@ -184,7 +184,7 @@ describe("Simulation Tests", () => {
 			assert.equal(getComputedStyle(canvas).cursor, "none");
 			const preview = network as unknown as {
 				manipulation: { temporaryIds: { nodes: string[]; edges: string[] } };
-				body: { edges: Record<string, {
+				body: { nodes: Record<string, { x: number; y: number; options: { opacity: number } }>; edges: Record<string, {
 					toId: number | string;
 					hover: boolean;
 					options: { label: string; hidden: boolean; smooth: { roundness: number }; color: { opacity: number } };
@@ -205,6 +205,13 @@ describe("Simulation Tests", () => {
 			assert.equal(preview.body.edges[edgeId].options.label, "a");
 			assert.equal(preview.body.edges[edgeId].options.smooth.roundness, 0);
 			assert.isBelow(preview.body.edges[edgeId].options.color.opacity, 1);
+			const besideTarget = { x: target.x + 6, y: target.y };
+			hover(besideTarget);
+			assert.equal(preview.body.edges[edgeId].toId, 1, "The preview stays snapped");
+			const endpoint = preview.body.nodes[endpointId];
+			assert.isAbove(endpoint.options.opacity, 0, "The blue cursor remains visible while snapped");
+			assert.closeTo(endpoint.x, network.DOMtoCanvas(besideTarget).x, 1);
+			assert.closeTo(endpoint.y, network.DOMtoCanvas(besideTarget).y, 1);
 			assert.isEmpty(widget.transitions, "Hovering leaves the authored graph unchanged");
 			hover({ x: target.x, y: target.y + 80 });
 			assert.equal(preview.body.edges[edgeId].toId, endpointId, "Leaving the node restores the free endpoint");
@@ -277,6 +284,35 @@ describe("Simulation Tests", () => {
 			widget.mode = "simulate";
 			await widget.updateComplete;
 			assert.isEmpty(visiblePoints());
+		});
+
+		it("adds and selects a node at the center of the visible canvas from the plus button", async () => {
+			const widget = document.createElement("webwriter-automaton") as AutomatonComponent;
+			document.body.append(widget);
+			await widget.updateComplete;
+			await widget.updateComplete;
+			const { network } = (widget as unknown as { graph: Graph }).graph;
+			const root = widget.shadowRoot!;
+			const canvas = root.querySelector<HTMLElement>("#graphCanvas")!;
+			const plus = root.querySelector("#toolMenu")!.shadowRoot!.querySelector<HTMLElement>("sl-button")!;
+			network.moveTo({ position: { x: 130, y: -85 }, scale: 1.7 });
+			const center = network.DOMtoCanvas({ x: canvas.clientWidth / 2, y: canvas.clientHeight / 2 });
+			plus.click();
+			await widget.updateComplete;
+			const [selected] = network.getSelectedNodes();
+			const node = widget.automaton.getNode(Number(selected));
+			assert.exists(node);
+			assert.closeTo(node!.x!, center.x, 1);
+			assert.closeTo(node!.y!, center.y, 1);
+			const bar = root.querySelector(".editing-bar")!.getBoundingClientRect();
+			const button = plus.getBoundingClientRect();
+			assert.closeTo(bar.height, button.height, 1);
+			assert.closeTo(bar.bottom, button.bottom, 1);
+
+			widget.permissions = "377";
+			await widget.updateComplete;
+			plus.click();
+			assert.lengthOf(widget.automaton.nodes.getIds().filter(id => id !== -1), 1, "Insertion observes current permissions");
 		});
 
 		it("edits the selected node or transition in the bottom bar", async () => {
@@ -403,14 +439,14 @@ describe("Simulation Tests", () => {
 			shortcut();
 			assert.equal(widget.mode, "edit");
 
-			const warning = root.querySelector<SlTooltip>(".mode_switch__warnings")!;
-			const indicator = warning.querySelector("button")!.getBoundingClientRect();
+			const indicator = root.querySelector<HTMLButtonElement>(".mode_switch__error_indicator")!;
+			const indicatorBounds = indicator.getBoundingClientRect();
 			const simulateBounds = simulate.getBoundingClientRect();
-			assert.isBelow(indicator.top, simulateBounds.bottom);
-			assert.isBelow(indicator.left, simulateBounds.right);
-			await warning.show();
-			assert.include(warning.querySelector("ul")!.textContent, "No initial state defined");
-			await warning.hide();
+			assert.isBelow(indicatorBounds.top, simulateBounds.bottom);
+			assert.isBelow(indicatorBounds.left, simulateBounds.right);
+			const warning = root.querySelector<HTMLElement>(".warning-panel--all")!;
+			assert.equal(indicator.getAttribute("aria-describedby"), warning.id);
+			assert.include(warning.textContent, "No initial state defined");
 
 			widget.setAttribute("nodes", "#0(0|0)");
 			widget.setAttribute("transitions", "0-0[]");
@@ -419,7 +455,7 @@ describe("Simulation Tests", () => {
 			widget.setAttribute("transitions", "0-0[a]");
 			await widget.updateComplete;
 			assert.isFalse(simulate.disabled);
-			assert.isNull(root.querySelector(".mode_switch__warnings"));
+			assert.isNull(root.querySelector(".warning-panel--all"));
 			shortcut();
 			await widget.updateComplete;
 			assert.equal(widget.mode, "simulate");

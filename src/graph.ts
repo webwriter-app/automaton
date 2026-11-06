@@ -3,9 +3,7 @@ import { Network, Position, type EdgeOptions } from 'vis-network';
 import { EditingBar, type EditableSelection } from './components/EditingBar';
 import { ToolMenu } from './components/ToolMenu';
 import { DRAW } from './utils/draw';
-import { html, TemplateResult } from 'lit';
-import { styleMap } from 'lit/directives/style-map.js';
-import { biExclamationOctagon } from './styles/icons';
+import { html } from 'lit';
 import { COLORS } from './utils/colors';
 import { AutomatonComponent } from './index';
 import { AutomatonError } from '@u/errors';
@@ -17,6 +15,8 @@ type CanvasGesture = {
     event: { pointerType?: string; preventDefault(): void };
 };
 
+const MIN_NODE_DIAMETER = 40;
+const NODE_MARGIN = 5;
 const TRANSITION_CURVE = { enabled: true, type: 'curvedCW', forceDirection: 'none', roundness: 0 };
 const POINTER_CURVE = { enabled: true, type: 'continuous', roundness: 0.5 };
 const PREVIEW_OPACITY = 0.55;
@@ -62,25 +62,21 @@ export class Graph {
 
     private _tm: ToolMenu;
 
-    private _hovered!: Node | Transition | null;
+    private hoveredNodeId?: number;
+    public get nodeWarnings() {
+        return this.hoveredNodeId === undefined ? [] : this._errors.filter(error => error.node?.id === this.hoveredNodeId);
+    }
 
     private _errors: AutomatonError[] = [];
     public get errors(): AutomatonError[] {
         return this._errors;
     }
 
-    private _currentError!: {
-        offset: {
-            x: number;
-            y: number;
-        };
-        message: TemplateResult<1>;
-    } | null;
-
     private _lastPosition: Position = { x: 0, y: 0 };
     private _connection?: { from: number; side: ConnectionSide };
     private _connectionDrag?: { id: number; start: Position; moved: boolean };
 
+    private nodeDropPreview?: Position;
     private _previewPlan?: ReturnType<ToolMenu['planTransition']>;
 
     public toggleMode: () => void = () => {};
@@ -89,10 +85,6 @@ export class Graph {
     public set requestUpdate(fn: () => void) {
         this._requestUpdate = () => {
             this._errors = this._a.checkAutomaton();
-            if (!this._errors.some((e) => e.node?.id === this._hovered?.id)) {
-                this._currentError = null;
-            }
-
             fn();
             this.displayErrors();
         };
@@ -118,8 +110,8 @@ export class Graph {
                     hover: COLORS.blue,
                     highlight: COLORS.blue,
                 },
-                heightConstraint: { minimum: 40 },
-                widthConstraint: { minimum: 40 },
+                heightConstraint: { minimum: MIN_NODE_DIAMETER },
+                widthConstraint: { minimum: MIN_NODE_DIAMETER },
             },
             edges: {
                 color: 'black',
@@ -146,6 +138,7 @@ export class Graph {
             if (this._connection) this.moveConnectionPreview(event);
         });
         canvas.addEventListener('pointerleave', () => {
+            this.hideNodeWarning();
             if (!this._connection || this._connectionDrag) return;
             this.previewConnectionTarget({});
             this._n.redraw();
@@ -165,7 +158,10 @@ export class Graph {
      */
     public setInteractive(interactive: boolean): void {
         this._interactive = interactive;
-        if (!interactive) this.cancelConnection();
+        if (!interactive) {
+            this.cancelConnection();
+            this._tm.cancelNodeDrag();
+        }
         if (this._interactive) {
             this._n.setOptions({
                 interaction: {
@@ -192,6 +188,8 @@ export class Graph {
      */
     public setAutomaton(automaton: Automaton): void {
         this.cancelConnection();
+        this._tm.cancelNodeDrag();
+        this.hoveredNodeId = undefined;
         this._a = automaton;
         this._n.setData(this._a.getGraphData());
         this._a.redrawNodes();
@@ -202,17 +200,77 @@ export class Graph {
         return this._interactive && this._ac.mode === 'edit' && this._tm.mode === 'idle';
     }
 
+    public get canAddNode() {
+        return this._interactive && this._ac.mode === 'edit' && this._ac.settings.permissions.node.add;
+    }
+
     private addNodeAt({ pointer }: CanvasGesture): boolean {
-        if (!this.canUseCanvasTools || !this._ac.settings.permissions.node.add || this._connection ||
+        if (!this.canUseCanvasTools || !this.canAddNode || this._connection ||
             this._n.getNodeAt(pointer.DOM) !== undefined || this._n.getEdgeAt(pointer.DOM) !== undefined) return false;
 
+        this.insertAndSelectNode(pointer.canvas);
+        return true;
+    }
+
+    public insertNodeFromButton(client?: Position) {
+        if (!this.canAddNode) return;
+        const point = client ? this.nodeDropPoint(client) : this._n.DOMtoCanvas({
+            x: this.canvas.clientWidth / 2,
+            y: this.canvas.clientHeight / 2,
+        });
+        if (!point) return;
+
+        if (this._tm.mode !== 'idle') {
+            this._tm.mode = 'idle';
+            this._n.disableEditMode();
+        }
+        this.cancelConnection();
+        this.insertAndSelectNode(point);
+    }
+
+    private insertAndSelectNode(point: Position) {
         const node = this._tm.insertNode(
-            { x: Math.round(pointer.canvas.x), y: Math.round(pointer.canvas.y) },
+            { x: Math.round(point.x), y: Math.round(point.y) },
             node => this._a.addNode(node),
         );
         this._n.selectNodes([node.id]);
         this._requestUpdate();
-        return true;
+    }
+
+    private nodeDropPoint(client: Position) {
+        const bounds = this.canvas.getBoundingClientRect();
+        if (client.x < bounds.left || client.x >= bounds.right ||
+            client.y < bounds.top || client.y >= bounds.bottom) return undefined;
+        return this._n.DOMtoCanvas({
+            x: (client.x - bounds.left) * this.canvas.clientWidth / bounds.width,
+            y: (client.y - bounds.top) * this.canvas.clientHeight / bounds.height,
+        });
+    }
+
+    public previewNodeDrop(client?: Position) {
+        const previous = this.nodeDropPreview;
+        this.nodeDropPreview = client && this.canAddNode ? this.nodeDropPoint(client) : undefined;
+        if (!previous && !this.nodeDropPreview) return;
+        this.canvas.classList.toggle('node-drop-preview', !!this.nodeDropPreview);
+        this._n.redraw();
+    }
+
+    private drawNodeDropPreview(ctx: CanvasRenderingContext2D) {
+        if (!this.nodeDropPreview || !this.canAddNode) return;
+        ctx.save();
+        ctx.globalAlpha = 0.75;
+        DRAW.ctx.circle({
+            ctx,
+            ...this.nodeDropPreview,
+            label: this._a.getNewNodeLabel(),
+            style: {
+                size: MIN_NODE_DIAMETER / 2 + NODE_MARGIN,
+                color: COLORS.blue.background,
+                borderColor: COLORS.blue.border,
+                borderWidth: 1,
+            },
+        }).drawNode();
+        ctx.restore();
     }
 
     private get selectedNodeId(): number | undefined {
@@ -312,7 +370,7 @@ export class Graph {
                 font: { color: 'rgba(52, 52, 52, 0.55)' },
             });
         }
-        this.previewBody.nodes[endpointId].options.opacity = plan ? 0 : PREVIEW_OPACITY;
+        this.previewBody.nodes[endpointId].options.opacity = PREVIEW_OPACITY;
     }
 
     private stylePreviewedEdges(): (() => void) | undefined {
@@ -514,8 +572,9 @@ export class Graph {
         // Highlight or bend existing arrows for this frame without changing their data.
         let restorePreview: (() => void) | undefined;
         this._n.on('beforeDrawing', () => { restorePreview = this.stylePreviewedEdges(); });
-        this._n.on('afterDrawing', () => {
+        this._n.on('afterDrawing', ctx => {
             restorePreview?.();
+            this.drawNodeDropPreview(ctx);
             if (!this.connectionPreview.temporaryIds.edges.length) this._previewPlan = undefined;
             this.positionConnectionPoints();
         });
@@ -525,37 +584,17 @@ export class Graph {
             if (gesture.event.pointerType === 'touch') this.addNodeAt(gesture);
         });
         this._n.on('select', () => this._ac.requestUpdate());
-        this._n.on('hoverNode', (e: any) => {
-            const nodeId = e.node as number;
-            if (nodeId === Graph.initialGhostNode.id) return;
-            
-            this._hovered = this._a.getNode(nodeId);
-
-            if (this._ac.showHelp == 'false') return;
-
-            if (this._errors.some((e) => e.node?.id === this._hovered?.id)) {
-                this._currentError = {
-                    offset: this._n.canvasToDOM({
-                        x: (this._hovered?.x as number) + 15,
-                        y: (this._hovered?.y as number) + 15,
-                    }),
-                    message: this._errors.filter((e) => e.node?.id === this._hovered?.id)?.reduce(
-                        (acc, error) => html`${acc}${error.message}<br/>`,
-                        html``
-                    ) || '',
-                };
+        this._n.on('hoverNode', ({ node }: { node: number }) => {
+            if (node !== Graph.initialGhostNode.id && this._errors.some(error => error.node?.id === node)) {
+                this.hoveredNodeId = node;
+                this._ac.requestUpdate();
             }
         });
-        this._n.on('blurNode', () => {
-            this._hovered = null;
-            this._currentError = null;
-        });
+        this._n.on('blurNode', () => this.hideNodeWarning());
         this._n.on('dragging', ({ nodes }: { nodes: number[] }) => {
             if (nodes.length) this.updateGhostNodePosition();
         });
-        this._n.on('dragStart', () => {
-            this._currentError = null;
-        });
+        this._n.on('dragStart', () => this.hideNodeWarning());
         this._n.on('dragEnd', () => {
             this._n.storePositions();
             this._lastPosition = this._n.getViewPosition();
@@ -601,34 +640,31 @@ export class Graph {
             if (e.key === 'Escape') {
                 e.preventDefault();
                 this.cancelConnection();
+                this._tm.cancelNodeDrag();
                 this._n.unselectAll();
                 this._a.clearHighlights();
                 this._ac.requestUpdate();
                 this._tm.mode = 'idle';
             }
 
-            if (e.key === 'q' && e.ctrlKey && !e.shiftKey) {
+            if (e.key === 'q' && e.ctrlKey && !e.shiftKey && this.canAddNode) {
                 e.preventDefault();
                 this._tm.addNode();
-                this._tm.visible = true;
             }
 
             if (e.key === 'Q' && e.ctrlKey && e.shiftKey) {
                 e.preventDefault();
                 this._tm.lockNodeAdd = !this._tm.lockNodeAdd;
-                this._tm.visible = true;
             }
 
-            if (e.key === 'e' && e.ctrlKey && !e.shiftKey) {
+            if (e.key === 'e' && e.ctrlKey && !e.shiftKey && this._ac.settings.permissions.edge.add) {
                 e.preventDefault();
                 this._tm.addEdge();
-                this._tm.visible = true;
             }
 
             if (e.key === 'E' && e.ctrlKey && e.shiftKey) {
                 e.preventDefault();
                 this._tm.lockEdgeAdd = !this._tm.lockEdgeAdd;
-                this._tm.visible = true;
             }
 
             if (selected?.type === 'node' && this._ac.settings.permissions.node.change) {
@@ -711,21 +747,9 @@ export class Graph {
         this._n.redraw();
     }
 
-    /**
-     * Renders the error display.
-     * @returns The HTML representation of the error display.
-     */
-    public renderErrorDisplay() {
-        return html`<sl-alert
-            class="errordisplay"
-            variant="warning"
-            style=${styleMap({
-                display: this._currentError ? 'block' : 'none',
-                left: `${this._currentError?.offset.x}px`,
-                top: `${this._currentError?.offset.y}px`,
-            })}
-            open
-            >${biExclamationOctagon} ${this._currentError?.message}</sl-alert
-        >`;
+    private hideNodeWarning() {
+        if (this.hoveredNodeId === undefined) return;
+        this.hoveredNodeId = undefined;
+        this._ac.requestUpdate();
     }
 }

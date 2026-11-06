@@ -1,12 +1,9 @@
-import { PropertyValueMap, html } from 'lit';
+import { PropertyValueMap, html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
-import { biLock, biNodePlus, biPlus, biShare, biUnlock } from '../styles/icons';
+import { biPlus } from '../styles/icons';
 
 import '@shoelace-style/shoelace/dist/themes/light.css';
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button.component.js';
-import SlBadge from '@shoelace-style/shoelace/dist/components/badge/badge.component.js';
-import SlTooltip from '@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js';
 import { Graph } from '../graph';
 import type { Node, Transition } from '../automata';
 import type { Position } from 'vis-network';
@@ -17,11 +14,7 @@ import { localized, msg } from '@lit/localize';
 @customElement('webwriter-automaton-toolmenu')
 @localized()
 export class ToolMenu extends LitElementWw {
-    @property({ type: Boolean, attribute: false })
-    private accessor _visible = false;
-    public set visible(visible: boolean) {
-        this._visible = visible;
-    }
+    private nodeDrag?: { pointerId: number; start: Position; moved: boolean };
 
     @property({ type: String, attribute: false })
     private accessor _mode: 'idle' | 'addNode' | 'addEdge' = 'idle';
@@ -63,12 +56,12 @@ export class ToolMenu extends LitElementWw {
     public static get scopedElements() {
         return {
             'sl-button': SlButton,
-            'sl-badge': SlBadge,
-            'sl-tooltip': SlTooltip,
         };
     }
 
     protected updated(changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
+        if (!this._graph) return;
+        if (this.nodeDrag && !this._graph.canAddNode) this.cancelNodeDrag();
         if (!changedProperties.has('_mode')) return;
 
         if (this._mode === 'addNode') {
@@ -83,64 +76,71 @@ export class ToolMenu extends LitElementWw {
     }
 
     render() {
-        return html` <div
-            class="toolmenu"
-            style=${styleMap({
-                display:
-                    this._graph.component.settings.permissions.node.add ||
-                    this._graph.component.settings.permissions.edge.add
-                        ? 'flex'
-                        : 'none',
-            })}
-        >
-            <sl-button class="toolmenu__button" @click=${this.toggleToolbar} circle size="large">${biPlus}</sl-button>
-            <div class="toolmenu__buttons" style=${styleMap({ display: this._visible ? 'flex' : 'none' })}>
-                <sl-tooltip content=${msg("Add node (Ctrl+Q)")} placement="right">
-                    <sl-button
-                        class="toolmenu__button"
-                        @click=${this.addNode}
-                        variant=${this._mode === 'addNode' ? 'primary' : 'default'}
-                        circle
-                        style=${styleMap({
-                            display: this._graph.component.settings.permissions.node.add ? 'block' : 'none',
-                        })}
-                        >${biNodePlus}
-                        <sl-button
-                            size="small"
-                            variant=${this._lockNodeAdd ? 'primary' : 'default'}
-                            circle
-                            @click=${(e: any) => {
-                                e.stopPropagation();
-                                this._lockNodeAdd = !this._lockNodeAdd;
-                            }}
-                            >${this._lockNodeAdd ? biLock : biUnlock}</sl-button
-                        >
-                    </sl-button>
-                </sl-tooltip>
-                <sl-tooltip content=${msg("Add edge (Ctrl+E)")} placement="right">
-                    <sl-button
-                        class="toolmenu__button"
-                        @click=${this.addEdge}
-                        variant=${this._mode === 'addEdge' ? 'primary' : 'default'}
-                        circle
-                        style=${styleMap({
-                            display: this._graph.component.settings.permissions.edge.add ? 'block' : 'none',
-                        })}
-                        >${biShare}
-                        <sl-button
-                            size="small"
-                            variant=${this._lockEdgeAdd ? 'primary' : 'default'}
-                            circle
-                            @click=${(e: any) => {
-                                e.stopPropagation();
-                                this._lockEdgeAdd = !this._lockEdgeAdd;
-                            }}
-                            >${this._lockEdgeAdd ? biLock : biUnlock}</sl-button
-                        >
-                    </sl-button>
-                </sl-tooltip>
+        if (!this._graph?.component.settings.permissions.node.add) return nothing;
+
+        const label = msg("Add node");
+        return html`
+            <div class="toolmenu" contenteditable="false">
+                <sl-button circle size="large" title=${label}
+                    @pointerdown=${this.startNodeDrag}
+                    @pointermove=${this.moveNodeDrag}
+                    @pointerup=${this.finishNodeDrag}
+                    @pointercancel=${this.interruptNodeDrag}
+                    @lostpointercapture=${this.interruptNodeDrag}
+                    @click=${(event: MouseEvent) => {
+                        // Pointer activation is handled on release. Keyboard activation still clicks the button.
+                        if (event.detail === 0) this._graph.insertNodeFromButton();
+                    }}>${biPlus}</sl-button>
             </div>
-        </div>`;
+        `;
+    }
+
+    disconnectedCallback() {
+        this.cancelNodeDrag();
+        super.disconnectedCallback();
+    }
+
+    private startNodeDrag(event: PointerEvent) {
+        if (event.button !== 0 || !event.isPrimary || !this._graph.canAddNode) return;
+        this.nodeDrag = {
+            pointerId: event.pointerId,
+            start: { x: event.clientX, y: event.clientY },
+            moved: false,
+        };
+        (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
+    }
+
+    private moveNodeDrag(event: PointerEvent) {
+        const drag = this.nodeDrag;
+        if (drag?.pointerId !== event.pointerId) return;
+        drag.moved ||= Math.hypot(event.clientX - drag.start.x, event.clientY - drag.start.y) >= 5;
+        if (drag.moved) this._graph.previewNodeDrop(this.dropPoint(event));
+    }
+
+    private finishNodeDrag(event: PointerEvent) {
+        const drag = this.nodeDrag;
+        if (drag?.pointerId !== event.pointerId) return;
+        const point = this.dropPoint(event);
+        this.cancelNodeDrag();
+        if (drag.moved && point) this._graph.insertNodeFromButton(point);
+        if (!drag.moved && !point) this._graph.insertNodeFromButton();
+    }
+
+    private dropPoint(event: PointerEvent): Position | undefined {
+        const { left, right, top, bottom } = (event.currentTarget as HTMLElement).getBoundingClientRect();
+        const { clientX: x, clientY: y } = event;
+        if (x < left || x >= right || y < top || y >= bottom) return { x, y };
+        return undefined;
+    }
+
+    private interruptNodeDrag(event: PointerEvent) {
+        if (this.nodeDrag?.pointerId === event.pointerId) this.cancelNodeDrag();
+    }
+
+    public cancelNodeDrag() {
+        if (!this.nodeDrag) return;
+        this.nodeDrag = undefined;
+        this._graph.previewNodeDrop();
     }
 
     public insertNode(position: Position, add: (node: Node) => void) {
@@ -221,11 +221,6 @@ export class ToolMenu extends LitElementWw {
         this._graph.network.unselectAll();
         this._graph.network.redraw();
         this._graph.requestUpdate();
-    }
-
-    private toggleToolbar() {
-        this._visible = !this._visible;
-        this.requestUpdate();
     }
 
     public addNode() {

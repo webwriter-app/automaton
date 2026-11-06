@@ -79,6 +79,10 @@ const baseStyles = css`
         pointer-events: none;
     }
 
+    .node-drop-preview + .empty-canvas-hint {
+        visibility: hidden;
+    }
+
     .connection-points {
         position: absolute;
         inset: 0;
@@ -138,7 +142,7 @@ const baseStyles = css`
             bottom: calc(20px + var(--sl-input-height-large));
         }
 
-        .workspace:has(> .editing-bar) > stack-extension {
+        .workspace:has(.editing-bar) > stack-extension {
             bottom: 66px;
         }
 
@@ -156,7 +160,7 @@ const baseStyles = css`
             padding: 10px;
         }
 
-        .workspace:has(> .editing-bar) > stack-extension {
+        .workspace:has(.editing-bar) > stack-extension {
             margin-bottom: 56px;
         }
     }
@@ -182,11 +186,6 @@ const baseStyles = css`
         }
     }
 
-    .errordisplay {
-        position: absolute;
-        display: none;
-    }
-
     .mode_switch__error_indicator {
         position: absolute;
         bottom: -8px;
@@ -202,22 +201,6 @@ const baseStyles = css`
 
     .mode_switch__error_indicator span {
         display: flex;
-    }
-
-    .mode_switch__warnings {
-        --max-width: min(18rem, 85cqw);
-    }
-
-    .mode_switch__warnings ul {
-        margin: 0;
-        padding-inline-start: 1em;
-        max-height: 120px;
-        overflow: auto;
-        overflow-wrap: anywhere;
-    }
-
-    .mode_switch__warnings::part(body) {
-        pointer-events: auto;
     }
 
     .mode_switch__buttons {

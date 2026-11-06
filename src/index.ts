@@ -258,7 +258,6 @@ export class AutomatonComponent extends LitElementWw {
 
 	private set helpOverlay(h: boolean) {
 		this._helpOverlay = h;
-		this.toolMenu.visible = h ? true : this.toolMenu.visible;
 	}
 
 	/** @internal */
@@ -478,7 +477,6 @@ export class AutomatonComponent extends LitElementWw {
 							` : ""}
 						${this._graph ? html`<div class="connection-points">${this._graph.renderConnectionPoints()}</div>` : ""}
 						${this.renderModeSwitch()}
-						${this._graph?.renderErrorDisplay()}
 						<webwriter-automaton-topmenu id="topMenu"></webwriter-automaton-topmenu>
 						<webwriter-automaton-toolmenu
 							id="toolMenu"
@@ -492,7 +490,10 @@ export class AutomatonComponent extends LitElementWw {
 						></webwriter-automaton-simulatormenu>
 					</div>
 					${guard([this.automaton], () => this.automaton.extension)}
-					${this._graph?.renderEditingBar()}
+					<div class="workspace-footer">
+						${this.renderWarnings()}
+						${this._graph?.renderEditingBar()}
+					</div>
 				</div>
 				${this._helpOverlay && this._topMenuCollapsed ? this.renderCompactHelp() : ""}
 			</div>
@@ -563,8 +564,8 @@ export class AutomatonComponent extends LitElementWw {
 					display: this.mode === "edit" ? "block" : "none",
 				})}
 			>
-				<sl-tag size="small" style="bottom: 77px;left: 80px;"
-					>${msg("Add Node by click")}</sl-tag
+				<sl-tag size="small" style="bottom: 26px;left: 70px;"
+					>${msg("Click or drag + to add a node")}</sl-tag
 				>
 				<sl-tag size="small" style="bottom: 128px;left: 80px;"
 					>${msg("Add Transition by drag and drop")}</sl-tag
@@ -594,7 +595,7 @@ export class AutomatonComponent extends LitElementWw {
 				<span>${msg("Mode Switch")}</span>
 				<span>${msg("Menu")}</span>
 				${this.mode === "edit" ? html`
-					<span>${msg("Add Node by click")}</span>
+					<span>${msg("Click or drag + to add a node")}</span>
 					<span>${msg("Add Transition by drag and drop")}</span>
 					<span>${msg("Select a node or transition to edit it")}</span>
 				` : html`
@@ -637,18 +638,31 @@ export class AutomatonComponent extends LitElementWw {
 				</div>
 			</sl-tooltip>
 			${this.showHelp === "true" && this._graph?.errors.length ? html`
-				<sl-tooltip class="mode_switch__warnings" placement="bottom-end">
-					<button type="button" class="mode_switch__error_indicator" aria-label=${msg("Warnings")} contenteditable="false">
-						<span aria-hidden="true">${biExclamationTriangle}</span>
-					</button>
-					<ul slot="content">
-						${this._graph.errors.map(error => html`
-							<li>${error.node ? html`<b>${error.node.label}:</b> ` : ""}${error.message}</li>
-						`)}
-					</ul>
-				</sl-tooltip>
+				<button type="button" class="mode_switch__error_indicator" aria-label=${msg("Warnings")}
+					aria-describedby="automaton-warnings" contenteditable="false">
+					<span aria-hidden="true">${biExclamationTriangle}</span>
+				</button>
 			` : ""}
 		</div>`;
+	}
+
+	private renderWarnings() {
+		if (this.showHelp !== "true" || !this._graph?.errors.length) return;
+		const { errors, nodeWarnings } = this._graph;
+		return html`
+			<sl-alert id="automaton-warnings" class="warning-panel warning-panel--all" variant="warning" open>
+				<ul>
+					${errors.map(error => html`
+						<li>${error.node ? html`<b>${error.node.label}:</b> ` : ""}${error.message}</li>
+					`)}
+				</ul>
+			</sl-alert>
+			${nodeWarnings.length ? html`
+				<sl-alert class="warning-panel warning-panel--node" variant="warning" open>
+					<ul>${nodeWarnings.map(error => html`<li>${error.message}</li>`)}</ul>
+				</sl-alert>
+			` : ""}
+		`;
 	}
 
 	/**

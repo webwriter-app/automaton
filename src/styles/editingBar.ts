@@ -1,16 +1,60 @@
 import { css } from 'lit';
 
 export const editingBarStyles = css`
-    .editing-bar {
+    .workspace-footer {
         position: absolute;
         inset: auto 10px 10px auto;
         z-index: 1500;
         display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: flex-end;
+        gap: 8px;
+        width: max-content;
+        max-width: calc(100% - 76px);
+        pointer-events: none;
+    }
+
+    .warning-panel {
+        width: max-content;
+        max-width: min(16rem, 100%);
+        font-family: var(--sl-font-sans, sans-serif);
+    }
+
+    .warning-panel--all {
+        display: none;
+        pointer-events: auto;
+    }
+
+    .workspace:has(.mode_switch__error_indicator:is(:hover, :focus)) .warning-panel--all {
+        display: block;
+    }
+
+    .workspace:has(.mode_switch__error_indicator:is(:hover, :focus)) .warning-panel--node {
+        display: none;
+    }
+
+    .warning-panel::part(message) {
+        padding: 8px 12px;
+    }
+
+    .warning-panel ul {
+        margin: 0;
+        padding-inline-start: 1em;
+        max-height: 110px;
+        overflow: auto;
+        overflow-wrap: anywhere;
+    }
+
+    .editing-bar {
+        pointer-events: auto;
+        min-width: 0;
+        display: flex;
         align-items: center;
         gap: 6px;
         box-sizing: border-box;
-        max-width: calc(100% - 76px);
-        min-height: var(--sl-input-height-large);
+        max-width: 100%;
+        height: var(--sl-input-height-large);
         padding: 4px 6px;
         border: 1px solid var(--sl-panel-border-color);
         border-radius: var(--sl-border-radius-medium);
@@ -86,6 +130,7 @@ export const editingBarStyles = css`
         gap: 6px;
         min-width: 0;
         overflow-x: auto;
+        max-height: 100%;
         scrollbar-width: thin;
         padding: 3px;
     }
