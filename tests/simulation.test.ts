@@ -166,8 +166,8 @@ describe("Simulation Tests", () => {
 			assert.equal(widget.getBoundingClientRect().height, 300);
 			widget.style.height = "640px";
 			assert.equal(widget.getBoundingClientRect().height, 640);
-			widget.style.height = "1200px";
-			assert.equal(widget.getBoundingClientRect().height, 900);
+			widget.style.height = "1400px";
+			assert.equal(widget.getBoundingClientRect().height, 1200);
 		});
 
 		it("adapts the menus, graph and PDA stack to the widget width", async () => {

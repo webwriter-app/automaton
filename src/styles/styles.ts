@@ -9,7 +9,7 @@ const baseStyles = css`
         min-width: 300px;
         height: 500px;
         min-height: 300px;
-        max-height: 900px;
+        max-height: 1200px;
 
         user-select: none;
     }
