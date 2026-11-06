@@ -8,6 +8,8 @@ import SlButton from '@shoelace-style/shoelace/dist/components/button/button.com
 import SlBadge from '@shoelace-style/shoelace/dist/components/badge/badge.component.js';
 import SlTooltip from '@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js';
 import { Graph } from '../graph';
+import type { Node, Transition } from '../automata';
+import type { Position } from 'vis-network';
 import { toolMenuStyles } from '../styles/toolMenu';
 import { LitElementWw } from '@webwriter/lit';
 import { localized, msg } from '@lit/localize';
@@ -66,7 +68,9 @@ export class ToolMenu extends LitElementWw {
         };
     }
 
-    protected updated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
+    protected updated(changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
+        if (!changedProperties.has('_mode')) return;
+
         if (this._mode === 'addNode') {
             this._graph.network.addNodeMode();
         }
@@ -74,6 +78,8 @@ export class ToolMenu extends LitElementWw {
         if (this._mode === 'idle') {
             this._graph.network.disableEditMode();
         }
+
+        this._graph.network.redraw();
     }
 
     render() {
@@ -137,10 +143,20 @@ export class ToolMenu extends LitElementWw {
         </div>`;
     }
 
-    public handleNodeAdd(nodeData: any, callback: any) {
-        nodeData.id = this._graph.automaton.getNewNodeId();
-        nodeData.label = this._graph.automaton.getNewNodeLabel();
-        callback(nodeData);
+    public insertNode(position: Position, add: (node: Node) => void) {
+        const node = {
+            ...position,
+            id: this._graph.automaton.getNewNodeId(),
+            label: this._graph.automaton.getNewNodeLabel(),
+            initial: false,
+            final: false,
+        };
+        add(node);
+        return node;
+    }
+
+    public handleNodeAdd(nodeData: Position, callback: (node: Node) => void) {
+        this.insertNode(nodeData, callback);
         if (!this._lockNodeAdd) {
             this._mode = 'idle';
             this._graph.network.disableEditMode();
@@ -151,7 +167,10 @@ export class ToolMenu extends LitElementWw {
         this._graph.requestUpdate();
     }
 
-    public handleTransitionAdd(edgeData: any, callback: any) {
+    public insertTransition(
+        edgeData: Pick<Transition, 'from' | 'to'> & Partial<Transition>,
+        add: (transition: Transition) => void,
+    ) {
         if (edgeData.to === Graph.initialGhostNode.id || edgeData.from === Graph.initialGhostNode.id) return;
 
         const edge = this._graph.automaton.transitions.get().find((t) => {
@@ -173,7 +192,7 @@ export class ToolMenu extends LitElementWw {
                     smooth: { type: 'curvedCW', roundness: 0.2 },
                 });
             } else {
-                edgeData.smooth = { type: 'curvedCW', roundness: 0.2 };
+                edgeData.smooth = { enabled: true, type: 'curvedCW', roundness: 0.2 };
             }
         }
 
@@ -195,15 +214,26 @@ export class ToolMenu extends LitElementWw {
                 });
             }
         } else {
-            edgeData.id = this._graph.automaton.getNewTransitionId();
-            edgeData.symbols = [newSymbol];
-
+            const transition: Transition = {
+                ...edgeData,
+                id: this._graph.automaton.getNewTransitionId(),
+                label: '',
+                symbols: [newSymbol],
+            };
             if (this._graph.automaton.type === 'pda') {
-                edgeData.stackOperations = [{ operation: 'none', symbol: newSymbol }];
+                transition.stackOperations = [{ operation: 'none', symbol: newSymbol, condition: '' }];
             }
-            callback(edgeData);
+            add(transition);
         }
+    }
 
+    public handleTransitionAdd(
+        edgeData: Pick<Transition, 'from' | 'to'> & Partial<Transition>,
+        callback: (transition: Transition) => void,
+    ) {
+        if (edgeData.from === Graph.initialGhostNode.id || edgeData.to === Graph.initialGhostNode.id) return;
+
+        this.insertTransition(edgeData, callback);
         if (!this._lockEdgeAdd) {
             this._mode = 'idle';
             this._graph.network.disableEditMode();
@@ -221,6 +251,7 @@ export class ToolMenu extends LitElementWw {
     }
 
     public addNode() {
+        this._graph.cancelConnection();
         if (this._mode === 'addNode') {
             this._mode = 'idle';
             this._graph.network.disableEditMode();
@@ -232,6 +263,7 @@ export class ToolMenu extends LitElementWw {
     }
 
     public addEdge() {
+        this._graph.cancelConnection();
         if (this._mode === 'addEdge') {
             this._mode = 'idle';
             this._graph.network.disableEditMode();

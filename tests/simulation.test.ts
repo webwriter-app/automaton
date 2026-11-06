@@ -158,6 +158,52 @@ describe("Simulation Tests", () => {
 	});
 
 	describe("Responsive layout", () => {
+		it("shows the empty hint and connection points only when insertion is available", async () => {
+			const widget = document.createElement("webwriter-automaton") as AutomatonComponent;
+			document.body.append(widget);
+			await widget.updateComplete;
+			await widget.updateComplete;
+			const root = widget.shadowRoot!;
+			assert.equal(root.querySelector(".empty-canvas-hint")?.textContent, "Double click / long tap to add a node");
+			widget.permissions = "377";
+			await widget.updateComplete;
+			assert.isNull(root.querySelector(".empty-canvas-hint"));
+
+			widget.permissions = "777";
+			widget.setAttribute("nodes", "#0(0|0);%1(180|0)");
+			await widget.updateComplete;
+			assert.isNull(root.querySelector(".empty-canvas-hint"));
+			const { network } = (widget as unknown as { graph: Graph }).graph;
+			network.selectNodes([0]);
+			network.redraw();
+			const visiblePoints = () => [...root.querySelectorAll<HTMLElement>(".connection-point:not([hidden])")];
+			assert.deepEqual(visiblePoints().map(point => point.dataset.side), ["top", "left", "bottom", "right"]);
+			visiblePoints()[0].click();
+			assert.exists(root.querySelector(".connection-point--active"));
+			const canvas = root.querySelector("canvas")!;
+			assert.equal(getComputedStyle(canvas).cursor, "none");
+			widget.requestUpdate();
+			await widget.updateComplete;
+			network.redraw();
+			assert.equal(getComputedStyle(canvas).cursor, "none", "Rendering preserves the preview");
+			widget.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+			network.redraw();
+			assert.isEmpty(visiblePoints());
+			assert.notEqual(getComputedStyle(canvas).cursor, "none");
+			assert.isEmpty(widget.transitions);
+
+			network.selectNodes([0]);
+			widget.permissions = "737";
+			await widget.updateComplete;
+			assert.isEmpty(visiblePoints());
+			widget.permissions = "777";
+			await widget.updateComplete;
+			assert.lengthOf(visiblePoints(), 4);
+			widget.mode = "simulate";
+			await widget.updateComplete;
+			assert.isEmpty(visiblePoints());
+		});
+
 		it("explains invalid graphs and enables simulation once they are valid", async () => {
 			const widget = document.createElement("webwriter-automaton") as AutomatonComponent;
 			document.body.append(widget);

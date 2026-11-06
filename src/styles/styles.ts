@@ -67,6 +67,57 @@ const baseStyles = css`
         min-width: 0;
     }
 
+    .empty-canvas-hint {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding: 16px;
+        text-align: center;
+        font-family: var(--sl-font-sans, sans-serif);
+        color: var(--sl-color-neutral-500);
+        pointer-events: none;
+    }
+
+    .connection-points {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .connection-point {
+        position: absolute;
+        translate: -50% -50%;
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: transparent;
+        pointer-events: auto;
+        touch-action: none;
+        cursor: crosshair;
+    }
+
+    .connection-point::after {
+        content: "";
+        position: absolute;
+        inset: 7px;
+        border: 1px solid var(--sl-color-primary-600);
+        border-radius: 50%;
+        background: var(--sl-color-neutral-0);
+    }
+
+    .connection-point:is(:hover, :focus-visible, .connection-point--active)::after {
+        background: var(--sl-color-primary-600);
+    }
+
+    .connection-in-progress canvas,
+    .graph:has(> .connection-in-progress) .connection-point {
+        cursor: none;
+    }
+
     #simulatorMenu {
         position: absolute;
         inset: auto 10px calc(10px + (var(--sl-input-height-large) - var(--sl-input-height-medium)) / 2);

@@ -444,6 +444,13 @@ export class AutomatonComponent extends LitElementWw {
 		Logger.log("will update");
 	}
 
+	protected updated(changedProperties: PropertyValueMap<this>): void {
+		super.updated(changedProperties);
+		if (changedProperties.has("permissions") || changedProperties.has("mode")) {
+			this._graph?.network.redraw();
+		}
+	}
+
 	requestUpdate(
 		name?: PropertyKey | undefined,
 		oldValue?: unknown,
@@ -467,6 +474,11 @@ export class AutomatonComponent extends LitElementWw {
 					<div class="graph">
 						${this._helpOverlay && !this._topMenuCollapsed ? this.renderHelpOverlay() : ""}
 						<div id="graphCanvas"></div>
+						${this.mode === "edit" && this.settings.permissions.node.add &&
+							this.automaton.nodes.getIds().every(id => id === Graph.initialGhostNode.id) ? html`
+								<div class="empty-canvas-hint">${msg("Double click / long tap to add a node")}</div>
+							` : ""}
+						${this._graph ? html`<div class="connection-points">${this._graph.renderConnectionPoints()}</div>` : ""}
 						${this._graph?.contextMenu.render()} ${this.renderModeSwitch()}
 						${this._graph?.renderErrorDisplay()}
 						<webwriter-automaton-topmenu id="topMenu"></webwriter-automaton-topmenu>
