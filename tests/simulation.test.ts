@@ -155,9 +155,11 @@ describe("Simulation Tests", () => {
 	});
 
 	describe("Responsive layout", () => {
-		it("clamps authored height and defaults to 500 pixels", async () => {
+		it("enforces embedded size limits and defaults to 500 pixels tall", async () => {
 			const widget = await createConfiguredDFA();
 			await widget.updateComplete;
+			widget.style.width = "250px";
+			assert.equal(widget.getBoundingClientRect().width, 300);
 			assert.equal(widget.getBoundingClientRect().height, 500);
 			widget.style.height = "250px";
 			assert.equal(widget.getBoundingClientRect().height, 360);

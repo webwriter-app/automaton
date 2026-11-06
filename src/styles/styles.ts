@@ -6,6 +6,7 @@ const baseStyles = css`
         background: white;
         display: block;
         box-sizing: border-box;
+        min-width: 300px;
         height: 500px;
         min-height: 360px;
         max-height: 900px;
@@ -16,6 +17,7 @@ const baseStyles = css`
     :host(:fullscreen) {
         width: 100%;
         height: 100%;
+        min-width: 0;
         min-height: 0;
         max-height: none;
     }
