@@ -3,6 +3,7 @@ import { getMochaConfig } from "@webwriter/build/test";
 import { assert } from "chai";
 import "../src";
 import { AutomatonComponent } from "../src";
+import type { StackExtension } from "../src/automata/pda";
 
 mocha.setup(getMochaConfig());
 
@@ -150,6 +151,65 @@ describe("Simulation Tests", () => {
 			await widget.updateComplete;
 			assert.deepEqual(widget.selectedPermissions, ["stack-add"]);
 			assert.isFalse(widget.settings.permissions.node.add);
+		});
+	});
+
+	describe("Responsive layout", () => {
+		it("clamps authored height and defaults to 500 pixels", async () => {
+			const widget = await createConfiguredDFA();
+			await widget.updateComplete;
+			assert.equal(widget.getBoundingClientRect().height, 500);
+			widget.style.height = "250px";
+			assert.equal(widget.getBoundingClientRect().height, 360);
+			widget.style.height = "640px";
+			assert.equal(widget.getBoundingClientRect().height, 640);
+			widget.style.height = "1200px";
+			assert.equal(widget.getBoundingClientRect().height, 900);
+		});
+
+		it("adapts the menus, graph and PDA stack to the widget width", async () => {
+			const widget = await createConfiguredPDA();
+			widget.style.height = "360px";
+			widget.mode = "simulate";
+			await widget.updateComplete;
+			const root = widget.shadowRoot!;
+			const graph = root.querySelector("#graphCanvas")!;
+			const topMenu = root.querySelector("#topMenu")!.shadowRoot!;
+			const simulator = root.querySelector("#simulatorMenu")!.shadowRoot!;
+			const stack = root.querySelector<StackExtension>("stack-extension")!;
+			stack.setStack(Array(16).fill("X"));
+			await stack.updateComplete;
+			const panel = stack.shadowRoot!.querySelector(".pda__stack")!;
+			const toggle = stack.shadowRoot!.querySelector<HTMLButtonElement>(".pda__stack-toggle")!;
+			const items = () => stack.shadowRoot!.querySelector(".pda__stack-items")!;
+
+			for (const width of [300, 499, 500, 799, 800, 2100]) {
+				widget.style.width = `${width}px`;
+				// Let the top menu's ResizeObserver react to the new container width.
+				await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+				const compact = width < 500;
+				assert.equal(!!topMenu.querySelector(".topmenu--hamburger"), compact, `${width}px top menu`);
+				const input = simulator.querySelector("#wordInput")!.getBoundingClientRect();
+				const buttons = Array.from(simulator.querySelectorAll(".simulator_buttons"))
+					.find(group => group.getClientRects().length)!.getBoundingClientRect();
+				assert.equal(buttons.top >= input.bottom, compact, `${width}px simulator rows`);
+				assert.isAtMost(buttons.right, widget.getBoundingClientRect().right, `${width}px playback controls fit`);
+				const canvas = graph.getBoundingClientRect();
+				const stackPanel = panel.getBoundingClientRect();
+				assert.closeTo(graph.querySelector("canvas")!.getBoundingClientRect().width, canvas.width, 1);
+				assert.isAtLeast(input.top, canvas.bottom, `${width}px input clears the canvas`);
+				assert.equal(stackPanel.left >= canvas.right, width >= 800, `${width}px stack docking`);
+				assert.equal(getComputedStyle(toggle).display !== "none", compact, `${width}px stack toggle`);
+				assert.equal(getComputedStyle(items()).display === "none", compact, `${width}px stack visibility`);
+			}
+
+			widget.style.width = "300px";
+			toggle.click();
+			await new Promise(resolve => requestAnimationFrame(resolve));
+			assert.equal(toggle.getAttribute("aria-expanded"), "true");
+			assert.isAbove(items().getBoundingClientRect().height, 0);
+			assert.isAbove(items().scrollHeight, items().clientHeight);
+			assert.isAtMost(panel.getBoundingClientRect().bottom, graph.getBoundingClientRect().bottom);
 		});
 	});
 

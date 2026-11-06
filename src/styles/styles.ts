@@ -1,20 +1,30 @@
 import { css } from 'lit';
 import { contextMenuStyles } from './contextMenu';
-import { stackStyles } from './stack';
 
 const baseStyles = css`
     :host {
         background: white;
         display: block;
+        box-sizing: border-box;
         height: 500px;
+        min-height: 360px;
+        max-height: 900px;
 
         user-select: none;
+    }
+
+    :host(:fullscreen) {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        max-height: none;
     }
 
     #graphCanvas {
         height: 100%;
         width: 100%;
         outline: 1px solid lightgray;
+        outline-offset: -1px;
     }
 
     .hidden {
@@ -26,8 +36,42 @@ const baseStyles = css`
     }
 
     .editor {
-        position: relative;
+        container: automaton / size;
+        display: flex;
+        flex-direction: column;
         height: 100%;
+    }
+
+    .workspace {
+        position: relative;
+        display: flex;
+        flex: 1;
+        min-height: 0;
+    }
+
+    .graph {
+        position: relative;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .workspace > stack-extension {
+        position: absolute;
+        inset: 60px 10px 10px auto;
+        display: flex;
+        align-items: flex-end;
+        width: 62px;
+        pointer-events: none;
+    }
+
+    @container automaton (width >= 800px) {
+        .workspace > stack-extension {
+            position: static;
+            align-items: flex-start;
+            flex: 0 0 120px;
+            box-sizing: border-box;
+            padding: 10px;
+        }
     }
 
     .mode_switch {
@@ -85,6 +129,18 @@ const baseStyles = css`
         border-bottom: 2px solid white;
         border-right: 2px solid white;
     }
+
+    .simulator-help {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        box-sizing: border-box;
+        padding: 10px;
+    }
+
+    .simulator-help > * {
+        position: static;
+    }
 `;
 
-export const styles = [baseStyles, contextMenuStyles, stackStyles];
+export const styles = [baseStyles, contextMenuStyles];

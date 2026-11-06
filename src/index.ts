@@ -342,16 +342,6 @@ export class AutomatonComponent extends LitElementWw {
 		this.simulatorMenu.automaton = this.automaton;
 		this.simulatorMenu.graph = this._graph;
 
-		if (this.automaton.extension) {
-			this.automaton.extension.contentEditable = "true";
-			(this.automaton.extension as StackExtension).add =
-				this.settings.permissions.stack.add;
-			(this.automaton.extension as StackExtension).delete =
-				this.settings.permissions.stack.delete;
-			(this.automaton.extension as StackExtension).change =
-				this.settings.permissions.stack.change;
-		}
-
 		Logger.log("first updated");
 	}
 
@@ -393,14 +383,10 @@ export class AutomatonComponent extends LitElementWw {
 					this.simulatorMenu?.reset();
 					this._graph?.requestUpdate();
 					this._graph?.setInteractive(true);
-					if (this.automaton?.extension)
-						this.automaton.extension.contentEditable = "true";
 				} else if (this.mode === "simulate") {
 					this.automaton?.redrawNodes();
 					this.simulatorMenu?.init();
 					this._graph?.setInteractive(false);
-					if (this.automaton?.extension)
-						this.automaton.extension.contentEditable = "false";
 				}
 			} else {
 				Logger.warn(
@@ -427,13 +413,14 @@ export class AutomatonComponent extends LitElementWw {
 			if (this._graph) this._graph.updateGhostNodePosition();
 		}
 
-		if (this.automaton && this.automaton.extension) {
-			(this.automaton.extension as StackExtension).add =
-				this.settings.permissions.stack.add;
-			(this.automaton.extension as StackExtension).delete =
-				this.settings.permissions.stack.delete;
-			(this.automaton.extension as StackExtension).change =
-				this.settings.permissions.stack.change;
+		if (this.automaton.extension) {
+			const stack = this.automaton.extension as StackExtension;
+			const permissions = this.settings.permissions.stack;
+			const editable = String(this.mode === "edit");
+			if (stack.contentEditable !== editable) stack.contentEditable = editable;
+			stack.add = permissions.add;
+			stack.delete = permissions.delete;
+			stack.change = permissions.change;
 		}
 
 		if (_changedProperties.has("showHelp") || _changedProperties.has("type")) {
@@ -462,30 +449,28 @@ export class AutomatonComponent extends LitElementWw {
 	public render(): TemplateResult {
 		return html`
 			<div class="editor">
-				${this._helpOverlay ? this.renderHelpOverlay() : ""}
-				<div id="graphCanvas"></div>
-				${this._graph?.contextMenu.render()} ${this.renderModeSwitch()}
-				${this._graph?.renderErrorDisplay()}
-				<!-- <webwriter-automaton-infomenu id="infoMenu"></webwriter-automaton-infomenu> -->
-				<webwriter-automaton-topmenu
-					id="topMenu"
-				></webwriter-automaton-topmenu>
+				<div class="workspace">
+					<div class="graph">
+						${this._helpOverlay ? this.renderHelpOverlay() : ""}
+						<div id="graphCanvas"></div>
+						${this._graph?.contextMenu.render()} ${this.renderModeSwitch()}
+						${this._graph?.renderErrorDisplay()}
+						<webwriter-automaton-topmenu id="topMenu"></webwriter-automaton-topmenu>
+						<webwriter-automaton-toolmenu
+							id="toolMenu"
+							style=${styleMap({
+								display: this.mode === "edit" ? "flex" : "none",
+							})}
+						></webwriter-automaton-toolmenu>
+					</div>
+					${guard([this.automaton], () => this.automaton.extension)}
+				</div>
 				<webwriter-automaton-simulatormenu
 					id="simulatorMenu"
 					style=${styleMap({
-						display: this.mode === "simulate" ? "flex" : "none",
+						display: this.mode === "simulate" ? "block" : "none",
 					})}
 				></webwriter-automaton-simulatormenu>
-				<webwriter-automaton-toolmenu
-					id="toolMenu"
-					style=${styleMap({
-						display: this.mode === "edit" ? "flex" : "none",
-					})}
-				></webwriter-automaton-toolmenu>
-				${guard(
-					[this.permissions, this.automaton],
-					() => this.automaton.extension
-				)}
 			</div>
 		`;
 	}
@@ -583,19 +568,12 @@ export class AutomatonComponent extends LitElementWw {
 				` : ""}
 			</div>
 
-			<div
-				class="help-overlay"
-				style=${styleMap({
-					display: this.mode === "simulate" ? "block" : "none",
-				})}
-			>
-				<sl-tag size="small" style="bottom: 60px;left: 10px;"
-					>${msg("Input word")}</sl-tag
-				>
-				<sl-tag size="small" style="bottom: 60px;left: 10px;"
-					>${msg("Simulation Controls")}</sl-tag
-				>
-			</div>
+			${this.mode === "simulate" ? html`
+				<div class="help-overlay simulator-help">
+					<sl-tag size="small">${msg("Input word")}</sl-tag>
+					<sl-tag size="small">${msg("Simulation Controls")}</sl-tag>
+				</div>
+			` : ""}
 		`;
 	}
 

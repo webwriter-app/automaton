@@ -21,7 +21,6 @@ import {
     biHandIndexThumb,
 } from '../styles/icons';
 import { Automaton, SimulationFeedback, SimulationResult, SimulationStatus } from '../automata';
-import { classMap } from 'lit/directives/class-map.js';
 import { SlChangeEvent } from '@shoelace-style/shoelace';
 import { styleMap } from 'lit/directives/style-map.js';
 import { simulationMenuStyles } from '../styles/simulationMenu';
@@ -90,17 +89,12 @@ export class SimulatorMenu extends LitElementWw {
     }
 
     render() {
-        return html`<div class=${classMap({
-            simulator: true,
-            'simulator--pda': this._automaton.type === 'pda',
-        })}>${this.renderLabel()} ${this.renderInput()} ${this.renderButtonGroup()}</div>`;
+        return html`<div class="simulator">${this.renderLabel()} ${this.renderInput()} ${this.renderButtonGroup()}</div>`;
     }
 
     private renderLabel() {
         if (!this._simulationResult) {
-            return html`<div
-                class="simulator__label">
-            </div>`;
+            return null;
         }
         else if (this._simulationResult.errors && this._simulationResult.errors.length > 0) {
             return html`<div

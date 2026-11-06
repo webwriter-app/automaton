@@ -1,4 +1,4 @@
-import { PropertyValueMap, html } from 'lit';
+import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import {
     biArrowLeftRight,
@@ -57,6 +57,9 @@ export class TopMenu extends LitElementWw {
     private accessor _menuOpen: boolean = false;
 
     private _resizeObserver?: ResizeObserver;
+    private fullscreenChanged = () => {
+        this._fullscreen = this._component?.matches(':fullscreen') ?? false;
+    };
 
     @property({ type: Object, attribute: false })
     private accessor _graph!: Graph;
@@ -93,6 +96,7 @@ export class TopMenu extends LitElementWw {
 
     connectedCallback(): void {
         super.connectedCallback();
+        this.ownerDocument.addEventListener('fullscreenchange', this.fullscreenChanged);
         const host = (this.getRootNode() as ShadowRoot)?.host ?? this.parentElement;
         if (host) {
             this._resizeObserver = new ResizeObserver((entries) => {
@@ -109,13 +113,7 @@ export class TopMenu extends LitElementWw {
     disconnectedCallback(): void {
         super.disconnectedCallback();
         this._resizeObserver?.disconnect();
-    }
-
-    protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
-        // Important for when the user exits fullscreen mode by pressing ESC or F11
-        document.addEventListener('fullscreenchange', () => {
-            this._fullscreen = !!document.fullscreenElement;
-        });
+        this.ownerDocument.removeEventListener('fullscreenchange', this.fullscreenChanged);
     }
 
     render() {
@@ -149,25 +147,13 @@ export class TopMenu extends LitElementWw {
             <div class="topmenu__button_group">
                 <sl-button
                     class="topmenu__button"
-                    @click=${async (e: Event) => {
-                        this._fullscreen = this.ownerDocument.fullscreenElement === this._component;
-                        
-                        const button = (e.target as HTMLElement).closest('sl-button') as SlButton;
-
+                    @click=${async () => {
                         try {
-                            if (this._fullscreen) await document.exitFullscreen();
+                            if (this._component.matches(':fullscreen')) await this.ownerDocument.exitFullscreen();
                             else await this._component.requestFullscreen();
                         } catch (err) {
                             Logger.error('Error entering/exiting fullscreen:', err);
                         }
-
-                        // Remove and re-append the button to update its hover state
-                        const parent = button.parentElement;
-                        if (parent) {
-                            parent.removeChild(button);
-                            parent.appendChild(button);
-                        }
-                        this._fullscreen = this.ownerDocument.fullscreenElement === this._component;
                     }}
                     circle
                 >

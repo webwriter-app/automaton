@@ -2,25 +2,36 @@ import { css } from 'lit';
 
 export const stackStyles = css`
     .pda__stack {
-        position: absolute;
-
         display: flex;
         flex-direction: column;
-
-        align-items: center;
-
-        right: 10px;
-        bottom: 62px;
-
-        width: 60px;
-
-        max-height: 378px;
-
+        box-sizing: border-box;
+        width: 100%;
+        max-height: 100%;
         border: 1px solid lightgray;
         border-radius: 5px;
         background-color: white;
-
+        pointer-events: auto;
         z-index: 1400;
+    }
+
+    .pda__stack-toggle {
+        display: none;
+        border: 0;
+        font: inherit;
+        cursor: pointer;
+    }
+
+    @container automaton (width < 500px) {
+        .pda__stack-title,
+        .pda__stack-toggle[aria-expanded='false'] ~ .pda__stack-button,
+        .pda__stack-toggle[aria-expanded='false'] ~ .pda__stack-items {
+            display: none;
+        }
+
+        .pda__stack-toggle {
+            display: block;
+            min-height: 44px;
+        }
     }
 
     .pda__stack sl-button::part(base),
@@ -31,7 +42,12 @@ export const stackStyles = css`
     }
 
     .pda__stack-button {
+        align-self: center;
         margin: 8px;
+    }
+
+    .pda__stack-button[hidden] {
+        display: none;
     }
 
     .pda__stack-button.dragover::part(base) {
@@ -43,7 +59,6 @@ export const stackStyles = css`
     .pda__stack-items {
         display: flex;
         flex-direction: column;
-        max-height: 298px;
         overflow-x: hidden;
         overflow-y: auto;
         width: 100%;
@@ -68,7 +83,6 @@ export const stackStyles = css`
     }
 
     .pda__stack-item {
-        max-width: 60px;
         width: 100%;
         margin: 0;
 
@@ -92,16 +106,14 @@ export const stackStyles = css`
         text-align: center;
     }
 
-    .pda__stack-title {
+    .pda__stack-title,
+    .pda__stack-toggle {
         background-color: var(--sl-color-primary-600);
         text-align: center;
         color: white;
-
+        overflow-wrap: anywhere;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
-
-        width: 60px;
-        position: sticky;
     }
 
     .drop-before {

@@ -2,30 +2,20 @@ import { css } from 'lit';
 
 export const simulationMenuStyles = css`
     .simulator {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
         padding: 10px;
-        padding-top: 2px;
-
         gap: 10px;
-
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
-        grid-template-rows: auto auto;
     }
 
-    .simulator::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+    @container automaton (width < 500px) {
+        .simulator {
+            grid-template-columns: minmax(0, 1fr);
+        }
 
-        background-color: rgb(255, 255, 255, 0.8);
-        z-index: 1400;
+        .simulator_buttons {
+            justify-self: end;
+        }
     }
 
     .simulator__label {
@@ -33,7 +23,9 @@ export const simulationMenuStyles = css`
 
         font-size: var(--sl-font-size-medium);
 
-        z-index: 1500;
+        max-height: min(120px, 25cqh);
+        overflow: auto;
+        overflow-wrap: anywhere;
     }
 
     .simulator__label__errors {
@@ -47,10 +39,6 @@ export const simulationMenuStyles = css`
         gap: 5px;
         margin-top: 5px;
         overflow-x: auto;
-    }
-
-    .simulator--pda .simulator__label {
-        margin-right: 80px;
     }
 
     .simulator__label__path__transition {
@@ -70,9 +58,7 @@ export const simulationMenuStyles = css`
     }
 
     .simulator__input {
-        flex-grow: 1;
-
-        z-index: 1500;
+        min-width: 0;
     }
 
     .simulator__input.danger::part(base) {
@@ -103,9 +89,7 @@ export const simulationMenuStyles = css`
     }
 
     .simulator__input-display {
-        flex-grow: 1;
-        position: relative;
-
+        box-sizing: border-box;
         border: solid var(--sl-input-border-width) var(--sl-input-border-color);
 
         border-radius: var(--sl-input-border-radius-medium);
@@ -113,7 +97,6 @@ export const simulationMenuStyles = css`
         height: var(--sl-input-height-medium);
 
         display: inline-flex;
-        z-index: 1500;
         background-color: white;
 
         align-items: stretch;
@@ -169,9 +152,5 @@ export const simulationMenuStyles = css`
     .simulator__input-display.success {
         border-color: var(--sl-color-success-600);
         background-color: var(--sl-color-success-50);
-    }
-
-    .simulator_buttons {
-        z-index: 1500;
     }
 `;

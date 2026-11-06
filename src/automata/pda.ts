@@ -9,7 +9,6 @@ import SlButton from '@shoelace-style/shoelace/dist/components/button/button.com
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input.component.js';
 import SlTooltip from '@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js';
 import { biTrash } from '../styles/icons';
-import { styleMap } from 'lit/directives/style-map.js';
 import { ManualAutoSimulator } from './manual-auto';
 import { localized, msg } from '@lit/localize';
 import { AutomatonError } from '@u/errors';
@@ -503,6 +502,7 @@ export class StackExtension extends LitElementWw {
     }
     private afterElement: HTMLElement | null = null;
     @state() private accessor _dragging: boolean = false;
+    @state() private accessor _stackOpen = false;
 
     @query('.pda__stack-items') private accessor _stackItems!: HTMLElement;
     @query('.pda__stack-button') private accessor _stackButton!: HTMLElement;
@@ -560,11 +560,19 @@ export class StackExtension extends LitElementWw {
     }
 
     public render(): TemplateResult {
+        const label = msg("Stack");
         return html`<div class="pda__stack">
-            <div class="pda__stack-title">${msg("Stack")}</div>
+            <div class="pda__stack-title">${label}</div>
+            <button
+                type="button"
+                class="pda__stack-toggle"
+                aria-expanded=${this._stackOpen}
+                aria-controls="pda__stack-button pda__stack-items"
+                @click=${() => { this._stackOpen = !this._stackOpen; }}
+            >${label}</button>
             <sl-button
                 class="pda__stack-button"
-                style=${styleMap({ display: this.isEditable() ? 'block' : 'none' })}
+                ?hidden=${!this.isEditable()}
                 size="small"
                 id="pda__stack-button"
                 circle
