@@ -167,64 +167,42 @@ export class ToolMenu extends LitElementWw {
         this._graph.requestUpdate();
     }
 
+    public planTransition(edgeData: Pick<Transition, 'from' | 'to'> & Partial<Transition>) {
+        const { automaton } = this._graph;
+        const transitions = automaton.transitions.get();
+        const existing = transitions.find(edge => edge.from === edgeData.from && edge.to === edgeData.to);
+        const reverse = transitions.find(edge => edge.from === edgeData.to && edge.to === edgeData.from);
+        const smooth = reverse ? { enabled: true, type: 'curvedCW', roundness: 0.2 } : undefined;
+        const symbol = this._graph.component.forcedAlphabet[0] || 'a';
+
+        const transition: Transition = {
+            ...edgeData,
+            ...existing,
+            ...(smooth ? { smooth } : {}),
+            id: existing?.id ?? automaton.getNewTransitionId(),
+            label: '',
+            symbols: [...(existing?.symbols ?? []), symbol],
+        };
+        if (automaton.type === 'pda') {
+            const operations = existing?.symbols.map((symbol, index) =>
+                existing.stackOperations?.[index] ?? { operation: 'none' as const, symbol, condition: '' }
+            ) ?? [];
+            transition.stackOperations = [...operations, { operation: 'none', symbol, condition: '' }];
+        }
+        transition.label = automaton.getTransitionLabel(transition);
+        return { transition, existing, reverse, smooth };
+    }
+
     public insertTransition(
         edgeData: Pick<Transition, 'from' | 'to'> & Partial<Transition>,
         add: (transition: Transition) => void,
     ) {
         if (edgeData.to === Graph.initialGhostNode.id || edgeData.from === Graph.initialGhostNode.id) return;
 
-        const edge = this._graph.automaton.transitions.get().find((t) => {
-            return t.from === edgeData.from && t.to === edgeData.to;
-        });
-
-        const reflection = this._graph.automaton.transitions.get().find((t) => {
-            return t.from === edgeData.to && t.to === edgeData.from;
-        });
-
-        if (reflection) {
-            this._graph.automaton.transitions.update({
-                ...reflection,
-                smooth: { type: 'curvedCW', roundness: 0.2 },
-            });
-            if (edge) {
-                this._graph.automaton.transitions.update({
-                    ...edge,
-                    smooth: { type: 'curvedCW', roundness: 0.2 },
-                });
-            } else {
-                edgeData.smooth = { enabled: true, type: 'curvedCW', roundness: 0.2 };
-            }
-        }
-
-        const newSymbol = this._graph.component.forcedAlphabet[0] || 'a';
-        if (edge) {
-            if (this._graph.automaton.type === 'pda') {
-                this._graph.automaton.transitions.update({
-                    ...edge,
-                    symbols: [...edge.symbols, newSymbol],
-                    stackOperations: [
-                        ...edge.stackOperations!,
-                        { operation: 'none', symbol: newSymbol, condition: '' },
-                    ],
-                });
-            } else {
-                this._graph.automaton.transitions.update({
-                    ...edge,
-                    symbols: [...edge.symbols, newSymbol],
-                });
-            }
-        } else {
-            const transition: Transition = {
-                ...edgeData,
-                id: this._graph.automaton.getNewTransitionId(),
-                label: '',
-                symbols: [newSymbol],
-            };
-            if (this._graph.automaton.type === 'pda') {
-                transition.stackOperations = [{ operation: 'none', symbol: newSymbol, condition: '' }];
-            }
-            add(transition);
-        }
+        const { transition, existing, reverse, smooth } = this.planTransition(edgeData);
+        if (reverse) this._graph.automaton.transitions.update({ id: reverse.id, smooth });
+        if (existing) this._graph.automaton.transitions.update(transition);
+        else add(transition);
     }
 
     public handleTransitionAdd(

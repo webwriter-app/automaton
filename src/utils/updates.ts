@@ -154,7 +154,8 @@ function didStackOperationsChange(newOperations: StackOperation[], oldOperations
     for (let i = 0; i < newOperations.length; i++) {
         if (
             newOperations[i].operation !== oldOperations[i].operation ||
-            newOperations[i].symbol !== oldOperations[i].symbol
+            newOperations[i].symbol !== oldOperations[i].symbol ||
+            newOperations[i].condition !== oldOperations[i].condition
         ) {
             return true;
         }

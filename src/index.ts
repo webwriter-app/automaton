@@ -376,7 +376,6 @@ export class AutomatonComponent extends LitElementWw {
 			if (this.allowedModes.includes(this.mode)) {
 				this._graph?.network.unselectAll();
 				this.automaton?.clearHighlights();
-				this._graph?.contextMenu.hide();
 
 				if (this.mode === "edit") {
 					this.simulatorMenu?.reset();
@@ -423,7 +422,6 @@ export class AutomatonComponent extends LitElementWw {
 			}
 
 			this.automaton.updateAutomaton(nodes, transitions);
-			if (this._graph) this._graph.updateGhostNodePosition();
 			this._graph?.requestUpdate();
 		}
 
@@ -479,7 +477,7 @@ export class AutomatonComponent extends LitElementWw {
 								<div class="empty-canvas-hint">${msg("Double click / long tap to add a node")}</div>
 							` : ""}
 						${this._graph ? html`<div class="connection-points">${this._graph.renderConnectionPoints()}</div>` : ""}
-						${this._graph?.contextMenu.render()} ${this.renderModeSwitch()}
+						${this.renderModeSwitch()}
 						${this._graph?.renderErrorDisplay()}
 						<webwriter-automaton-topmenu id="topMenu"></webwriter-automaton-topmenu>
 						<webwriter-automaton-toolmenu
@@ -494,6 +492,7 @@ export class AutomatonComponent extends LitElementWw {
 						></webwriter-automaton-simulatormenu>
 					</div>
 					${guard([this.automaton], () => this.automaton.extension)}
+					${this._graph?.renderEditingBar()}
 				</div>
 				${this._helpOverlay && this._topMenuCollapsed ? this.renderCompactHelp() : ""}
 			</div>
@@ -575,10 +574,7 @@ export class AutomatonComponent extends LitElementWw {
 					>${msg("Move the elements by drag and drop")}</sl-tag
 				>
 				<sl-tag size="small" style="bottom: 70px;right: 30px;"
-					>${msg("To edit a node right click the node")}</sl-tag
-				>
-				<sl-tag size="small" style="bottom: 30px;right: 30px;"
-					>${msg("To edit a transition right click the transition")}</sl-tag
+					>${msg("Select a node or transition to edit it")}</sl-tag
 				>
 			</div>
 
@@ -600,6 +596,7 @@ export class AutomatonComponent extends LitElementWw {
 				${this.mode === "edit" ? html`
 					<span>${msg("Add Node by click")}</span>
 					<span>${msg("Add Transition by drag and drop")}</span>
+					<span>${msg("Select a node or transition to edit it")}</span>
 				` : html`
 					<span>${msg("Input word")}</span>
 					<span>${msg("Simulation Controls")}</span>

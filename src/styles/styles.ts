@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { contextMenuStyles } from './contextMenu';
+import { editingBarStyles } from './editingBar';
 
 const baseStyles = css`
     :host {
@@ -138,6 +138,10 @@ const baseStyles = css`
             bottom: calc(20px + var(--sl-input-height-large));
         }
 
+        .workspace:has(> .editing-bar) > stack-extension {
+            bottom: 66px;
+        }
+
         .workspace:has(> stack-extension) #simulatorMenu {
             --simulator-feedback-end: 68px;
         }
@@ -150,6 +154,10 @@ const baseStyles = css`
             flex: 0 0 120px;
             box-sizing: border-box;
             padding: 10px;
+        }
+
+        .workspace:has(> .editing-bar) > stack-extension {
+            margin-bottom: 56px;
         }
     }
 
@@ -327,4 +335,4 @@ const baseStyles = css`
     }
 `;
 
-export const styles = [baseStyles, contextMenuStyles];
+export const styles = [baseStyles, editingBarStyles];

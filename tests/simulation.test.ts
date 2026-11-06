@@ -182,6 +182,36 @@ describe("Simulation Tests", () => {
 			assert.exists(root.querySelector(".connection-point--active"));
 			const canvas = root.querySelector("canvas")!;
 			assert.equal(getComputedStyle(canvas).cursor, "none");
+			const preview = network as unknown as {
+				manipulation: { temporaryIds: { nodes: string[]; edges: string[] } };
+				body: { edges: Record<string, {
+					toId: number | string;
+					hover: boolean;
+					options: { label: string; hidden: boolean; smooth: { roundness: number }; color: { opacity: number } };
+				}> };
+			};
+			const { nodes: [endpointId], edges: [edgeId] } = preview.manipulation.temporaryIds;
+			const canvasBounds = canvas.getBoundingClientRect();
+			const hover = (point: { x: number; y: number }) => {
+				canvas.dispatchEvent(new PointerEvent("pointermove", {
+					bubbles: true,
+					clientX: canvasBounds.left + point.x,
+					clientY: canvasBounds.top + point.y,
+				}));
+			};
+			const target = network.canvasToDOM(network.getPositions([1])[1]);
+			hover(target);
+			assert.equal(preview.body.edges[edgeId].toId, 1, "The preview attaches to the destination node");
+			assert.equal(preview.body.edges[edgeId].options.label, "a");
+			assert.equal(preview.body.edges[edgeId].options.smooth.roundness, 0);
+			assert.isBelow(preview.body.edges[edgeId].options.color.opacity, 1);
+			assert.isEmpty(widget.transitions, "Hovering leaves the authored graph unchanged");
+			hover({ x: target.x, y: target.y + 80 });
+			assert.equal(preview.body.edges[edgeId].toId, endpointId, "Leaving the node restores the free endpoint");
+			assert.isBelow(preview.body.edges[edgeId].options.color.opacity, 1);
+			hover(target);
+			root.querySelector("#graphCanvas")!.dispatchEvent(new PointerEvent("pointerleave"));
+			assert.equal(preview.body.edges[edgeId].toId, endpointId, "Leaving the canvas also clears the target");
 			widget.requestUpdate();
 			await widget.updateComplete;
 			network.redraw();
@@ -191,6 +221,51 @@ describe("Simulation Tests", () => {
 			assert.isEmpty(visiblePoints());
 			assert.notEqual(getComputedStyle(canvas).cursor, "none");
 			assert.isEmpty(widget.transitions);
+
+			widget.setAttribute("transitions", "1-0[b]");
+			await widget.updateComplete;
+			network.selectNodes([0]);
+			network.redraw();
+			visiblePoints()[0].click();
+			const reversePreviewId = preview.manipulation.temporaryIds.edges[0];
+			let reverseBend = 0;
+			network.once("beforeDrawing", () => { reverseBend = preview.body.edges[0].options.smooth.roundness; });
+			hover(target);
+			assert.equal(reverseBend, 0.2, "The existing reverse edge bends during the preview");
+			assert.equal(preview.body.edges[reversePreviewId].options.smooth.roundness, 0.2);
+			assert.equal(preview.body.edges[0].options.smooth.roundness, 0, "Preview styling is removed after drawing");
+			assert.equal(widget.getAttribute("transitions"), "1-0[b]");
+
+			widget.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+			widget.setAttribute("transitions", "0-1[b];1-0[b]");
+			await widget.updateComplete;
+			network.selectNodes([0]);
+			network.redraw();
+			visiblePoints()[0].click();
+			const existingPreviewId = preview.manipulation.temporaryIds.edges[0];
+			let highlightsExisting = false;
+			network.once("beforeDrawing", () => { highlightsExisting = preview.body.edges[0].hover; });
+			hover(target);
+			assert.isTrue(highlightsExisting);
+			assert.isTrue(preview.body.edges[existingPreviewId].options.hidden, "An existing edge takes the place of the preview");
+			assert.equal(widget.getAttribute("transitions"), "0-1[b];1-0[b]");
+			widget.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+
+			widget.permissions = "757";
+			await widget.updateComplete;
+			network.selectEdges([0]);
+			widget.dispatchEvent(new KeyboardEvent("keydown", { key: "Backspace" }));
+			assert.exists(widget.automaton.getTransition(0), "Delete permissions still apply");
+			widget.permissions = "777";
+			await widget.updateComplete;
+			network.selectEdges([0]);
+			widget.dispatchEvent(new KeyboardEvent("keydown", { key: "Backspace" }));
+			assert.isNull(widget.automaton.getTransition(0));
+			network.selectEdges([1]);
+			widget.dispatchEvent(new KeyboardEvent("keydown", { key: "Delete" }));
+			assert.isNull(widget.automaton.getTransition(1));
+			assert.exists(widget.automaton.getNode(0));
+			assert.exists(widget.automaton.getNode(1));
 
 			network.selectNodes([0]);
 			widget.permissions = "737";
@@ -202,6 +277,117 @@ describe("Simulation Tests", () => {
 			widget.mode = "simulate";
 			await widget.updateComplete;
 			assert.isEmpty(visiblePoints());
+		});
+
+		it("edits the selected node or transition in the bottom bar", async () => {
+			const widget = await createConfiguredPDA();
+			widget.style.width = "300px";
+			widget.style.height = "300px";
+			await widget.updateComplete;
+			await widget.updateComplete;
+			const { network } = (widget as unknown as { graph: Graph }).graph;
+			const root = widget.shadowRoot!;
+			const bar = () => root.querySelector<HTMLElement>(".editing-bar");
+			const select = async (type: "node" | "edge", id: number) => {
+				if (type === "node") network.selectNodes([id]);
+				else network.selectEdges([id]);
+				widget.requestUpdate();
+				await widget.updateComplete;
+			};
+			const edit = (field: Element, property: "value" | "checked", value: string | boolean, event: string) => {
+				Object.assign(field, { [property]: value });
+				field.dispatchEvent(new Event(event, { bubbles: true, composed: true }));
+			};
+			assert.isNull(bar());
+			await select("node", 1);
+			const label = bar()!.querySelector("sl-input")!;
+			const final = bar()!.querySelector("sl-checkbox[name=final]")!;
+			const initial = bar()!.querySelector("sl-checkbox[name=initial]")!;
+			const barBounds = bar()!.getBoundingClientRect();
+			const plusBounds = root.querySelector("#toolMenu")!.shadowRoot!
+				.querySelector(".toolmenu > sl-button")!.getBoundingClientRect();
+			const graphBounds = root.querySelector(".graph")!.getBoundingClientRect();
+			assert.closeTo(barBounds.right, graphBounds.right - 10, 1);
+			assert.closeTo(barBounds.bottom, plusBounds.bottom, 1);
+			assert.isAbove(barBounds.left, plusBounds.right);
+			assert.isAtMost(label.getBoundingClientRect().width, 88);
+			assert.isAtLeast(initial.getBoundingClientRect().left, label.getBoundingClientRect().right);
+			const centerY = (element: Element) => {
+				const rect = element.getBoundingClientRect();
+				return rect.top + rect.height / 2;
+			};
+			assert.closeTo(initial.getBoundingClientRect().left, final.getBoundingClientRect().left, 1);
+			assert.isAtLeast(final.getBoundingClientRect().top, initial.getBoundingClientRect().bottom);
+			assert.closeTo(initial.getBoundingClientRect().top, label.getBoundingClientRect().top, 1);
+			assert.closeTo(final.getBoundingClientRect().bottom, label.getBoundingClientRect().bottom, 1);
+			assert.isBelow(bar()!.querySelector(".editing-bar__delete")!.getBoundingClientRect().height,
+				label.getBoundingClientRect().height);
+			label.dispatchEvent(new KeyboardEvent("keydown", { key: "Backspace", bubbles: true, composed: true }));
+			assert.exists(widget.automaton.getNode(1));
+			edit(label, "value", "middle", "sl-input");
+			edit(final, "checked", true, "sl-change");
+			edit(initial, "checked", true, "sl-change");
+			await widget.updateComplete;
+			assert.equal(widget.automaton.getNode(1)?.label, "middle");
+			assert.isTrue(widget.automaton.getNode(1)?.final);
+			assert.equal(widget.automaton.getInitialNode().id, 1);
+			const waitForAttributes = () => new Promise(resolve => setTimeout(resolve, 250));
+			await waitForAttributes();
+			assert.include(widget.getAttribute("nodes"), "middle");
+			assert.strictEqual(bar()!.querySelector("sl-input"), label, "Editing preserves the focused field");
+
+			await select("edge", 0);
+			assert.equal(bar()!.getAttribute("aria-label"), "Edge");
+			assert.isNull(bar()!.querySelector("sl-checkbox"));
+			const fields = bar()!.querySelector<HTMLElement>(".editing-bar__edge-fields")!;
+			const symbol = fields.querySelector("sl-input[placeholder=Symbol]")!;
+			edit(symbol, "value", "b", "sl-input");
+			await widget.updateComplete;
+			assert.equal(widget.automaton.getTransition(0)?.symbols[0], "b");
+			assert.isNull(bar()!.querySelector("details"));
+			assert.isAbove(fields.scrollWidth, fields.clientWidth, "Long rows scroll within the compact bar");
+			assert.closeTo(centerY(fields.querySelector("input[type=range]")!), centerY(symbol), 2);
+			await waitForAttributes();
+			assert.include(widget.getAttribute("transitions"), "0-1[b{p|");
+			edit(fields.querySelector("sl-input[placeholder=If]")!, "value", "X", "sl-input");
+			await waitForAttributes();
+			assert.include(widget.getAttribute("transitions"), "0-1[b{p|%24|X}]");
+			bar()!.querySelector<HTMLElement>(".editing-bar__delete")!.click();
+			await widget.updateComplete;
+			assert.isNull(widget.automaton.getTransition(0));
+			assert.isNull(bar());
+			widget.style.width = "900px";
+			await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+			await select("node", 1);
+			assert.closeTo(bar()!.getBoundingClientRect().right, widget.getBoundingClientRect().right - 10, 1,
+				"The bar remains aligned with the widget's edge when the PDA stack is docked");
+			widget.permissions = "077";
+			await widget.updateComplete;
+			assert.isNull(bar()!.querySelector(".editing-bar__delete"));
+			assert.isTrue((bar()!.querySelector("sl-input") as HTMLElement & { disabled: boolean }).disabled);
+			widget.mode = "simulate";
+			await widget.updateComplete;
+			assert.isNull(bar());
+		});
+
+		it("moves the initial arrow clear of a nearby node or transition", async () => {
+			const widget = document.createElement("webwriter-automaton") as AutomatonComponent;
+			widget.setAttribute("nodes", "#0(0|0);1(-220|0)");
+			widget.setAttribute("transitions", "1-0[a]");
+			document.body.append(widget);
+			await widget.updateComplete;
+			await widget.updateComplete;
+			const { network } = (widget as unknown as { graph: Graph }).graph;
+			const position = () => network.getPositions([-1])[-1];
+			assert.isAbove(Math.abs(position().y), 20, "The arrow avoids the incoming transition");
+			widget.removeAttribute("transitions");
+			await widget.updateComplete;
+			assert.isBelow(position().x, 0);
+			assert.closeTo(position().y, 0, 1, "The arrow points from the left when clear");
+			widget.setAttribute("nodes", "#0(0|0);1(-65|0)");
+			await widget.updateComplete;
+			assert.isAbove(Math.abs(position().y), 20, "The arrow moves when a node obstructs it");
+			assert.equal(widget.getAttribute("nodes"), "#0(0|0);1(-65|0)");
 		});
 
 		it("explains invalid graphs and enables simulation once they are valid", async () => {

@@ -446,14 +446,13 @@ export abstract class Automaton {
         });
 
 
-        Graph.initialGhostNode = {
+        this.nodes.update({
             ...Graph.initialGhostNode,
             x: node.x ? node.x - 100 : -100,
             y: node.y ? node.y : 0,
             hidden: false,
             fixed: true,
-        };
-        this.nodes.update(Graph.initialGhostNode);
+        });
     }
 }
 

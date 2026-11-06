@@ -1,6 +1,6 @@
 import { Transition, Node, Automaton } from './automata';
-import { Network, Position } from 'vis-network';
-import { ContextMenu } from './components/ContextMenu';
+import { Network, Position, type EdgeOptions } from 'vis-network';
+import { EditingBar, type EditableSelection } from './components/EditingBar';
 import { ToolMenu } from './components/ToolMenu';
 import { DRAW } from './utils/draw';
 import { html, TemplateResult } from 'lit';
@@ -9,13 +9,32 @@ import { biExclamationOctagon } from './styles/icons';
 import { COLORS } from './utils/colors';
 import { AutomatonComponent } from './index';
 import { AutomatonError } from '@u/errors';
-import { Logger } from './utils/logger';
 import { msg } from '@lit/localize';
 
 type ConnectionSide = 'top' | 'left' | 'bottom' | 'right';
 type CanvasGesture = {
     pointer: { DOM: Position; canvas: Position };
     event: { pointerType?: string; preventDefault(): void };
+};
+
+const TRANSITION_CURVE = { enabled: true, type: 'curvedCW', forceDirection: 'none', roundness: 0 };
+const POINTER_CURVE = { enabled: true, type: 'continuous', roundness: 0.5 };
+const PREVIEW_OPACITY = 0.55;
+
+type PreviewEdge = {
+    toId: string | number;
+    from?: Position;
+    to?: Position;
+    edgeType: { getDistanceToEdge(x1: number, y1: number, x2: number, y2: number, x: number, y: number): number };
+    hover: boolean;
+    chooser: boolean | ((values: { color: string; opacity: number; width: number }) => void);
+    options: {
+        label?: string;
+        hidden: boolean;
+        smooth: typeof TRANSITION_CURVE;
+        color: { opacity: number };
+    };
+    setOptions(options: EdgeOptions & { to?: string | number }): void;
 };
 
 /**
@@ -37,20 +56,13 @@ export class Graph {
         return this._ac;
     }
 
-    private _cm: ContextMenu;
-    public get contextMenu(): ContextMenu {
-        return this._cm;
-    }
+    private editingBar: EditingBar;
 
     private _interactive: boolean = true;
 
     private _tm: ToolMenu;
 
     private _hovered!: Node | Transition | null;
-    private _hoveredType!: 'Node' | 'Transition';
-
-    private _selected!: Node | Transition;
-    private _selectedType!: 'Node' | 'Transition';
 
     private _errors: AutomatonError[] = [];
     public get errors(): AutomatonError[] {
@@ -66,9 +78,10 @@ export class Graph {
     } | null;
 
     private _lastPosition: Position = { x: 0, y: 0 };
-    private _nodeCenterPointerOffset: Position = { x: 0, y: 0 };
     private _connection?: { from: number; side: ConnectionSide };
     private _connectionDrag?: { id: number; start: Position; moved: boolean };
+
+    private _previewPlan?: ReturnType<ToolMenu['planTransition']>;
 
     public toggleMode: () => void = () => {};
 
@@ -83,8 +96,6 @@ export class Graph {
             fn();
             this.displayErrors();
         };
-
-        this._cm.requestUpdate = this._requestUpdate;
     }
     public get requestUpdate(): () => void {
         return this._requestUpdate;
@@ -94,8 +105,7 @@ export class Graph {
         this._a = a;
         this._ac = ac;
         this._tm = tm;
-        this._cm = new ContextMenu(ac);
-        this._cm.requestUpdate = this._requestUpdate;
+        this.editingBar = new EditingBar(ac);
 
         const options = {
             physics: false,
@@ -113,12 +123,7 @@ export class Graph {
             },
             edges: {
                 color: 'black',
-                smooth: {
-                    enabled: true,
-                    type: 'curvedCW',
-                    forceDirection: 'none',
-                    roundness: 0,
-                },
+                smooth: TRANSITION_CURVE,
                 arrows: 'to',
                 font: {},
             },
@@ -139,6 +144,11 @@ export class Graph {
         this._n = new Network(canvas, a.getGraphData(), options);
         canvas.addEventListener('pointermove', event => {
             if (this._connection) this.moveConnectionPreview(event);
+        });
+        canvas.addEventListener('pointerleave', () => {
+            if (!this._connection || this._connectionDrag) return;
+            this.previewConnectionTarget({});
+            this._n.redraw();
         });
         canvas.addEventListener('pointerdown', () => {
             // Remove the temporary endpoint before vis-network hit-tests the clicked node.
@@ -201,8 +211,6 @@ export class Graph {
             node => this._a.addNode(node),
         );
         this._n.selectNodes([node.id]);
-        this._selected = node;
-        this._selectedType = 'Node';
         this._requestUpdate();
         return true;
     }
@@ -229,7 +237,7 @@ export class Graph {
     private get connectionPreview() {
         return (this._n as Network & { manipulation: {
             touchTime: number;
-            temporaryIds: { nodes: string[] };
+            temporaryIds: { nodes: string[]; edges: string[] };
             _handleConnect(event: { center: Position }): void;
             _dragControlNode(event: { center: Position }): void;
             _cleanupTemporaryNodesAndEdges(): void;
@@ -253,6 +261,7 @@ export class Graph {
         // These gestures already have one start event per press.
         preview.touchTime = 0;
         preview._handleConnect({ center: { x: bounds.left + center.x, y: bounds.top + center.y } });
+        this.previewConnectionTarget({});
         this._n.redraw();
         return true;
     }
@@ -264,10 +273,89 @@ export class Graph {
         }
     }
 
+    private get previewBody() {
+        return (this._n as Network & { body: {
+            nodes: Record<string, Position & { options: { opacity: number } }>;
+            edges: Record<string, PreviewEdge>;
+        } }).body;
+    }
+
+    private previewConnectionTarget({ from, to }: { from?: string | number; to?: string | number }) {
+        const { nodes: [endpointId], edges: [edgeId] } = this.connectionPreview.temporaryIds;
+        if (!endpointId || !edgeId) return;
+
+        const validTarget = this._ac.mode === 'edit' && this._ac.settings.permissions.edge.add &&
+            typeof from === 'number' && typeof to === 'number' && to !== from &&
+            to !== Graph.initialGhostNode.id && this._a.getNode(from) && this._a.getNode(to);
+        const plan = validTarget ? this._tm.planTransition({ from, to }) : undefined;
+        this._previewPlan = plan;
+
+        const edge = this.previewBody.edges[edgeId];
+        const destination = plan?.transition.to ?? endpointId;
+        const configuredCurve = plan?.transition.smooth;
+        const smooth = plan
+            ? typeof configuredCurve === 'boolean' ? { ...TRANSITION_CURVE, enabled: configuredCurve } : configuredCurve ?? TRANSITION_CURVE
+            : POINTER_CURVE;
+        const label = plan?.transition.label ?? ' ';
+        const hidden = !!plan?.existing;
+        if (edge.toId !== destination || edge.options.label !== label || edge.options.hidden !== hidden ||
+            edge.options.smooth.type !== smooth.type || edge.options.smooth.roundness !== smooth.roundness ||
+            edge.options.smooth.enabled !== smooth.enabled || edge.options.color.opacity !== PREVIEW_OPACITY) {
+            edge.setOptions({
+                to: destination, smooth, label, hidden,
+                chosen: false,
+                labelHighlightBold: false,
+                color: {
+                    color: '#000000', hover: '#000000', highlight: '#000000',
+                    inherit: false, opacity: PREVIEW_OPACITY,
+                },
+                font: { color: 'rgba(52, 52, 52, 0.55)' },
+            });
+        }
+        this.previewBody.nodes[endpointId].options.opacity = plan ? 0 : PREVIEW_OPACITY;
+    }
+
+    private stylePreviewedEdges(): (() => void) | undefined {
+        const plan = this._previewPlan;
+        if (!plan || !this.connectionPreview.temporaryIds.edges.length) return;
+        if (plan.existing) {
+            const edge = this.previewBody.edges[plan.existing.id];
+            if (!edge) return;
+            const { hover, chooser } = edge;
+            edge.hover = true;
+            edge.chooser = values => {
+                values.color = '#0284c7';
+                values.opacity = PREVIEW_OPACITY;
+                values.width += 2;
+            };
+            return () => {
+                edge.hover = hover;
+                edge.chooser = chooser;
+            };
+        }
+
+        // A new opposite-direction transition bends both arrows when committed.
+        if (plan.reverse && plan.smooth) {
+            const edge = this.previewBody.edges[plan.reverse.id];
+            if (!edge) return;
+            const smooth = edge.options.smooth;
+            if (smooth.enabled === plan.smooth.enabled && smooth.type === plan.smooth.type &&
+                smooth.roundness === plan.smooth.roundness) return;
+            edge.options.smooth = { ...plan.smooth, forceDirection: smooth.forceDirection };
+            edge.setOptions({ smooth: plan.smooth });
+            return () => {
+                edge.options.smooth = smooth;
+                edge.setOptions({});
+            };
+        }
+        return undefined;
+    }
+
     public cancelConnection() {
         if (!this._connection) return;
         this._connection = undefined;
         this._connectionDrag = undefined;
+        this._previewPlan = undefined;
         this.connectionPreview._cleanupTemporaryNodesAndEdges();
     }
 
@@ -280,8 +368,6 @@ export class Graph {
             this._a.getNode(from) && this._a.getNode(to)) {
             this._tm.insertTransition({ from, to }, transition => this._a.addTransition(transition));
             this._n.selectNodes([to]);
-            this._selected = this._a.getNode(to) as Node;
-            this._selectedType = 'Node';
             this._requestUpdate();
         } else {
             this._n.redraw();
@@ -374,126 +460,76 @@ export class Graph {
         fixed: true,
     };    
     
-    /**
-     * Updates the selected data (either a Node or a Transition) in the graph.
-     *
-     * @param data - The data (Node or Transition) to be updated.
-     */
-    private updateSelectedData(data: Node | Transition) {
-        if (this._selectedType === 'Node') {
-            if (data.id === Graph.initialGhostNode.id) return;
-
-            if (!data.label) this._a.updateNode(data.id, { ...(data as Node), label: undefined });
-            else this._a.updateNode(data.id, data as Node);
-
-            this._selected = this._a.getNode(data.id) as Node;
-        } else if (this._selectedType === 'Transition') {
-            if (!data.label) this._a.updateTransition(data.id, { ...(data as Transition), label: undefined });
-            this._a.updateTransition(data.id, data as Transition);
-
-            this._selected = this._a.getTransition(data.id) as Transition;
+    private get editableSelection(): EditableSelection | undefined {
+        if (!this._interactive || this._ac.mode !== 'edit') return;
+        const [nodeId, ...otherNodes] = this._n.getSelectedNodes();
+        if (nodeId !== undefined) {
+            if (typeof nodeId !== 'number' || nodeId === Graph.initialGhostNode.id || otherNodes.length) return;
+            const node = this._a.getNode(nodeId);
+            if (node) return { type: 'node', data: node };
+            return;
         }
-        this._requestUpdate();
+        const [edgeId, ...otherEdges] = this._n.getSelectedEdges();
+        if (typeof edgeId !== 'number' || otherEdges.length) return;
+        const edge = this._a.getTransition(edgeId);
+        if (edge && edge.from !== Graph.initialGhostNode.id) return { type: 'edge', data: edge };
+        return undefined;
     }
 
-    /**
-     * Deletes the selected node or transition from the automaton.
-     */
-    private deleteSelected() {
-        Logger.log('Deleting', this._selected);
-
-        if (this._selectedType === 'Node') {
-            if (this._selected.id === Graph.initialGhostNode.id) return;
-            if (!this._ac.settings.permissions.node.delete) return;
-
-            this._a.removeNode(this._selected.id);
-        } else if (this._selectedType === 'Transition') {
-            if (!this._ac.settings.permissions.edge.delete) return;
-
-            this._a.removeTransition(this._selected.id);
-        }
-        this._requestUpdate();
-
-        if (this._tm.mode === 'addEdge') {
-            this.network.addEdgeMode();
-        }
-
-        this._cm.blur();
-        this._selected = null as any;
+    public renderEditingBar() {
+        const selection = this.editableSelection;
+        if (!selection) return;
+        const currentSelection = () => {
+            const current = this.editableSelection;
+            return current?.type === selection.type && current.data.id === selection.data.id ? current : undefined;
+        };
+        return this.editingBar.render(selection, (getPatch, permission = 'change') => {
+            const current = currentSelection();
+            if (!current || !this._ac.settings.permissions[current.type][permission]) return;
+            const patch = getPatch(current);
+            if (current.type === 'node') this._a.updateNode(current.data.id, patch as Partial<Node>);
+            else this._a.updateTransition(current.data.id, patch as Partial<Transition>);
+            this._requestUpdate();
+        }, () => {
+            const current = currentSelection();
+            if (current) this.deleteSelected(current);
+        });
     }
 
-    /**
-     * Sets up event listeners for the graph.
-     * This method handles various events such as click, context menu, node selection, node hover, etc.
-     * It also handles keyboard events for adding nodes, adding edges, deleting selected elements, etc.
-     */
+    private deleteSelected(selection: EditableSelection) {
+        if (!this._ac.settings.permissions[selection.type].delete) return;
+        this._n.unselectAll();
+        if (selection.type === 'node') this._a.removeNode(selection.data.id);
+        else this._a.removeTransition(selection.data.id);
+        this._requestUpdate();
+        if (this._tm.mode === 'addEdge') this.network.addEdgeMode();
+    }
+
     private setupListeners() {
         this._n.on('click', ({ pointer }: CanvasGesture) => {
-            this._cm.blur();
             if (this._connection) this.finishConnection(pointer.DOM);
         });
         this._n.on('doubleClick', (gesture: CanvasGesture) => this.addNodeAt(gesture));
-        this._n.on('afterDrawing', () => this.positionConnectionPoints());
+        this._n.on('controlNodeDragging', event => this.previewConnectionTarget(event.controlEdge));
+        // Highlight or bend existing arrows for this frame without changing their data.
+        let restorePreview: (() => void) | undefined;
+        this._n.on('beforeDrawing', () => { restorePreview = this.stylePreviewedEdges(); });
+        this._n.on('afterDrawing', () => {
+            restorePreview?.();
+            if (!this.connectionPreview.temporaryIds.edges.length) this._previewPlan = undefined;
+            this.positionConnectionPoints();
+        });
 
-        const oncontext = (e: any) => {
-            e.event.preventDefault();
-
-            if (!this._interactive) return;
-
-            if (!this._hovered) {
-                this._cm.blur();
-                return;
-            }
-
-            if (
-                this._hovered.id === Graph.initialGhostNode.id ||
-                (this._hoveredType === 'Transition' && (this._hovered as Transition).from === Graph.initialGhostNode.id)
-            ) {
-                return;
-            }
-
-            this._selected = this._hovered;
-            this._selectedType = this._hoveredType;
-            this._cm.setData(
-                this._selected,
-                this._selectedType,
-                this.updateSelectedData.bind(this),
-                this.deleteSelected.bind(this)
-            );
-            this._cm.setPosition(e.pointer.DOM);
-            if (this._selectedType === 'Node') {
-                this._n.selectNodes([this._selected.id]);
-            } else if (this._selectedType === 'Transition') {
-                this._n.selectEdges([this._selected.id]);
-            }
-            this._cm.show();
-        };
-        this._n.on('oncontext', oncontext);
+        this._n.on('oncontext', ({ event }: CanvasGesture) => event.preventDefault());
         this._n.on('hold', (gesture: CanvasGesture) => {
-            if (gesture.event.pointerType === 'touch' && this.addNodeAt(gesture)) return;
-            oncontext(gesture);
+            if (gesture.event.pointerType === 'touch') this.addNodeAt(gesture);
         });
-        this._n.on('selectNode', (e: any) => {
-            const nodeId = e.nodes[0];
-            
-            if (nodeId === Graph.initialGhostNode.id) {
-                this._n.unselectAll();
-                return;
-            }
-            
-            this._selected = this._a.getNode(nodeId) as Node;
-            this._selectedType = 'Node';
-        });
-        this._n.on('deselectNode', () => {
-            this._selected = null as any;
-            this._selectedType = null as any;
-        });
+        this._n.on('select', () => this._ac.requestUpdate());
         this._n.on('hoverNode', (e: any) => {
             const nodeId = e.node as number;
             if (nodeId === Graph.initialGhostNode.id) return;
             
             this._hovered = this._a.getNode(nodeId);
-            this._hoveredType = 'Node';
 
             if (this._ac.showHelp == 'false') return;
 
@@ -514,39 +550,11 @@ export class Graph {
             this._hovered = null;
             this._currentError = null;
         });
-        this._n.on('hoverEdge', (e: any) => {
-            this._hovered = this._a.getTransition(e.edge);
-            this._hoveredType = 'Transition';
+        this._n.on('dragging', ({ nodes }: { nodes: number[] }) => {
+            if (nodes.length) this.updateGhostNodePosition();
         });
-        this._n.on('blurEdge', () => {
-            this._hovered = null;
-        });        
-        this._n.on('dragging', (e: any) => {
-            if (!e.nodes || e.nodes.length == 0) return;
-
-            const draggedNodeId = e.nodes[0] as number;
-            const draggedNode = this._a.getNode(draggedNodeId);
-            
-            if (draggedNode && draggedNode.initial && draggedNodeId !== Graph.initialGhostNode.id) {
-                const newX = e.pointer.canvas.x + this._nodeCenterPointerOffset.x - 100;
-                const newY = e.pointer.canvas.y + this._nodeCenterPointerOffset.y;
-                
-                this._a.updateNode(Graph.initialGhostNode.id, {
-                    x: newX,
-                    y: newY
-                });
-            }
-        });        
-        this._n.on('dragStart', (e: any) => {
+        this._n.on('dragStart', () => {
             this._currentError = null;
-            this._cm.blur();
-
-            if (e.nodes && e.nodes.length > 0) {
-                this._nodeCenterPointerOffset = {
-                    x: (e.nodes[0] !== undefined ? this._a.getNode(e.nodes[0])?.x ?? 0 : 0) - e.pointer.canvas.x,
-                    y: (e.nodes[0] !== undefined ? this._a.getNode(e.nodes[0])?.y ?? 0 : 0) - e.pointer.canvas.y
-                }
-            }
         });
         this._n.on('dragEnd', () => {
             this._n.storePositions();
@@ -580,20 +588,22 @@ export class Graph {
 
             if (!this._interactive) return;
 
-            if ((e.key === 'Delete' || e.key === 'Backspace') && !this._cm.isVisible() && this._selected) {
+            const insideEditingBar = e.composedPath().some(target =>
+                target instanceof HTMLElement && target.classList.contains('editing-bar'));
+            if (insideEditingBar) return;
+
+            const selected = this.editableSelection;
+            if ((e.key === 'Delete' || e.key === 'Backspace') && selected) {
                 e.preventDefault();
-                this.deleteSelected();
+                this.deleteSelected(selected);
             }
 
             if (e.key === 'Escape') {
                 e.preventDefault();
                 this.cancelConnection();
-                this._selected = null as any;
-                this._selectedType = null as any;
                 this._n.unselectAll();
                 this._a.clearHighlights();
-
-                this._cm.blur();
+                this._ac.requestUpdate();
                 this._tm.mode = 'idle';
             }
 
@@ -621,53 +631,70 @@ export class Graph {
                 this._tm.visible = true;
             }
 
-            if (e.key === 'ArrowLeft' && this._selected && this._selectedType === 'Node' && !this._cm.isVisible()) {
-                e.preventDefault();
-                const x = (this._selected as Node).x || 0;
-                this.updateSelectedData({ ...this._selected, x: x - 10 });
-                this.updateGhostNodePosition();
-            }
-
-            if (e.key === 'ArrowRight' && this._selected && this._selectedType === 'Node' && !this._cm.isVisible()) {
-                e.preventDefault();
-                const x = (this._selected as Node).x || 0;
-                this.updateSelectedData({ ...this._selected, x: x + 10 });
-                this.updateGhostNodePosition();
-            }
-
-            if (e.key === 'ArrowUp' && this._selected && this._selectedType === 'Node' && !this._cm.isVisible()) {
-                e.preventDefault();
-                const y = (this._selected as Node).y || 0;
-                this.updateSelectedData({ ...this._selected, y: y - 10 });
-                this.updateGhostNodePosition();
-            }
-
-            if (e.key === 'ArrowDown' && this._selected && this._selectedType === 'Node' && !this._cm.isVisible()) {
-                e.preventDefault();
-                const y = (this._selected as Node).y || 0;
-                this.updateSelectedData({ ...this._selected, y: y + 10 });
-                this.updateGhostNodePosition();
+            if (selected?.type === 'node' && this._ac.settings.permissions.node.change) {
+                const dx = e.key === 'ArrowLeft' ? -10 : e.key === 'ArrowRight' ? 10 : 0;
+                const dy = e.key === 'ArrowUp' ? -10 : e.key === 'ArrowDown' ? 10 : 0;
+                if (dx || dy) {
+                    e.preventDefault();
+                    const { id, x = 0, y = 0 } = selected.data;
+                    this._a.updateNode(id, { x: x + dx, y: y + dy });
+                    this._requestUpdate();
+                }
             }
         });
     }
 
-    /**
-     * Updates the position of the ghost node based on the initial node's position.
-     */
-    public updateGhostNodePosition() {
-        const initialNode = this._a.getInitialNode();
-        if (initialNode && this._a.getNode(Graph.initialGhostNode.id)) {
-            const newX = (initialNode.x || 0) - 100;
-            const newY = initialNode.y || 0;
-            
-            Graph.initialGhostNode.x = newX;
-            Graph.initialGhostNode.y = newY;
-            
-            this._a.updateNode(Graph.initialGhostNode.id, {
-                x: newX,
-                y: newY
-            });
+    private updateGhostNodePosition() {
+        const ghostId = Graph.initialGhostNode.id;
+        const { nodes, edges } = this.previewBody;
+        const ghost = nodes[ghostId];
+        const initial = this._a.getInitialNode();
+        if (edges[ghostId]) edges[ghostId].options.hidden = !initial;
+        if (!ghost || !initial || !nodes[initial.id]) return;
+
+        const center = nodes[initial.id];
+        const nodeRadius = (id: number) => {
+            const { left, right, top, bottom } = this._n.getBoundingBox(id);
+            return Math.max(20, (right - left) / 2, (bottom - top) / 2);
+        };
+        const radius = nodeRadius(initial.id);
+        const length = Math.max(100, radius + 70);
+        const obstacles = this._a.nodes.get()
+            .filter(node => node.id !== ghostId && node.id !== initial.id && nodes[node.id])
+            .map(node => ({ position: nodes[node.id], radius: nodeRadius(node.id) + 6 }))
+            .filter(node => Math.hypot(node.position.x - center.x, node.position.y - center.y) <= length + node.radius);
+        const transitions = this._a.transitions.get()
+            .filter(transition => transition.from !== ghostId)
+            .map(transition => edges[transition.id])
+            .filter(edge => edge?.from && edge.to && !edge.options.hidden);
+
+        let best = { x: center.x - length, y: center.y };
+        let bestScore = Infinity;
+        // Prefer the usual left side, then try nearby angles until the shaft is clear.
+        for (let index = 0; index < 16; index++) {
+            const step = Math.ceil(index / 2) * (index % 2 ? 1 : -1);
+            const angle = Math.PI + step * Math.PI / 8;
+            const dx = Math.cos(angle);
+            const dy = Math.sin(angle);
+            let score = 0;
+            for (let distance = radius + 4; distance <= length; distance += 8) {
+                const x = center.x + dx * distance;
+                const y = center.y + dy * distance;
+                if (obstacles.some(node => Math.hypot(x - node.position.x, y - node.position.y) < node.radius)) score += 2;
+                if (transitions.some(({ from, to, edgeType }) =>
+                    edgeType.getDistanceToEdge(from!.x, from!.y, to!.x, to!.y, x, y) < 9)) score++;
+                if (score >= bestScore) break;
+            }
+            if (score < bestScore) {
+                best = { x: center.x + dx * length, y: center.y + dy * length };
+                bestScore = score;
+                if (score === 0) break;
+            }
         }
+
+        // This helper node belongs to the canvas. Its position is never authored.
+        ghost.x = best.x;
+        ghost.y = best.y;
     }
 
     /**
@@ -675,6 +702,7 @@ export class Graph {
      */
     private displayErrors() {
         this._a.redrawNodes();
+        this.updateGhostNodePosition();
         for (const error of this._errors) {
             if (error.node) {
                 this._a.highlightErrorNode(error.node.id);
