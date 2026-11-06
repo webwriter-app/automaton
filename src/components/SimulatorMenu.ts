@@ -83,7 +83,8 @@ export class SimulatorMenu extends LitElementWw {
             'sl-button': SlButton,
             'sl-tooltip': SlTooltip,
             'sl-badge': SlBadge,
-            'sl-input': SlInput,
+            // Shoelace's autocorrect property predates the native HTMLElement property.
+            'sl-input': SlInput as unknown as CustomElementConstructor,
             'sl-button-group': SlButtonGroup,
         };
     }

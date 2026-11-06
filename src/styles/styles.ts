@@ -1,7 +1,6 @@
 import { css } from 'lit';
 import { contextMenuStyles } from './contextMenu';
 import { stackStyles } from './stack';
-import { settingsStyles } from './settings';
 
 const baseStyles = css`
     :host {
@@ -88,4 +87,4 @@ const baseStyles = css`
     }
 `;
 
-export const styles = [baseStyles, contextMenuStyles, stackStyles, settingsStyles];
+export const styles = [baseStyles, contextMenuStyles, stackStyles];

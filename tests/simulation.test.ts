@@ -80,6 +80,78 @@ describe("Simulation Tests", () => {
 		});
 	});
 
+	describe("Widget options", () => {
+		it("reads existing settings and keeps controls outside the widget in both modes", async () => {
+			const widget = await createConfiguredDFA();
+			widget.setAttribute("permissions", "251");
+			widget.setAttribute("allowedtypes", "dfa nfa");
+			widget.setAttribute("allowedmodes", "edit simulate");
+			widget.setAttribute("allowedtransformations", "sink");
+			widget.setAttribute("showhelp", "false");
+			widget.setAttribute("testwords", '["a","ab"]');
+			widget.setAttribute("forcedalphabet", '["a","b"]');
+
+			assert.deepEqual(widget.selectedPermissions, ["node-delete", "edge-add", "edge-change", "stack-change"]);
+			assert.deepEqual(widget.allowedTypeOptions, ["dfa", "nfa"]);
+			assert.deepEqual(widget.allowedModeOptions, ["edit", "simulate"]);
+			assert.deepEqual(widget.allowedTransformationOptions, ["sink"]);
+			assert.isFalse(widget.helpEnabled);
+			assert.equal(widget.testWordsInput, "a,ab");
+			assert.equal(widget.forcedAlphabetInput, "a,b");
+			assert.containsAllKeys(AutomatonComponent.options, [
+				"selectedPermissions", "allowedTypeOptions", "allowedTransformationOptions",
+				"allowedModeOptions", "helpEnabled", "formalDefinitionEnabled", "transitionsTableEnabled",
+				"testLanguage", "testWordsInput", "forcedAlphabetInput", "verbose",
+			]);
+
+			for (const editable of ["true", "false"]) {
+				widget.setAttribute("contenteditable", editable);
+				await widget.updateComplete;
+				assert.isNotNull(widget.shadowRoot!.querySelector("#graphCanvas"));
+				assert.isNull(widget.shadowRoot!.querySelector('[part~="options"]'));
+			}
+		});
+
+		it("writes option changes to the existing authored attributes", async () => {
+			const widget = await createConfiguredPDA();
+			await widget.updateComplete;
+			widget.selectedPermissions = ["node-add", "edge-delete", "stack-change"];
+			widget.allowedTypeOptions = ["pda", "dfa"];
+			widget.allowedModeOptions = ["simulate"];
+			widget.allowedTransformationOptions = [];
+			widget.helpEnabled = false;
+			widget.formalDefinitionEnabled = false;
+			widget.transitionsTableEnabled = false;
+			widget.setAttribute("testlanguage", "a+");
+			widget.testWordsInput = "a,aa";
+			widget.forcedAlphabetInput = "a,b,a,invalid";
+			widget.setAttribute("verbose", "");
+			await widget.updateComplete;
+
+			assert.equal(widget.getAttribute("permissions"), "421");
+			assert.equal(widget.getAttribute("allowedtypes"), "pda dfa");
+			assert.equal(widget.getAttribute("allowedmodes"), "simulate");
+			assert.equal(widget.mode, "simulate");
+			assert.deepEqual(widget.allowedTransformations, []);
+			assert.equal(widget.getAttribute("showhelp"), "false");
+			assert.isFalse(widget.automaton.showErrors);
+			assert.equal(widget.getAttribute("showformaldefinition"), "false");
+			assert.equal(widget.getAttribute("showtransitionstable"), "false");
+			assert.equal(widget.testLanguage, "a+");
+			assert.equal(widget.getAttribute("testwords"), '["a","aa"]');
+			assert.equal(widget.getAttribute("forcedalphabet"), '["a","b"]');
+			assert.isTrue(widget.verbose);
+			widget.removeAttribute("verbose");
+			widget.removeAttribute("testlanguage");
+			assert.equal(widget.testLanguage, "");
+
+			widget.setAttribute("permissions", "004");
+			await widget.updateComplete;
+			assert.deepEqual(widget.selectedPermissions, ["stack-add"]);
+			assert.isFalse(widget.settings.permissions.node.add);
+		});
+	});
+
 	describe("DFA Configuration", () => {
 		it("should load and configure the test DFA", async () => {
 			const automaton = await createConfiguredDFA();

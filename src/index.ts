@@ -11,7 +11,6 @@ import { LitElementWw } from "@webwriter/lit";
 import { styles } from "./styles/styles";
 
 import SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
-import SlDetails from "@shoelace-style/shoelace/dist/components/details/details.component.js";
 import SlInput from "@shoelace-style/shoelace/dist/components/input/input.component.js";
 import SlCheckbox from "@shoelace-style/shoelace/dist/components/checkbox/checkbox.component.js";
 import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js";
@@ -26,7 +25,6 @@ import SlPopup from "@shoelace-style/shoelace/dist/components/popup/popup.compon
 import SlTag from "@shoelace-style/shoelace/dist/components/tag/tag.component.js";
 import SlDialog from "@shoelace-style/shoelace/dist/components/dialog/dialog.component.js";
 import SlRange from "@shoelace-style/shoelace/dist/components/range/range.component.js";
-import SlSwitch from "@shoelace-style/shoelace/dist/components/switch/switch.component.js";
 import SlDivider from "@shoelace-style/shoelace/dist/components/divider/divider.component.js";
 
 import "@shoelace-style/shoelace/dist/themes/light.css";
@@ -41,7 +39,7 @@ import { ToolMenu } from "./components/ToolMenu";
 import { InfoMenu } from "./components/InfoMenu";
 import { SimulatorMenu } from "./components/SimulatorMenu";
 
-import { Settings } from "./components/Settings";
+import { Settings, optionGroups, options } from "./components/Settings";
 
 import { biBoxes, biExclamationTriangle, biPencil } from "./styles/icons";
 
@@ -115,7 +113,7 @@ export class AutomatonComponent extends LitElementWw {
 	public accessor mode: "edit" | "simulate" = "edit";
 
 	/** A regular expression to check the language of the automaton against. */
-	@property({ type: String, attribute: true, reflect: true })
+	@property({ type: String, attribute: true, reflect: true, useDefault: true })
 	public accessor testLanguage: string = "";
 
 	/** The alphabet that the automaton is forced to use as characters separated by spaces. */
@@ -191,7 +189,58 @@ export class AutomatonComponent extends LitElementWw {
 	}
 
 	/** @internal */
-	public settings = new Settings(this);
+	public readonly settings = new Settings(this);
+
+	static get options() { return options(); }
+	static get optionGroups() { return optionGroups(); }
+
+	// The drawer's values differ from these settings' authored attribute formats.
+	/** @internal */
+	get selectedPermissions() { return this.settings.selectedPermissions; }
+	set selectedPermissions(value: string[] | null) { this.settings.selectedPermissions = value; }
+
+	/** @internal */
+	get allowedTypeOptions() { return this.allowedTypes; }
+	set allowedTypeOptions(value: string[] | null) {
+		this.setAttribute("allowedtypes", ATTRIBUTE_CONVERTERS.stringArray.toAttribute(value) ?? "");
+	}
+
+	/** @internal */
+	get allowedTransformationOptions() { return this.allowedTransformations; }
+	set allowedTransformationOptions(value: string[] | null) {
+		this.setAttribute("allowedtransformations", ATTRIBUTE_CONVERTERS.stringArray.toAttribute(value) ?? "");
+	}
+
+	/** @internal */
+	get allowedModeOptions() { return this.allowedModes; }
+	set allowedModeOptions(value: string[] | null) {
+		this.setAttribute("allowedmodes", ATTRIBUTE_CONVERTERS.stringArray.toAttribute(value) ?? "");
+	}
+
+	/** @internal */
+	get helpEnabled() { return this.showHelp === "true"; }
+	set helpEnabled(value: boolean) { this.setAttribute("showhelp", String(value === true)); }
+
+	/** @internal */
+	get formalDefinitionEnabled() { return this.showFormalDefinition === "true"; }
+	set formalDefinitionEnabled(value: boolean) { this.setAttribute("showformaldefinition", String(value === true)); }
+
+	/** @internal */
+	get transitionsTableEnabled() { return this.showTransitionsTable === "true"; }
+	set transitionsTableEnabled(value: boolean) { this.setAttribute("showtransitionstable", String(value === true)); }
+
+	/** @internal */
+	get testWordsInput() { return (this.testWords ?? []).join(","); }
+	set testWordsInput(value: string | null) {
+		this.setAttribute("testwords", JSON.stringify(value ? value.split(",") : []));
+	}
+
+	/** @internal */
+	get forcedAlphabetInput() { return (this.forcedAlphabet ?? []).join(","); }
+	set forcedAlphabetInput(value: string | null) {
+		const symbols = value?.split(",").filter(symbol => symbol.length === 1) ?? [];
+		this.setAttribute("forcedalphabet", JSON.stringify([...new Set(symbols)]));
+	}
 
 	/** @internal */
 	static shadowRootOptions = {
@@ -231,12 +280,12 @@ export class AutomatonComponent extends LitElementWw {
 		return styles;
 	}
 
-	protected static get scopedElements() {
+	static get scopedElements() {
 		return {
 			"sl-button": SlButton,
 			"sl-button-group": SlButtonGroup,
-			"sl-details": SlDetails,
-			"sl-input": SlInput,
+			// Shoelace's autocorrect property predates the native HTMLElement property.
+			"sl-input": SlInput as unknown as CustomElementConstructor,
 			"sl-checkbox": SlCheckbox,
 			"sl-tooltip": SlTooltip,
 			"sl-alert": SlAlert,
@@ -253,7 +302,6 @@ export class AutomatonComponent extends LitElementWw {
 			"sl-popup": SlPopup,
 			"sl-tag": SlTag,
 			"sl-range": SlRange,
-			"sl-switch": SlSwitch,
 			"sl-divider": SlDivider,
 		};
 	}
@@ -293,9 +341,6 @@ export class AutomatonComponent extends LitElementWw {
 		};
 		this.simulatorMenu.automaton = this.automaton;
 		this.simulatorMenu.graph = this._graph;
-
-		this.settings = new Settings(this);
-		this.settings.numberStringToPermissions(this.permissions);
 
 		if (this.automaton.extension) {
 			this.automaton.extension.contentEditable = "true";
@@ -391,7 +436,7 @@ export class AutomatonComponent extends LitElementWw {
 				this.settings.permissions.stack.change;
 		}
 
-		if (_changedProperties.has("showHelp")) {
+		if (_changedProperties.has("showHelp") || _changedProperties.has("type")) {
 			this.automaton.showErrors = this.showHelp === "true";
 		}
 
@@ -415,15 +460,6 @@ export class AutomatonComponent extends LitElementWw {
 	 * @returns {TemplateResult} The rendered TemplateResult.
 	 */
 	public render(): TemplateResult {
-		return html`
-			${this.renderEditor()}
-			${this.isContentEditable
-				? guard([this.settings], () => this.renderSettings())
-				: ""}
-		`;
-	}
-
-	private renderEditor(): TemplateResult {
 		return html`
 			<div class="editor">
 				${this._helpOverlay ? this.renderHelpOverlay() : ""}
@@ -451,18 +487,6 @@ export class AutomatonComponent extends LitElementWw {
 					() => this.automaton.extension
 				)}
 			</div>
-		`;
-	}
-
-	/**
-	 * Renders the settings section of the component.
-	 * @returns {TemplateResult} The rendered settings section.
-	 */
-	private renderSettings(): TemplateResult {
-		return html`
-			<aside class="settings" part="options">
-				${this.settings.render()}
-			</aside>
 		`;
 	}
 

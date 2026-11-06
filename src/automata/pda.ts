@@ -511,7 +511,8 @@ export class StackExtension extends LitElementWw {
     public static get scopedElements() {
         return {
             'sl-button': SlButton,
-            'sl-input': SlInput,
+            // Shoelace's autocorrect property predates the native HTMLElement property.
+            'sl-input': SlInput as unknown as CustomElementConstructor,
             'sl-tooltip': SlTooltip,
         };
     }
