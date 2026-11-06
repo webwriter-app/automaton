@@ -4,6 +4,7 @@ import { assert } from "chai";
 import "../src";
 import { AutomatonComponent } from "../src";
 import type { StackExtension } from "../src/automata/pda";
+import type { Graph } from "../src/graph";
 
 mocha.setup(getMochaConfig());
 
@@ -162,7 +163,7 @@ describe("Simulation Tests", () => {
 			assert.equal(widget.getBoundingClientRect().width, 300);
 			assert.equal(widget.getBoundingClientRect().height, 500);
 			widget.style.height = "250px";
-			assert.equal(widget.getBoundingClientRect().height, 360);
+			assert.equal(widget.getBoundingClientRect().height, 300);
 			widget.style.height = "640px";
 			assert.equal(widget.getBoundingClientRect().height, 640);
 			widget.style.height = "1200px";
@@ -171,7 +172,7 @@ describe("Simulation Tests", () => {
 
 		it("adapts the menus, graph and PDA stack to the widget width", async () => {
 			const widget = await createConfiguredPDA();
-			widget.style.height = "360px";
+			widget.style.height = "300px";
 			widget.mode = "simulate";
 			await widget.updateComplete;
 			const root = widget.shadowRoot!;
@@ -212,6 +213,27 @@ describe("Simulation Tests", () => {
 			assert.isAbove(items().getBoundingClientRect().height, 0);
 			assert.isAbove(items().scrollHeight, items().clientHeight);
 			assert.isAtMost(panel.getBoundingClientRect().bottom, graph.getBoundingClientRect().bottom);
+		});
+
+		it("preserves the canvas zoom and center through width and height changes", async () => {
+			const widget = await createConfiguredPDA();
+			widget.style.width = "800px";
+			await widget.updateComplete;
+			const afterResize = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+			await afterResize();
+
+			const { network } = (widget as unknown as { graph: Graph }).graph;
+			const position = { x: 90, y: -40 };
+			const scale = 1.75;
+			network.moveTo({ scale, position });
+			for (const [width, height] of [[300, 500], [300, 300], [1000, 600]]) {
+				widget.style.width = `${width}px`;
+				widget.style.height = `${height}px`;
+				await afterResize();
+				assert.equal(network.getScale(), scale, `${width} × ${height} zoom`);
+				assert.closeTo(network.getViewPosition().x, position.x, 0.01);
+				assert.closeTo(network.getViewPosition().y, position.y, 0.01);
+			}
 		});
 	});
 

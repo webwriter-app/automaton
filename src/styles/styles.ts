@@ -8,7 +8,7 @@ const baseStyles = css`
         box-sizing: border-box;
         min-width: 300px;
         height: 500px;
-        min-height: 360px;
+        min-height: 300px;
         max-height: 900px;
 
         user-select: none;

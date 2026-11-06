@@ -355,6 +355,17 @@ export class Graph {
             this._n.storePositions();
             this._lastPosition = this._n.getViewPosition();
         });
+        let scaleBeforeResize: number | undefined;
+        this._n.on('resize', () => {
+            if (scaleBeforeResize !== undefined) return;
+            const scale = this._n.getScale();
+            scaleBeforeResize = scale;
+            // vis-network emits resize before scaling the camera to the new canvas size.
+            queueMicrotask(() => {
+                scaleBeforeResize = undefined;
+                if (this._n.getScale() !== scale) this._n.moveTo({ scale });
+            });
+        });
         this._n.on('zoom', (e: any) => {
             if (e.scale < 0.5) {
                 this._n.moveTo({ scale: 0.5, position: this._lastPosition });
