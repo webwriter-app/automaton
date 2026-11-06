@@ -245,6 +245,16 @@ describe("Simulation Tests", () => {
 			assert.equal(widget.getBoundingClientRect().height, 1200);
 		});
 
+		it("allows canvas focus without drawing a widget focus outline", async () => {
+			const widget = await createConfiguredDFA();
+			await widget.updateComplete;
+			const frame = widget.shadowRoot!.querySelector<HTMLElement>(".vis-network")!;
+			frame.focus();
+			assert.equal(widget.shadowRoot!.activeElement, frame);
+			assert.equal(getComputedStyle(frame).outlineStyle, "none");
+			assert.equal(getComputedStyle(widget).outlineStyle, "none");
+		});
+
 		it("adapts the menus, graph and PDA stack to the widget width", async () => {
 			const widget = await createConfiguredPDA();
 			widget.style.height = "300px";

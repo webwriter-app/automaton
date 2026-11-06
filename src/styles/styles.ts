@@ -29,6 +29,11 @@ const baseStyles = css`
         outline-offset: -1px;
     }
 
+    :host(:focus),
+    .vis-network:focus {
+        outline: none;
+    }
+
     .hidden {
         display: none;
     }
