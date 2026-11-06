@@ -90,9 +90,9 @@ class PDASimulator extends ManualAutoSimulator {
         this._initialStack = this._a.extension.getStack();
         this._currentStack = [...this._initialStack];
         this._previousTransitions = {
-            accepted: this._currentNode.final,
+            accepted: this._currentNode?.final ?? false,
             path: {
-                nodes: [this._currentNode],
+                nodes: this._currentNode ? [this._currentNode] : [],
                 transitions: [],
                 stacks: [this._currentStack]
             }
@@ -299,9 +299,9 @@ class PDASimulator extends ManualAutoSimulator {
         this._currentStack = [...this._initialStack];
         this._a.displayStack(this._initialStack);
         this._previousTransitions = {
-            accepted: this._currentNode.final,
+            accepted: this._currentNode?.final ?? false,
             path: {
-                nodes: [this._currentNode],
+                nodes: this._currentNode ? [this._currentNode] : [],
                 transitions: [],
                 stacks: [this._currentStack]
             }

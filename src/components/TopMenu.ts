@@ -19,16 +19,14 @@ import SlTab from '@shoelace-style/shoelace/dist/components/tab/tab.component.js
 import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group.component.js';
 import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.component.js';
 
-import { AutomatonComponent } from '../index';
+import { AutomatonComponent, type AutomatonType } from '../index';
 import { topMenuStyles } from '../styles/topMenu';
-import { transformations } from '../utils/transformations';
+import { AddSinkstateToDFA } from '../utils/transformations/Sinkstate';
+import { DFA } from '../automata/dfa';
 import { LitElementWw } from '@webwriter/lit';
 import { Graph } from '../graph';
-import { stripNode, stripTransition } from '../utils/updates';
 import RandExp from 'randexp';
 import { SimulationStatus } from 'automata';
-import { NFA } from 'automata/nfa';
-import { PDA } from 'automata/pda';
 import { localized, msg } from '@lit/localize';
 import { Logger } from '@u/logger';
 
@@ -61,11 +59,8 @@ export class TopMenu extends LitElementWw {
         this._fullscreen = this._component?.matches(':fullscreen') ?? false;
     };
 
-    @property({ type: Object, attribute: false })
-    private accessor _graph!: Graph;
-    public set graph(graph: Graph) {
-        this._graph = graph;
-    }
+    @state()
+    private accessor _choices: 'sink' | 'type' | undefined = undefined;
 
     @property({ type: Object, attribute: false })
     private accessor _setHelpOverlay!: (visible: boolean) => (void);
@@ -126,7 +121,7 @@ export class TopMenu extends LitElementWw {
                         aria-label=${msg("Menu")}
                         aria-expanded=${this._menuOpen || this._helpOverlay}
                         aria-controls="compact-menu"
-                        @click=${() => { this._menuOpen = !this._menuOpen; }}
+                        @click=${() => { this._menuOpen = !this._menuOpen; this._choices = undefined; }}
                     >${biList}</sl-button>
                     ${this._menuOpen || this._helpOverlay ? html`
                         <div class="topmenu__collapsed_panel" id="compact-menu">
@@ -286,76 +281,49 @@ export class TopMenu extends LitElementWw {
                     </div>
                 </sl-popup>
             </div>
-            <div class="topmenu__button_group">
-                <!-- <sl-tooltip content="Transformations" placement="left"> -->
-                <sl-button
-                    class="topmenu__button"
-                    size=${buttonSize}
-                    circle
-                    ?disabled=${this._component.allowedTransformations.length === 0 || this._component.mode === 'simulate'}
-                    >${biArrowLeftRight}</sl-button
-                >
-                <!-- </sl-tooltip> -->
-                <div class="topmenu__buttons">
-                    ${this._component.allowedTransformations.includes('sink') && this._component.mode !== 'simulate'
-                        ? html`
-                            <sl-tooltip content=${msg("Add Sinkstate")} placement=${tooltipPlacement}>
-                                <sl-button
-                                    class="topmenu__button"
-                                    size="small"
-                                    ?circle=${msg("Sink").length <= 4}
-                                    @click=${() => {
-                                        transformations.AddSinkstateToDFA(this._component.automaton);
-                                    }}
-                                    >${msg("Sink")}</sl-button
-                                >
-                            </sl-tooltip>
-                        ` : ''}
-                </div>
-            </div>
-            <div class="topmenu__button_group">
-                <sl-tooltip content=${msg("Automaton Type")} placement=${tooltipPlacement}>
-                    <sl-button class="topmenu__button" size=${buttonSize} circle ?disabled=${this._component.allowedTypes.length === 0 || this._component.mode === 'simulate'}>
-                        ${this._component.automaton.type === 'dfa'
-                            ? msg('DFA') : this._component.automaton.type === 'nfa'
-                            ? msg('NFA') : msg('PDA')}
+            ${this.renderChoices('sink', msg("Transformations"), buttonSize, boundary)}
+            ${this.renderChoices('type', msg("Automaton Type"), buttonSize, boundary)}`;
+    }
+
+    private renderChoices(kind: 'sink' | 'type', label: string, size: string, boundary?: HTMLElement) {
+        const { automaton, mode, allowedTypes, allowedTransformations } = this._component;
+        const types = (['dfa', 'nfa', 'pda'] as const).filter(type => allowedTypes.includes(type) && type !== automaton.type);
+        const disabled = mode !== 'edit' || (kind === 'sink'
+            ? !(automaton instanceof DFA) || !allowedTransformations.includes('sink')
+            : types.length === 0);
+        const typeLabel = (type: AutomatonType) => type === 'dfa' ? msg('DFA') : type === 'nfa' ? msg('NFA') : msg('PDA');
+        return html`
+            <div class="topmenu__button_group" @keydown=${(event: KeyboardEvent) => {
+                if (event.key === 'Escape') this._choices = undefined;
+            }}>
+                <sl-popup placement="bottom-end" distance="8" shift flip
+                    .shiftBoundary=${boundary} .flipBoundary=${boundary}
+                    ?active=${!disabled && this._choices === kind}>
+                    <sl-button slot="anchor" class="topmenu__button" size=${size} circle title=${label}
+                        aria-expanded=${!disabled && this._choices === kind} ?disabled=${disabled}
+                        @click=${() => { this._choices = this._choices === kind ? undefined : kind; }}>
+                        ${kind === 'sink' ? biArrowLeftRight : typeLabel(automaton.type)}
                     </sl-button>
-                </sl-tooltip>
-                <div class="topmenu__buttons">
-                    ${this._component.allowedTypes.length > 0 && this._component.mode !== 'simulate'
-                         ? html`
-                            <sl-tooltip content=${msg("DFA")} placement=${tooltipPlacement}>
-                                <sl-button
-                                    class="topmenu__button"
-                                    size="small"
-                                    @click=${() => this.switchAutomatonType('dfa')}
-                                    circle
-                                    ?disabled=${!this._component.allowedTypes.includes('dfa')}
-                                    >${msg("DFA")}</sl-button
-                                >
-                            </sl-tooltip>
-                            <sl-tooltip content=${msg("NFA")} placement=${tooltipPlacement}>
-                                <sl-button
-                                    class="topmenu__button"
-                                    size="small"
-                                    @click=${() => this.switchAutomatonType('nfa')}
-                                    circle
-                                    ?disabled=${!this._component.allowedTypes.includes('nfa')}
-                                    >${msg("NFA")}</sl-button
-                                >
-                            </sl-tooltip>
-                            <sl-tooltip content=${msg("PDA")} placement=${tooltipPlacement}>
-                                <sl-button
-                                    class="topmenu__button"
-                                    size="small"
-                                    @click=${() => this.switchAutomatonType('pda')}
-                                    circle
-                                    ?disabled=${!this._component.allowedTypes.includes('pda')}
-                                    >${msg("PDA")}</sl-button
-                                >
-                            </sl-tooltip>
-                        ` : ''}
-                </div>
+                    <div class="topmenu__choices" role="group" aria-label=${label}>
+                        ${kind === 'sink' ? html`
+                            <sl-button size="small" @click=${() => {
+                                this._choices = undefined;
+                                const current = this._component.automaton;
+                                if (this._component.mode === 'edit' && current instanceof DFA &&
+                                    this._component.allowedTransformations.includes('sink') && AddSinkstateToDFA(current)) {
+                                    this._component.refreshGraph();
+                                }
+                            }}>${msg("Add Sinkstate")}</sl-button>
+                        ` : types.map(type => html`
+                            <sl-button size="small" @click=${() => {
+                                this._choices = undefined;
+                                if (this._component.mode === 'edit' && this._component.allowedTypes.includes(type)) {
+                                    this._component.type = type;
+                                }
+                            }}>${typeLabel(type)}</sl-button>
+                        `)}
+                    </div>
+                </sl-popup>
             </div>`;
     }
 
@@ -390,49 +358,5 @@ export class TopMenu extends LitElementWw {
             </tbody>
         </table>`;
         return table;
-    }
-
-    private switchAutomatonType(type: string): void {
-        Logger.log(
-            'Switching from',
-            this._component.automaton.type.toUpperCase(),
-            'to',
-            type.toUpperCase()
-        );
-
-        switch (this._component.automaton.type) {
-            case 'dfa':
-                if (type === 'nfa') this._component.automaton = transformations.DFAtoNFA(this._component.automaton);
-                if (type === 'pda') this._component.automaton = transformations.DFAtoPDA(this._component.automaton);
-                break;
-            case 'nfa':
-                if (type === 'dfa') this._component.automaton = transformations.NFAtoDFA(this._component.automaton as NFA);
-                if (type === 'pda') this._component.automaton = transformations.NFAtoPDA(this._component.automaton as NFA);
-                break;
-            case 'pda':
-                if (type === 'dfa') this._component.automaton = transformations.PDAtoDFA(this._component.automaton as PDA);
-                if (type === 'nfa') this._component.automaton = transformations.PDAtoNFA(this._component.automaton as PDA);
-                break;
-        }
-
-        this._graph.network.setData({
-            nodes: this._component.automaton.nodes,
-            edges: this._component.automaton.transitions,
-        });
-
-        this._component.nodes = this._component.automaton.nodes
-            .get()
-            .filter((n) => n.id !== Graph.initialGhostNode.id)
-            .map(stripNode);
-        this._component.nodes = [...this._component.nodes];
-
-        this._component.transitions = this._component.automaton.transitions
-            .get()
-            .filter((t) => t.from !== Graph.initialGhostNode.id)
-            .map(stripTransition);
-        this._component.transitions = [...this._component.transitions];
-
-        this.requestUpdate();
-        this._component.requestUpdate();
     }
 }

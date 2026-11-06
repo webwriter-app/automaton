@@ -27,20 +27,13 @@ export const topMenuStyles = css`
         justify-content: center;
     }
 
-    .topmenu__buttons {
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        position: absolute;
-        padding-top: 50px;
-        top: 0;
-        right: 0;
-        left: 0;
-    }
-
-    .topmenu__button_group:not([disabled]):hover .topmenu__buttons {
+    .topmenu__choices {
         display: flex;
+        gap: 6px;
+        padding: 6px;
+        border: 1px solid var(--sl-panel-border-color);
+        border-radius: var(--sl-border-radius-medium);
+        background: white;
     }
 
     .topmenu__button_group {
@@ -85,12 +78,6 @@ export const topMenuStyles = css`
 
     .topmenu__collapsed_panel sl-tooltip::part(base__popup) {
         z-index: 2000;
-    }
-
-    .topmenu__collapsed_panel .topmenu__buttons {
-        padding-top: 38px;
-        left: auto;
-        flex-direction: row;
     }
 
     .topmenu__popup {

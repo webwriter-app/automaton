@@ -260,11 +260,14 @@ export class AutomatonComponent extends LitElementWw {
 		this._helpOverlay = h;
 	}
 
-	/** @internal */
-	public set automaton(a: Automaton) {
+	private stopGraphPersistence?: () => void;
+
+	private replaceAutomaton(a: Automaton) {
+		this.stopGraphPersistence?.();
+		if (a instanceof DFA) a.requiredAlphabet = this.forcedAlphabet ?? [];
+		a.showErrors = this.showHelp === "true";
 		this._automaton = a;
-		this.type = a.type;
-		this.setUpListeners(this._automaton);
+		this.setUpListeners(a);
 		this._graph?.setAutomaton(this._automaton);
 		if (this.simulatorMenu) this.simulatorMenu.automaton = this._automaton;
 		Logger.log("Automaton set", this._automaton.transitions.get());
@@ -330,7 +333,6 @@ export class AutomatonComponent extends LitElementWw {
 		this._graph.toggleMode = () => this.toggleMode();
 		this.toolMenu.graph = this._graph;
 		this.topMenu.component = this;
-		this.topMenu.graph = this._graph;
 		this.topMenu.setHelpOverlay = (h: boolean) => {
 			this.helpOverlay = h;
 		};
@@ -353,13 +355,22 @@ export class AutomatonComponent extends LitElementWw {
 	): void {
 		super.willUpdate(_changedProperties);
 
-		if (_changedProperties.has("type")) {
-			if (this.type === "dfa")
-				this.automaton = new DFA(this.nodes, this.transitions);
-			if (this.type === "nfa")
-				this.automaton = new NFA(this.nodes, this.transitions);
-			if (this.type === "pda")
-				this.automaton = new PDA(this.nodes, this.transitions);
+		const type = this.type === "dfa" || this.type === "nfa" || this.type === "pda"
+			? this.type : this.automaton.type;
+		const replace = _changedProperties.has("type") &&
+			(!this._graph || type !== this.automaton.type);
+		if (replace) {
+			const nodes = !this._graph || _changedProperties.has("nodes")
+				? this.nodes : this.authoredNodes(this.automaton);
+			const transitions = !this._graph || _changedProperties.has("transitions")
+				? this.transitions : this.authoredTransitions(this.automaton);
+			const edges = this.transitionsForType(transitions, type);
+			const AutomatonClass = { dfa: DFA, nfa: NFA, pda: PDA }[type];
+			this.replaceAutomaton(new AutomatonClass(nodes, edges));
+			this.writeGraphAttributes(this.automaton);
+		} else if (_changedProperties.has("forcedAlphabet") && this.automaton instanceof DFA) {
+			this.automaton.requiredAlphabet = this.forcedAlphabet ?? [];
+			this._graph?.requestUpdate();
 		}
 
 		if (_changedProperties.has("allowedModes")) {
@@ -402,12 +413,9 @@ export class AutomatonComponent extends LitElementWw {
 			}
 		}
 
-		if (
-			_changedProperties.has("nodes") ||
-			_changedProperties.has("transitions")
-		) {
+		if (!replace && (_changedProperties.has("nodes") || _changedProperties.has("transitions"))) {
 			const nodes = _changedProperties.has("nodes") ? this.nodes : [];
-			const transitions = _changedProperties.has("transitions") ? this.transitions : [];
+			const transitions = _changedProperties.has("transitions") ? this.transitionsForType(this.transitions) : [];
 			const previousNodes = _changedProperties.get("nodes") as Node[] | undefined;
 			const previousTransitions = _changedProperties.get("transitions") as Transition[] | undefined;
 
@@ -668,6 +676,11 @@ export class AutomatonComponent extends LitElementWw {
 	/**
 	 * Toggles the mode between 'edit' and 'simulate'.
 	 */
+	/** @internal */
+	public refreshGraph() {
+		this._graph?.requestUpdate();
+	}
+
 	private canSimulate() {
 		return this.allowedModes.includes("simulate") && this._graph?.errors.length === 0;
 	}
@@ -680,29 +693,37 @@ export class AutomatonComponent extends LitElementWw {
 		}
 	}
 
-	/**
-	 * Sets up the listeners for the automaton.
-	 * @param a The automaton object.
-	 */
-	private setUpListeners(a: Automaton) {
-		/**
-		 * Updates the attributes of the graph by filtering and mapping the nodes and transitions
-		 * based on certain conditions.
-		 */
-		const updateAttributes = () => {
-			this.nodes = this.automaton.nodes
-				.get()
-				.filter((n) => n.id !== Graph.initialGhostNode.id)
-				.map(stripNode);
-			this.nodes = [...this.nodes];
-			this.transitions = this.automaton.transitions
-				.get()
-				.filter((t) => t.from !== Graph.initialGhostNode.id)
-				.map(stripTransition);
-			this.transitions = [...this.transitions];
-		};
+	private transitionsForType(transitions: Transition[], type = this.automaton.type): Transition[] {
+		return transitions.map(({ stackOperations, ...edge }) => type === "pda"
+			? {
+				...edge,
+				stackOperations: edge.symbols.map((_, index) =>
+					stackOperations?.[index] ?? { operation: "none", symbol: "", condition: "" }),
+			}
+			: { ...edge, stackOperations: undefined });
+	}
 
-		a.nodes.on("*", debounce(updateAttributes, 200));
-		a.transitions.on("*", debounce(updateAttributes, 200));
+	private authoredNodes(a: Automaton) {
+		return a.nodes.get().filter(node => node.id !== Graph.initialGhostNode.id).map(stripNode);
+	}
+
+	private authoredTransitions(a: Automaton) {
+		return a.transitions.get().filter(edge => edge.from !== Graph.initialGhostNode.id).map(stripTransition);
+	}
+
+	private writeGraphAttributes(a: Automaton) {
+		this.nodes = this.authoredNodes(a);
+		this.transitions = this.authoredTransitions(a);
+	}
+
+	private setUpListeners(a: Automaton) {
+		const update = debounce(() => this.writeGraphAttributes(a), 200);
+		a.nodes.on("*", update);
+		a.transitions.on("*", update);
+		this.stopGraphPersistence = () => {
+			update.cancel();
+			a.nodes.off("*", update);
+			a.transitions.off("*", update);
+		};
 	}
 }

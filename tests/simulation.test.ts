@@ -72,6 +72,84 @@ describe("Simulation Tests", () => {
 			.forEach((el) => el.remove());
 	});
 
+	const menuChoice = async (widget: AutomatonComponent, label: string, choice: string) => {
+		await widget.updateComplete;
+		const menu = widget.shadowRoot!.querySelector("#topMenu") as HTMLElement & { updateComplete: Promise<unknown> };
+		await menu.updateComplete;
+		const root = menu.shadowRoot!;
+		if (!root.querySelector(`sl-button[title="${label}"]`)) {
+			root.querySelector<HTMLElement>(".topmenu--hamburger > sl-button")!.click();
+			await menu.updateComplete;
+		}
+		const anchor = root.querySelector<HTMLElement>(`sl-button[title="${label}"]`)!;
+		anchor.click();
+		await menu.updateComplete;
+		const popup = anchor.closest("sl-popup")!;
+		assert.isTrue(popup.hasAttribute("active"));
+		const button = [...popup.querySelectorAll<HTMLElement>(".topmenu__choices sl-button")]
+			.find(option => option.textContent?.trim() === choice)!;
+		button.click();
+		await widget.updateComplete;
+		await menu.updateComplete;
+	};
+
+	describe("Automaton tools", () => {
+		it("switches types with an empty graph and preserves live edits and edge geometry", async () => {
+			const widget = document.createElement("webwriter-automaton") as AutomatonComponent;
+			widget.style.width = "600px";
+			document.body.append(widget);
+			await menuChoice(widget, "Automaton Type", "NFA");
+			assert.equal(widget.automaton.type, "nfa");
+			assert.isEmpty(widget.nodes);
+			await menuChoice(widget, "Automaton Type", "PDA");
+			assert.equal(widget.automaton.type, "pda");
+			assert.exists(widget.shadowRoot!.querySelector("stack-extension"));
+			widget.setAttribute("nodes", "#0(0|0);%1(150|0)");
+			widget.setAttribute("transitions", "0-1[a{p|X|}]~0.2;1-1[b{n||}]@135");
+			await widget.updateComplete;
+			widget.automaton.updateNode(1, { label: "accept" });
+			await menuChoice(widget, "Automaton Type", "DFA");
+			assert.equal(widget.automaton.type, "dfa");
+			assert.isNull(widget.shadowRoot!.querySelector("stack-extension"));
+			assert.equal(widget.automaton.getNode(1)?.label, "accept");
+			assert.isTrue(widget.automaton.getNode(1)?.final);
+			assert.equal(widget.automaton.getInitialNode().id, 0);
+			assert.equal(widget.getAttribute("transitions"), "0-1[a]~0.2;1-1[b]@135");
+			await menuChoice(widget, "Automaton Type", "PDA");
+			assert.equal(widget.automaton.getTransition(0)?.stackOperations?.[0].operation, "none");
+			assert.equal(widget.getAttribute("transitions"), "0-1[a{n||}]~0.2;1-1[b{n||}]@135");
+		});
+
+		it("completes missing DFA transitions and reuses the sink as the alphabet grows", async () => {
+			const widget = document.createElement("webwriter-automaton") as AutomatonComponent;
+			widget.style.width = "600px";
+			document.body.append(widget);
+			await menuChoice(widget, "Transformations", "Add Sinkstate");
+			assert.isEmpty(widget.nodes, "An empty graph cannot gain a sink");
+			widget.setAttribute("nodes", "#%0(0|0)");
+			await menuChoice(widget, "Transformations", "Add Sinkstate");
+			assert.isEmpty(widget.automaton.getTransitionsFromNode(widget.automaton.getInitialNode()),
+				"An empty alphabet cannot produce an empty-symbol transition");
+			widget.forcedAlphabet = ["a", "b"];
+			await widget.updateComplete;
+			await menuChoice(widget, "Transformations", "Add Sinkstate");
+			const { automaton } = widget;
+			const sink = automaton.getNode(1)!;
+			assert.isFalse(sink.final);
+			assert.isFalse(sink.initial);
+			assert.deepEqual(automaton.getTransitionsFromNode(sink).map(edge => [edge.to, edge.symbols]), [[1, ["a", "b"]]]);
+			assert.isEmpty(automaton.checkAutomaton());
+			await menuChoice(widget, "Transformations", "Add Sinkstate");
+			assert.lengthOf(automaton.nodes.get().filter(node => node.id >= 0), 2);
+			widget.forcedAlphabet = ["a", "b", "c"];
+			await widget.updateComplete;
+			await menuChoice(widget, "Transformations", "Add Sinkstate");
+			assert.lengthOf(automaton.nodes.get().filter(node => node.id >= 0), 2);
+			assert.deepEqual(automaton.getTransitionsFromNode(sink).map(edge => [edge.to, edge.symbols]), [[1, ["a", "b", "c"]]]);
+			assert.isEmpty(automaton.checkAutomaton());
+		});
+	});
+
 	describe("Component Initialization", () => {
 		it("should initialize the automaton component", async () => {
 			const automaton = await createConfiguredDFA();
