@@ -360,36 +360,6 @@
                 }
               ],
               "description": "Sets up the listeners for the automaton."
-            },
-            {
-              "kind": "field",
-              "name": "referenceNodes",
-              "type": {
-                "text": "string | undefined"
-              },
-              "privacy": "public",
-              "attribute": "reference-nodes",
-              "description": "Explicit correct/reference states, encoded like nodes. Requires reference-transitions."
-            },
-            {
-              "kind": "field",
-              "name": "referenceTransitions",
-              "type": {
-                "text": "string | undefined"
-              },
-              "privacy": "public",
-              "attribute": "reference-transitions",
-              "description": "Explicit correct/reference transitions, encoded like transitions. Requires reference-nodes."
-            },
-            {
-              "kind": "field",
-              "name": "referenceType",
-              "type": {
-                "text": "AutomatonType | undefined"
-              },
-              "privacy": "public",
-              "attribute": "reference-type",
-              "description": "Reference graph type; defaults to the authored automaton type."
             }
           ],
           "attributes": [
@@ -526,30 +496,6 @@
               "default": "[\"sink\"]",
               "description": "The transformations that are allowed in the editor.",
               "fieldName": "allowedTransformations"
-            },
-            {
-              "name": "reference-nodes",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Explicit correct/reference states, encoded like nodes. Requires reference-transitions.",
-              "fieldName": "referenceNodes"
-            },
-            {
-              "name": "reference-transitions",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Explicit correct/reference transitions, encoded like transitions. Requires reference-nodes.",
-              "fieldName": "referenceTransitions"
-            },
-            {
-              "name": "reference-type",
-              "type": {
-                "text": "AutomatonType | undefined"
-              },
-              "description": "Reference graph type; defaults to the authored automaton type.",
-              "fieldName": "referenceType"
             }
           ],
           "superclass": {
