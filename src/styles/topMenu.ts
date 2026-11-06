@@ -14,6 +14,12 @@ export const topMenuStyles = css`
         top: 10px;
     }
 
+    @container automaton (500px <= width < 560px) {
+        .topmenu {
+            gap: 2px;
+        }
+    }
+
     .topmenu sl-button::part(base),
     .topmenu sl-button::part(label) {
         display: flex;

@@ -85,9 +85,21 @@ const baseStyles = css`
         position: absolute;
         top: 10px;
         left: 10px;
-        line-height: 16px;
+        max-width: calc(100% - 70px);
 
         z-index: 1500;
+    }
+
+    @container automaton (width >= 500px) {
+        .mode_switch {
+            max-width: calc(100% - 320px);
+        }
+    }
+
+    @container automaton (500px <= width < 560px) {
+        .mode_switch {
+            max-width: calc(100% - 274px);
+        }
     }
 
     .errordisplay {
@@ -103,12 +115,56 @@ const baseStyles = css`
         z-index: 1000;
     }
 
-    .mode_switch__select {
-        width: 150px;
+    .mode_switch__buttons {
+        display: flex;
+        user-select: none;
     }
 
-    .mode_switch sl-tooltip:has(sl-select[open])::part(base__popup) {
-        visibility: hidden;
+    .mode_switch__buttons button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        min-width: 0;
+        min-height: var(--sl-input-height-medium);
+        padding: 4px 10px;
+        border: 1px solid var(--sl-input-border-color);
+        background: var(--sl-color-neutral-0);
+        color: var(--sl-color-neutral-700);
+        font: 500 var(--sl-font-size-small) / 1.05 var(--sl-font-sans);
+        cursor: pointer;
+    }
+
+    .mode_switch__buttons button:first-child {
+        border-radius: var(--sl-border-radius-medium) 0 0 var(--sl-border-radius-medium);
+    }
+
+    .mode_switch__buttons button + button {
+        border-left: 0;
+        border-radius: 0 var(--sl-border-radius-medium) var(--sl-border-radius-medium) 0;
+    }
+
+    .mode_switch__buttons button[aria-pressed="true"] {
+        background: var(--sl-color-primary-600);
+        color: var(--sl-color-neutral-0);
+    }
+
+    .mode_switch__buttons button:focus-visible {
+        outline: var(--sl-focus-ring);
+        outline-offset: -2px;
+    }
+
+    .mode_switch__buttons button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .mode_switch__buttons [aria-hidden] {
+        display: flex;
+    }
+
+    .mode_switch__label {
+        overflow-wrap: anywhere;
     }
 
     .help-backdrop {

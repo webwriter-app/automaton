@@ -5,7 +5,6 @@ import "../src";
 import { AutomatonComponent } from "../src";
 import type { StackExtension } from "../src/automata/pda";
 import type { Graph } from "../src/graph";
-import type SlSelect from "@shoelace-style/shoelace/dist/components/select/select.component.js";
 import type SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js";
 import LOCALIZE from "../localization/generated/index.js";
 
@@ -159,7 +158,7 @@ describe("Simulation Tests", () => {
 	});
 
 	describe("Responsive layout", () => {
-		it("contains the compact menu, German help and mode tooltip at 300 by 300 pixels", async () => {
+		it("fits the compact menu, German help and mode buttons at 300 by 300 pixels", async () => {
 			const widget = await createConfiguredDFA();
 			widget.style.width = "300px";
 			widget.style.height = "300px";
@@ -199,15 +198,27 @@ describe("Simulation Tests", () => {
 				await layout();
 
 				const tooltip = root.querySelector<SlTooltip>(".mode_switch sl-tooltip")!;
-				const select = root.querySelector<SlSelect>(".mode_switch__select")!;
+				const group = root.querySelector<HTMLElement>(".mode_switch__buttons")!;
+				const [edit, simulate] = group.querySelectorAll<HTMLButtonElement>("button");
+				assertInside(group);
+				assert.equal(edit.textContent!.trim(), "Bearbeiten");
+				assert.equal(simulate.textContent!.trim(), "Simulieren");
+				assert.exists(edit.querySelector(".bi-pencil"));
+				assert.exists(simulate.querySelector(".bi-boxes"));
+				assert.equal(edit.getAttribute("aria-pressed"), "true");
 				await tooltip.show();
 				assertInside(tooltip.body);
-				await select.show();
-				assert.equal(getComputedStyle(tooltip.body).visibility, "hidden");
-				assertInside(select.shadowRoot!.querySelector('[part="listbox"]')!);
-				await select.hide();
-				widget.mode = "simulate";
+				await tooltip.hide();
+				simulate.click();
 				await layout();
+				assert.equal(widget.mode, "simulate");
+				assert.equal(simulate.getAttribute("aria-pressed"), "true");
+				assert.equal(edit.getAttribute("aria-pressed"), "false");
+				widget.allowedModes = ["simulate"];
+				await widget.updateComplete;
+				assert.isTrue(edit.disabled);
+				edit.click();
+				assert.equal(widget.mode, "simulate");
 				const playbackTooltips = root.querySelector("#simulatorMenu")!.shadowRoot!
 					.querySelectorAll<SlTooltip>(".simulator_buttons sl-tooltip");
 				const lastVisibleTooltip = Array.from(playbackTooltips)
@@ -256,6 +267,11 @@ describe("Simulation Tests", () => {
 				await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 				const compact = width < 500;
 				assert.equal(!!topMenu.querySelector(".topmenu--hamburger"), compact, `${width}px top menu`);
+				const modeButtons = root.querySelector(".mode_switch__buttons")!.getBoundingClientRect();
+				const circleButton = topMenu.querySelector("sl-button")!.getBoundingClientRect();
+				assert.closeTo(modeButtons.top, circleButton.top, 1, `${width}px mode buttons align`);
+				assert.closeTo(modeButtons.height, circleButton.height, 1, `${width}px mode buttons match toolbar height`);
+				assert.isAtMost(modeButtons.right, topMenu.querySelector(".topmenu")!.getBoundingClientRect().left);
 				const input = simulator.querySelector("#wordInput")!.getBoundingClientRect();
 				const buttons = Array.from(simulator.querySelectorAll(".simulator_buttons"))
 					.find(group => group.getClientRects().length)!.getBoundingClientRect();

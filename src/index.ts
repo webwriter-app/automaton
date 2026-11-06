@@ -46,7 +46,6 @@ import { biBoxes, biExclamationTriangle, biPencil } from "./styles/icons";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { guard } from "lit/directives/guard.js";
-import { SlChangeEvent } from "@shoelace-style/shoelace";
 import {
 	checkIfNodesUpdated,
 	checkIfTransitionsUpdated,
@@ -594,30 +593,26 @@ export class AutomatonComponent extends LitElementWw {
 				content=${msg("Switch mode (Ctrl+M)")}
 				placement="bottom-start"
 			>
-				<sl-select
-					size="small"
-					class="mode_switch__select"
-					value=${this.mode}
-					.value=${this.mode}
-					defaultValue="${this.mode}"
-					?disabled=${this.allowedModes.length <= 1}
-					@sl-change=${(e: SlChangeEvent) => {
-						this.mode = (e.target as SlSelect).value as
-							| "edit"
-							| "simulate";
-					}}
-					name="mode"
-				>
-					<span slot="prefix"
-						>${this.mode === "edit" ? biPencil : biBoxes}</span
+				<div class="mode_switch__buttons" role="group" aria-label=${msg("Mode Switch")} contenteditable="false">
+					<button
+						type="button"
+						aria-pressed=${this.mode === "edit"}
+						?disabled=${!this.allowedModes.includes("edit")}
+						@click=${() => { this.mode = "edit"; }}
 					>
-					<sl-option value=${"edit"} selected>
-						<span slot="prefix">${biPencil}</span> ${msg("Edit")}
-					</sl-option>
-					<sl-option value=${"simulate"}>
-						<span slot="prefix">${biBoxes}</span> ${msg("Simulate")}
-					</sl-option>
-				</sl-select>
+						<span aria-hidden="true">${biPencil}</span>
+						<span class="mode_switch__label">${msg("Edit")}</span>
+					</button>
+					<button
+						type="button"
+						aria-pressed=${this.mode === "simulate"}
+						?disabled=${!this.allowedModes.includes("simulate")}
+						@click=${() => { this.mode = "simulate"; }}
+					>
+						<span aria-hidden="true">${biBoxes}</span>
+						<span class="mode_switch__label">${msg("Simulate")}</span>
+					</button>
+				</div>
 			</sl-tooltip>
 			<div
 				class="mode_switch__error_indicator"
