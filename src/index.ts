@@ -448,10 +448,10 @@ export class AutomatonComponent extends LitElementWw {
 	 */
 	public render(): TemplateResult {
 		return html`
-			<div class="editor">
+			<div class=${this._topMenuCollapsed ? "editor editor--compact" : "editor"}>
 				<div class="workspace">
 					<div class="graph">
-						${this._helpOverlay ? this.renderHelpOverlay() : ""}
+						${this._helpOverlay && !this._topMenuCollapsed ? this.renderHelpOverlay() : ""}
 						<div id="graphCanvas"></div>
 						${this._graph?.contextMenu.render()} ${this.renderModeSwitch()}
 						${this._graph?.renderErrorDisplay()}
@@ -471,6 +471,7 @@ export class AutomatonComponent extends LitElementWw {
 						display: this.mode === "simulate" ? "block" : "none",
 					})}
 				></webwriter-automaton-simulatormenu>
+				${this._helpOverlay && this._topMenuCollapsed ? this.renderCompactHelp() : ""}
 			</div>
 		`;
 	}
@@ -487,57 +488,50 @@ export class AutomatonComponent extends LitElementWw {
 					>${msg("Mode Switch")}</sl-tag
 				>
 
-				${this._topMenuCollapsed ? html`
-					<sl-tag size="small" style="top:18px;right:60px"
-						>${msg("Menu")}</sl-tag
-					>
-					<div class="line" style="top:28px;right:50px;width:10px"></div>
-				` : html`
-					<sl-tag size="small" style="top: 228px;right:10px"
-						>${msg("Fullscreen")}</sl-tag
-					>
-					<div
-						class="line"
-						style="top: 55px;right: 30px;height: 164px;"
-					></div>
+				<sl-tag size="small" style="top: 228px;right:10px"
+					>${msg("Fullscreen")}</sl-tag
+				>
+				<div
+					class="line"
+					style="top: 55px;right: 30px;height: 164px;"
+				></div>
 
-					<sl-tag size="small" style="top:18px;right:325px"
-						>${msg("Type")}</sl-tag
-					>
-					<div class="line" style="top:28px;right:310px;width:10px"></div>
+				<sl-tag size="small" style="top:18px;right:325px"
+					>${msg("Type")}</sl-tag
+				>
+				<div class="line" style="top:28px;right:310px;width:10px"></div>
 
-					<sl-tag size="small" style="top:60px;right:325px"
-						>${msg("Transformations")}</sl-tag
-					>
-					<div
-						class="line"
-						style="top:55px;right:230px;width:90px;height:15px"
-					></div>
+				<sl-tag size="small" style="top:60px;right:325px"
+					>${msg("Transformations")}</sl-tag
+				>
+				<div
+					class="line"
+					style="top:55px;right:230px;width:90px;height:15px"
+				></div>
 
-					<sl-tag size="small" style="top: 186px;right: 325px;"
-						>${msg("Help")}</sl-tag
-					>
-					<div
-						class="line"
-						style="top: 55px;right: 80px;width: 240px;height: 141px;"
-					></div>
+				<sl-tag size="small" style="top: 186px;right: 325px;"
+					>${msg("Help")}</sl-tag
+				>
+				<div
+					class="line"
+					style="top: 55px;right: 80px;width: 240px;height: 141px;"
+				></div>
 
-					<sl-tag size="small" style="top: 144px;right: 325px;"
-						>${msg("Test Cases")}</sl-tag
-					>
-					<div
-						class="line"
-						style="top: 55px;right: 130px;width: 190px;height: 99px;"
-					></div>
+				<sl-tag size="small" style="top: 144px;right: 325px;"
+					>${msg("Test Cases")}</sl-tag
+				>
+				<div
+					class="line"
+					style="top: 55px;right: 130px;width: 190px;height: 99px;"
+				></div>
 
-					<sl-tag size="small" style="top: 102px;right: 325px;"
-						>${msg("Definition")}</sl-tag
-					>
-					<div
-						class="line"
-						style="top: 55px;right: 180px;width: 140px;height: 57px;"
-					></div>
-				`}
+				<sl-tag size="small" style="top: 102px;right: 325px;"
+					>${msg("Definition")}</sl-tag
+				>
+				<div
+					class="line"
+					style="top: 55px;right: 180px;width: 140px;height: 57px;"
+				></div>
 			</div>
 
 			<div
@@ -553,19 +547,15 @@ export class AutomatonComponent extends LitElementWw {
 					>${msg("Add Transition by drag and drop")}</sl-tag
 				>
 
-				${!this._topMenuCollapsed ? html`
-					<sl-tag size="small" style="bottom: 110px;right: 30px;"
-						>${msg("Move the elements by drag and drop")}</sl-tag
-					>
-					<sl-tag size="small" style="bottom: 70px;right: 30px;"
-						>${msg("To edit a node right click the node")}</sl-tag
-					>
-					<sl-tag size="small" style="bottom: 30px;right: 30px;"
-						>${msg(
-							"To edit a transition right click the transition"
-						)}</sl-tag
-					>
-				` : ""}
+				<sl-tag size="small" style="bottom: 110px;right: 30px;"
+					>${msg("Move the elements by drag and drop")}</sl-tag
+				>
+				<sl-tag size="small" style="bottom: 70px;right: 30px;"
+					>${msg("To edit a node right click the node")}</sl-tag
+				>
+				<sl-tag size="small" style="bottom: 30px;right: 30px;"
+					>${msg("To edit a transition right click the transition")}</sl-tag
+				>
 			</div>
 
 			${this.mode === "simulate" ? html`
@@ -577,6 +567,23 @@ export class AutomatonComponent extends LitElementWw {
 		`;
 	}
 
+	private renderCompactHelp(): TemplateResult {
+		return html`
+			<div class="help-backdrop"></div>
+			<div class="compact-help" role="region" aria-label=${msg("Help")} tabindex="0">
+				<span>${msg("Mode Switch")}</span>
+				<span>${msg("Menu")}</span>
+				${this.mode === "edit" ? html`
+					<span>${msg("Add Node by click")}</span>
+					<span>${msg("Add Transition by drag and drop")}</span>
+				` : html`
+					<span>${msg("Input word")}</span>
+					<span>${msg("Simulation Controls")}</span>
+				`}
+			</div>
+		`;
+	}
+
 	/**
 	 * Renders the mode switch component.
 	 * @returns {TemplateResult} The rendered mode switch component.
@@ -585,7 +592,7 @@ export class AutomatonComponent extends LitElementWw {
 		return html`<div class="mode_switch">
 			<sl-tooltip
 				content=${msg("Switch mode (Ctrl+M)")}
-				placement="right"
+				placement="bottom-start"
 			>
 				<sl-select
 					size="small"

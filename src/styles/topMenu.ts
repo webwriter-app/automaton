@@ -58,18 +58,16 @@ export const topMenuStyles = css`
     }
 
     .topmenu--hamburger {
-        flex-direction: row;
-    }
-
-    .topmenu--hamburger > sl-popup::part(popup) {
         z-index: 2500;
     }
 
     .topmenu__collapsed_panel {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
         display: flex;
-        flex-direction: column;
-        gap: 10px;
-        padding: 10px;
+        gap: 6px;
+        padding: 8px;
         background-color: white;
         outline: 1px solid var(--sl-panel-border-color);
         border-radius: var(--sl-border-radius-medium);
@@ -84,21 +82,20 @@ export const topMenuStyles = css`
     }
 
     .topmenu__collapsed_panel .topmenu__buttons {
-        padding-top: 0;
-        padding-right: 60px;
-        left: unset;
-        bottom: 0;
+        padding-top: 38px;
+        left: auto;
         flex-direction: row;
     }
 
     .topmenu__popup {
-        max-width: min(400px, 60vw);
-        max-height: var(--auto-size-available-height, 350px);
+        max-width: min(400px, var(--auto-size-available-width, 60vw));
+        max-height: min(350px, var(--auto-size-available-height, 350px));
         background-color: white;
         outline: 1px solid var(--sl-panel-border-color);
         border-radius: var(--sl-border-radius-medium);
         font-size: 1rem;
         overflow: auto;
+        overflow-wrap: anywhere;
     }
 
     .topmenu__popup label {

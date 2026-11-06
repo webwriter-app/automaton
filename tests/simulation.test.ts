@@ -5,6 +5,9 @@ import "../src";
 import { AutomatonComponent } from "../src";
 import type { StackExtension } from "../src/automata/pda";
 import type { Graph } from "../src/graph";
+import type SlSelect from "@shoelace-style/shoelace/dist/components/select/select.component.js";
+import type SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js";
+import LOCALIZE from "../localization/generated/index.js";
 
 mocha.setup(getMochaConfig());
 
@@ -156,6 +159,67 @@ describe("Simulation Tests", () => {
 	});
 
 	describe("Responsive layout", () => {
+		it("contains the compact menu, German help and mode tooltip at 300 by 300 pixels", async () => {
+			const widget = await createConfiguredDFA();
+			widget.style.width = "300px";
+			widget.style.height = "300px";
+			widget.lang = "de";
+			await LOCALIZE.setLocale("de");
+			try {
+				const layout = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+				await layout();
+				const root = widget.shadowRoot!;
+				const menu = root.querySelector("#topMenu")!.shadowRoot!;
+				const bounds = widget.getBoundingClientRect();
+				const assertInside = (element: Element) => {
+					const rect = element.getBoundingClientRect();
+					assert.isAbove(rect.height, 0);
+					assert.isAtLeast(rect.top, bounds.top);
+					assert.isAtLeast(rect.left, bounds.left);
+					assert.isAtMost(rect.bottom, bounds.bottom);
+					assert.isAtMost(rect.right, bounds.right);
+				};
+
+				menu.querySelector<HTMLElement>(".topmenu--hamburger > sl-button")!.click();
+				await layout();
+				const panel = menu.querySelector(".topmenu__collapsed_panel")!;
+				assertInside(panel);
+				panel.querySelector<HTMLElement>("sl-button:has(.bi-question-lg)")!.click();
+				await layout();
+				const help = root.querySelector(".compact-help")!;
+				assertInside(help);
+				assert.include(help.textContent, "Übergänge");
+				assert.equal(help.scrollWidth, help.clientWidth, "German help text wraps");
+				panel.querySelector<HTMLElement>("sl-button:has(.bi-question-lg)")!.click();
+				const definition = panel.querySelector("sl-popup:has(.bi-code-slash)")!;
+				definition.querySelector<HTMLElement>("sl-button")!.click();
+				await layout();
+				assertInside(definition.querySelector(".topmenu__popup")!);
+				menu.querySelector<HTMLElement>(".topmenu--hamburger > sl-button")!.click();
+				await layout();
+
+				const tooltip = root.querySelector<SlTooltip>(".mode_switch sl-tooltip")!;
+				const select = root.querySelector<SlSelect>(".mode_switch__select")!;
+				await tooltip.show();
+				assertInside(tooltip.body);
+				await select.show();
+				assert.equal(getComputedStyle(tooltip.body).visibility, "hidden");
+				assertInside(select.shadowRoot!.querySelector('[part="listbox"]')!);
+				await select.hide();
+				widget.mode = "simulate";
+				await layout();
+				const playbackTooltips = root.querySelector("#simulatorMenu")!.shadowRoot!
+					.querySelectorAll<SlTooltip>(".simulator_buttons sl-tooltip");
+				const lastVisibleTooltip = Array.from(playbackTooltips)
+					.filter(tip => tip.firstElementChild?.getClientRects().length).at(-1)!;
+				await lastVisibleTooltip.show();
+				assertInside(lastVisibleTooltip.body);
+			} finally {
+				widget.remove();
+				await LOCALIZE.setLocale("en");
+			}
+		});
+
 		it("enforces embedded size limits and defaults to 500 pixels tall", async () => {
 			const widget = await createConfiguredDFA();
 			await widget.updateComplete;

@@ -39,9 +39,14 @@ const baseStyles = css`
 
     .editor {
         container: automaton / size;
+        position: relative;
         display: flex;
         flex-direction: column;
         height: 100%;
+    }
+
+    .editor--compact {
+        overflow: hidden;
     }
 
     .workspace {
@@ -102,6 +107,10 @@ const baseStyles = css`
         width: 150px;
     }
 
+    .mode_switch sl-tooltip:has(sl-select[open])::part(base__popup) {
+        visibility: hidden;
+    }
+
     .help-backdrop {
         background-color: rgba(0, 0, 0, 0.1);
         position: absolute;
@@ -142,6 +151,26 @@ const baseStyles = css`
 
     .simulator-help > * {
         position: static;
+    }
+
+    .compact-help {
+        position: absolute;
+        inset: 112px 10px 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        overflow: auto;
+        overflow-wrap: anywhere;
+        font-family: var(--sl-font-sans, sans-serif);
+        font-size: var(--sl-font-size-small, 0.875rem);
+        z-index: 2000;
+    }
+
+    .compact-help > span {
+        background: var(--sl-color-neutral-0, white);
+        border-radius: 4px;
+        padding: 4px 8px;
     }
 `;
 
