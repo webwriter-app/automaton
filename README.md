@@ -3,10 +3,6 @@
 
 Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).
 
-## Live sessions
-
-All seven aggregate views are available for each widget. See [Support live sessions](LIVE-SESSIONS.md) for data blocks, references, and the editor testing workflow.
-
 ## Snippets
 [Snippets](https://webwriter.app/docs/snippets/snippets/) are examples and templates using the package's widgets.
 
@@ -18,7 +14,6 @@ All seven aggregate views are available for each widget. See [Support live sessi
 | Nfa Complex | `@webwriter/automaton/snippets/nfa-complex.html` |
 | Pda Simple | `@webwriter/automaton/snippets/pda-simple.html` |
 | Pda Complex | `@webwriter/automaton/snippets/pda-complex.html` |
-| Live session: all views | `@webwriter/automaton/snippets/live-sessions.html` |
 
 
 

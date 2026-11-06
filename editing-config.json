@@ -70,8 +70,7 @@
       "ja": "オートマトン",
       "zh-hant": "自動化"
     },
-    "warningIgnorePattern": "development",
-    "sharedData": true
+    "warningIgnorePattern": "development"
   },
   "./snippets/dfa-simple": {
     "label": {
