@@ -1,7 +1,6 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import {
-    biArrowLeftRight,
     biClipboard,
     biCodeSlash,
     biFullscreen,
@@ -21,7 +20,6 @@ import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 
 import { AutomatonComponent, type AutomatonType } from '../index';
 import { topMenuStyles } from '../styles/topMenu';
-import { DFA } from '../automata/dfa';
 import { LitElementWw } from '@webwriter/lit';
 import { Graph } from '../graph';
 import RandExp from 'randexp';
@@ -59,7 +57,7 @@ export class TopMenu extends LitElementWw {
     };
 
     @state()
-    private accessor _choices: 'sink' | 'type' | undefined = undefined;
+    private accessor _typeMenuOpen = false;
 
     @property({ type: Object, attribute: false })
     private accessor _setHelpOverlay!: (visible: boolean) => (void);
@@ -120,7 +118,7 @@ export class TopMenu extends LitElementWw {
                         aria-label=${msg("Menu")}
                         aria-expanded=${this._menuOpen || this._helpOverlay}
                         aria-controls="compact-menu"
-                        @click=${() => { this._menuOpen = !this._menuOpen; this._choices = undefined; }}
+                        @click=${() => { this._menuOpen = !this._menuOpen; this._typeMenuOpen = false; }}
                     >${biList}</sl-button>
                     ${this._menuOpen || this._helpOverlay ? html`
                         <div class="topmenu__collapsed_panel" id="compact-menu">
@@ -280,38 +278,31 @@ export class TopMenu extends LitElementWw {
                     </div>
                 </sl-popup>
             </div>
-            ${this.renderChoices('sink', msg("Transformations"), buttonSize, boundary)}
-            ${this.renderChoices('type', msg("Automaton Type"), buttonSize, boundary)}`;
+            ${this.renderTypeMenu(buttonSize, boundary)}`;
     }
 
-    private renderChoices(kind: 'sink' | 'type', label: string, size: string, boundary?: HTMLElement) {
-        const { automaton, mode, allowedTypes, allowedTransformations } = this._component;
+    private renderTypeMenu(size: string, boundary?: HTMLElement) {
+        const label = msg("Automaton Type");
+        const { automaton, mode, allowedTypes } = this._component;
         const types = (['dfa', 'nfa', 'pda'] as const).filter(type => allowedTypes.includes(type) && type !== automaton.type);
-        const disabled = mode !== 'edit' || (kind === 'sink'
-            ? !(automaton instanceof DFA) || !allowedTransformations.includes('sink')
-            : types.length === 0);
+        const disabled = mode !== 'edit' || types.length === 0;
         const typeLabel = (type: AutomatonType) => type === 'dfa' ? msg('DFA') : type === 'nfa' ? msg('NFA') : msg('PDA');
         return html`
             <div class="topmenu__button_group" @keydown=${(event: KeyboardEvent) => {
-                if (event.key === 'Escape') this._choices = undefined;
+                if (event.key === 'Escape') this._typeMenuOpen = false;
             }}>
                 <sl-popup placement="bottom-end" distance="8" shift flip
                     .shiftBoundary=${boundary} .flipBoundary=${boundary}
-                    ?active=${!disabled && this._choices === kind}>
+                    ?active=${!disabled && this._typeMenuOpen}>
                     <sl-button slot="anchor" class="topmenu__button" size=${size} circle title=${label}
-                        aria-expanded=${!disabled && this._choices === kind} ?disabled=${disabled}
-                        @click=${() => { this._choices = this._choices === kind ? undefined : kind; }}>
-                        ${kind === 'sink' ? biArrowLeftRight : typeLabel(automaton.type)}
+                        aria-expanded=${!disabled && this._typeMenuOpen} ?disabled=${disabled}
+                        @click=${() => { this._typeMenuOpen = !this._typeMenuOpen; }}>
+                        ${typeLabel(automaton.type)}
                     </sl-button>
                     <div class="topmenu__choices" role="group" aria-label=${label}>
-                        ${kind === 'sink' ? html`
+                        ${types.map(type => html`
                             <sl-button size="small" @click=${() => {
-                                this._choices = undefined;
-                                void this._component.completeDfaWithSink();
-                            }}>${msg("Add Sinkstate")}</sl-button>
-                        ` : types.map(type => html`
-                            <sl-button size="small" @click=${() => {
-                                this._choices = undefined;
+                                this._typeMenuOpen = false;
                                 void this._component.switchType(type);
                             }}>${typeLabel(type)}</sl-button>
                         `)}

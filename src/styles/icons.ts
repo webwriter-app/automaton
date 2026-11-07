@@ -38,6 +38,21 @@ export const biPlus = html`<svg
     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
 </svg>`;
 
+export const sinkStateIcon = html`<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.75"
+    aria-hidden="true"
+>
+    <circle cx="12" cy="12" r="10" />
+    <circle cx="12" cy="12" r="6" />
+    <circle cx="12" cy="12" r="2" />
+</svg>`;
+
 export const biLock = html`<svg
     xmlns="http://www.w3.org/2000/svg"
     width="16"

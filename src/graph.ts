@@ -348,7 +348,7 @@ export class Graph {
         if (!endpointId || !edgeId) return;
 
         const validTarget = this._ac.mode === 'edit' && this._ac.settings.permissions.edge.add &&
-            typeof from === 'number' && typeof to === 'number' && to !== from &&
+            typeof from === 'number' && typeof to === 'number' &&
             to !== Graph.initialGhostNode.id && this._a.getNode(from) && this._a.getNode(to);
         const plan = validTarget ? this._tm.planTransition({ from, to }) : undefined;
         this._previewPlan = plan;
@@ -427,7 +427,7 @@ export class Graph {
         this.cancelConnection();
         const to = this._n.getNodeAt(position);
         if (from !== undefined && this.canUseCanvasTools && this._ac.settings.permissions.edge.add &&
-            typeof to === 'number' && to !== from && to !== Graph.initialGhostNode.id &&
+            typeof to === 'number' && to !== Graph.initialGhostNode.id &&
             this._a.getNode(from) && this._a.getNode(to)) {
             this._tm.insertTransition({ from, to }, transition => this._a.addTransition(transition));
             this._n.selectNodes([to]);

@@ -40,9 +40,9 @@ export class Settings {
     }
 
     get sinkDisabledReason() {
-        const { automaton, mode, allowedTransformations } = this.parentComponent;
+        const { automaton, mode, sinkStateEnabled } = this.parentComponent;
         if (!(automaton instanceof DFA)) return msg('Sink completion is only available for DFAs.');
-        if (!allowedTransformations.includes('sink')) return msg('Sink completion is disabled in Transformations.');
+        if (!sinkStateEnabled) return msg('Sink state completion is turned off.');
         if (mode !== 'edit') return msg('Switch to Edit mode to complete the DFA.');
         switch (sinkStateStatus(automaton)) {
             case 'empty': return msg('Add a state before completing the DFA.');
@@ -120,10 +120,9 @@ export function options() {
                 { value: 'pda', label: { _: msg('PDA') } },
             ],
         },
-        allowedTransformationOptions: {
-            type: 'select', multiple: true, attribute: false, group: 'editing',
-            label: { _: msg('Transformations') },
-            options: [{ value: 'sink', label: { _: msg('Sinkstate') } }],
+        sinkStateEnabled: {
+            type: Boolean, control: 'switch', attribute: false, group: 'editing',
+            label: { _: msg('Enable sink state') },
         },
         allowedModeOptions: {
             type: 'select', multiple: true, attribute: false, group: 'view',

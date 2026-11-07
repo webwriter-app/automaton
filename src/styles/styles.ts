@@ -173,13 +173,13 @@ const baseStyles = css`
 
     @container automaton (width >= 500px) {
         .mode_switch {
-            max-width: calc(100% - 320px);
+            max-width: calc(100% - 270px);
         }
     }
 
     @container automaton (500px <= width < 560px) {
         .mode_switch {
-            max-width: calc(100% - 274px);
+            max-width: calc(100% - 232px);
         }
     }
 
@@ -290,6 +290,11 @@ const baseStyles = css`
     .edit-help__transition {
         bottom: 128px;
         left: 80px;
+    }
+
+    .edit-help__sink {
+        bottom: calc(16px + var(--sl-input-height-large) + (var(--sl-input-height-small) - 22px) / 2);
+        left: 70px;
     }
 
     @container automaton (width >= 500px) {

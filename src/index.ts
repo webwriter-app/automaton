@@ -219,9 +219,12 @@ export class AutomatonComponent extends LitElementWw {
 	}
 
 	/** @internal */
-	get allowedTransformationOptions() { return this.allowedTransformations; }
-	set allowedTransformationOptions(value: string[] | null) {
-		this.setAttribute("allowedtransformations", ATTRIBUTE_CONVERTERS.stringArray.toAttribute(value) ?? "");
+	get sinkStateEnabled() { return this.allowedTransformations.includes("sink"); }
+	set sinkStateEnabled(value: boolean) {
+		if (this.sinkStateEnabled === (value === true)) return;
+		const transformations = this.allowedTransformations.filter(transformation => transformation !== "sink");
+		if (value === true) transformations.push("sink");
+		this.setAttribute("allowedtransformations", ATTRIBUTE_CONVERTERS.stringArray.toAttribute(transformations) ?? "");
 	}
 
 	/** @internal */
@@ -526,41 +529,33 @@ export class AutomatonComponent extends LitElementWw {
 					style="top: 55px;right: 30px;height: 164px;"
 				></div>
 
-				<sl-tag size="small" style="top:18px;right:325px"
+				<sl-tag size="small" style="top:18px;right:275px"
 					>${msg("Type")}</sl-tag
 				>
-				<div class="line" style="top:28px;right:310px;width:10px"></div>
+				<div class="line" style="top:28px;right:260px;width:10px"></div>
 
-				<sl-tag size="small" style="top:60px;right:325px"
-					>${msg("Transformations")}</sl-tag
-				>
-				<div
-					class="line"
-					style="top:55px;right:230px;width:90px;height:15px"
-				></div>
-
-				<sl-tag size="small" style="top: 186px;right: 325px;"
+				<sl-tag size="small" style="top: 186px;right: 275px;"
 					>${msg("Help")}</sl-tag
 				>
 				<div
 					class="line"
-					style="top: 55px;right: 80px;width: 240px;height: 141px;"
+					style="top: 55px;right: 80px;width: 190px;height: 141px;"
 				></div>
 
-				<sl-tag size="small" style="top: 144px;right: 325px;"
+				<sl-tag size="small" style="top: 144px;right: 275px;"
 					>${msg("Test Cases")}</sl-tag
 				>
 				<div
 					class="line"
-					style="top: 55px;right: 130px;width: 190px;height: 99px;"
+					style="top: 55px;right: 130px;width: 140px;height: 99px;"
 				></div>
 
-				<sl-tag size="small" style="top: 102px;right: 325px;"
+				<sl-tag size="small" style="top: 102px;right: 275px;"
 					>${msg("Definition")}</sl-tag
 				>
 				<div
 					class="line"
-					style="top: 55px;right: 180px;width: 140px;height: 57px;"
+					style="top: 55px;right: 180px;width: 90px;height: 57px;"
 				></div>
 			</div>
 
@@ -570,9 +565,12 @@ export class AutomatonComponent extends LitElementWw {
 					display: this.mode === "edit" ? "block" : "none",
 				})}
 			>
-				<sl-tag size="small" style="bottom: 26px;left: 70px;"
+				${this.automaton instanceof DFA && this.sinkStateEnabled ? html`
+					<sl-tag size="small" class="edit-help__sink">${msg("Add sink state")}</sl-tag>
+				` : ""}
+				${this.settings.permissions.node.add ? html`<sl-tag size="small" style="bottom: 26px;left: 70px;"
 					>${msg("Click or drag + to add a node")}</sl-tag
-				>
+				>` : ""}
 				<sl-tag size="small" class="edit-help__transition"
 					>${msg("Add Transition by drag and drop")}</sl-tag
 				>
@@ -605,7 +603,8 @@ export class AutomatonComponent extends LitElementWw {
 						? msg("Remove stack items with ×") : msg("Stack")}</span>
 				` : ""}
 				${this.mode === "edit" ? html`
-					<span>${msg("Click or drag + to add a node")}</span>
+					${this.automaton instanceof DFA && this.sinkStateEnabled ? html`<span>${msg("Add sink state")}</span>` : ""}
+					${this.settings.permissions.node.add ? html`<span>${msg("Click or drag + to add a node")}</span>` : ""}
 					<span>${msg("Add Transition by drag and drop")}</span>
 					<span>${msg("Select a node or transition to edit it")}</span>
 				` : html`

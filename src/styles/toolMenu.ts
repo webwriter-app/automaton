@@ -6,10 +6,19 @@ export const toolMenuStyles = css`
         left: 10px;
         bottom: 10px;
         z-index: 1500;
+        width: var(--sl-input-height-large);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
     }
 
-    .toolmenu sl-button {
+    .toolmenu__node {
         touch-action: none;
+    }
+
+    .toolmenu__sink:only-child {
+        margin-bottom: calc(var(--sl-input-height-large) + 6px);
     }
 
     .toolmenu sl-button::part(base),

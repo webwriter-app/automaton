@@ -1,6 +1,6 @@
 import { PropertyValueMap, html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { biPlus } from '../styles/icons';
+import { biPlus, sinkStateIcon } from '../styles/icons';
 
 import '@shoelace-style/shoelace/dist/themes/light.css';
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button.component.js';
@@ -76,12 +76,24 @@ export class ToolMenu extends LitElementWw {
     }
 
     render() {
-        if (!this._graph?.component.settings.permissions.node.add) return nothing;
+        const component = this._graph?.component;
+        if (!component) return nothing;
+        const canAddNode = component.settings.permissions.node.add;
+        const showSink = component.automaton.type === 'dfa' && component.sinkStateEnabled;
+        if (!canAddNode && !showSink) return nothing;
 
         const label = msg("Add node");
+        const sinkLabel = msg("Add sink state");
+        const sinkReason = showSink ? component.settings.sinkDisabledReason : undefined;
         return html`
             <div class="toolmenu" contenteditable="false">
-                <sl-button circle size="large" title=${label}
+                ${showSink ? html`
+                    <sl-button class="toolmenu__sink" circle size="small"
+                        aria-label=${sinkLabel} title=${sinkReason ?? sinkLabel}
+                        ?disabled=${sinkReason !== undefined}
+                        @click=${() => void component.completeDfaWithSink()}>${sinkStateIcon}</sl-button>
+                ` : nothing}
+                ${canAddNode ? html`<sl-button class="toolmenu__node" circle size="large" title=${label}
                     @pointerdown=${this.startNodeDrag}
                     @pointermove=${this.moveNodeDrag}
                     @pointerup=${this.finishNodeDrag}
@@ -90,7 +102,7 @@ export class ToolMenu extends LitElementWw {
                     @click=${(event: MouseEvent) => {
                         // Pointer activation is handled on release. Keyboard activation still clicks the button.
                         if (event.detail === 0) this._graph.insertNodeFromButton();
-                    }}>${biPlus}</sl-button>
+                    }}>${biPlus}</sl-button>` : nothing}
             </div>
         `;
     }
@@ -172,7 +184,8 @@ export class ToolMenu extends LitElementWw {
         const { automaton } = this._graph;
         const transitions = automaton.transitions.get();
         const existing = transitions.find(edge => edge.from === edgeData.from && edge.to === edgeData.to);
-        const reverse = transitions.find(edge => edge.from === edgeData.to && edge.to === edgeData.from);
+        const reverse = edgeData.from === edgeData.to ? undefined
+            : transitions.find(edge => edge.from === edgeData.to && edge.to === edgeData.from);
         const smooth = reverse ? { enabled: true, type: 'curvedCW', roundness: 0.2 } : undefined;
         const symbol = this._graph.component.forcedAlphabet[0] || 'a';
 

@@ -5,6 +5,7 @@ import "../src";
 import { AutomatonComponent } from "../src";
 import type { StackExtension } from "../src/automata/pda";
 import type { Graph } from "../src/graph";
+import type SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import type SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js";
 import LOCALIZE from "../localization/generated/index.js";
 
@@ -122,28 +123,51 @@ describe("Simulation Tests", () => {
 
 		it("completes missing DFA transitions and reuses the sink as the alphabet grows", async () => {
 			const widget = document.createElement("webwriter-automaton") as AutomatonComponent;
-			widget.style.width = "600px";
+			widget.style.width = "300px";
+			widget.style.height = "300px";
 			document.body.append(widget);
-			await menuChoice(widget, "Transformations", "Add Sinkstate");
+			await widget.updateComplete;
+			await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+			const root = widget.shadowRoot!;
+			const toolbar = root.querySelector("#toolMenu")!.shadowRoot!;
+			const sinkButton = () => toolbar.querySelector<SlButton>(".toolmenu__sink");
+			const addSink = async () => {
+				const button = sinkButton()!;
+				await button.updateComplete;
+				button.click();
+				await widget.updateComplete;
+			};
+			const sinkRect = sinkButton()!.getBoundingClientRect();
+			const plusRect = toolbar.querySelector(".toolmenu__node")!.getBoundingClientRect();
+			assert.isBelow(sinkRect.height, plusRect.height);
+			assert.isBelow(sinkRect.bottom, plusRect.top);
+			assert.closeTo(sinkRect.x + sinkRect.width / 2, plusRect.x + plusRect.width / 2, 1);
+			assert.isNull(sinkButton()!.querySelector(".bi-plus"));
+			await addSink();
 			assert.isEmpty(widget.nodes, "An empty graph cannot gain a sink");
 			widget.setAttribute("nodes", "#%0(0|0)");
-			await menuChoice(widget, "Transformations", "Add Sinkstate");
+			await addSink();
 			assert.isEmpty(widget.automaton.getTransitionsFromNode(widget.automaton.getInitialNode()),
 				"An empty alphabet cannot produce an empty-symbol transition");
 			widget.forcedAlphabet = ["a", "b"];
+			widget.sinkStateEnabled = false;
 			await widget.updateComplete;
-			await menuChoice(widget, "Transformations", "Add Sinkstate");
+			assert.isNull(sinkButton());
+			assert.isTrue(widget.actions.completeDfaWithSink.disabled);
+			widget.sinkStateEnabled = true;
+			await widget.updateComplete;
+			await addSink();
 			const { automaton } = widget;
 			const sink = automaton.getNode(1)!;
 			assert.isFalse(sink.final);
 			assert.isFalse(sink.initial);
 			assert.deepEqual(automaton.getTransitionsFromNode(sink).map(edge => [edge.to, edge.symbols]), [[1, ["a", "b"]]]);
 			assert.isEmpty(automaton.checkAutomaton());
-			await menuChoice(widget, "Transformations", "Add Sinkstate");
+			await addSink();
 			assert.lengthOf(automaton.nodes.get().filter(node => node.id >= 0), 2);
 			widget.forcedAlphabet = ["a", "b", "c"];
 			await widget.updateComplete;
-			await menuChoice(widget, "Transformations", "Add Sinkstate");
+			await addSink();
 			assert.lengthOf(automaton.nodes.get().filter(node => node.id >= 0), 2);
 			assert.deepEqual(automaton.getTransitionsFromNode(sink).map(edge => [edge.to, edge.symbols]), [[1, ["a", "b", "c"]]]);
 			assert.isEmpty(automaton.checkAutomaton());
@@ -177,12 +201,13 @@ describe("Simulation Tests", () => {
 			assert.deepEqual(widget.selectedPermissions, ["node-delete", "edge-add", "edge-change", "stack-change"]);
 			assert.deepEqual(widget.allowedTypeOptions, ["dfa", "nfa"]);
 			assert.deepEqual(widget.allowedModeOptions, ["edit", "simulate"]);
-			assert.deepEqual(widget.allowedTransformationOptions, ["sink"]);
+			assert.isTrue(widget.sinkStateEnabled);
+			assert.equal(AutomatonComponent.options.sinkStateEnabled.type, Boolean);
 			assert.isFalse(widget.helpEnabled);
 			assert.equal(widget.testWordsInput, "a,ab");
 			assert.equal(widget.forcedAlphabetInput, "a,b");
 			assert.containsAllKeys(AutomatonComponent.options, [
-				"selectedPermissions", "allowedTypeOptions", "allowedTransformationOptions",
+				"selectedPermissions", "allowedTypeOptions", "sinkStateEnabled",
 				"allowedModeOptions", "helpEnabled", "formalDefinitionEnabled", "transitionsTableEnabled",
 				"testLanguage", "testWordsInput", "forcedAlphabetInput",
 			]);
@@ -204,7 +229,7 @@ describe("Simulation Tests", () => {
 			widget.selectedPermissions = ["node-add", "edge-delete", "stack-change"];
 			widget.allowedTypeOptions = ["pda", "dfa"];
 			widget.allowedModeOptions = ["simulate"];
-			widget.allowedTransformationOptions = [];
+			widget.sinkStateEnabled = false;
 			widget.helpEnabled = false;
 			widget.formalDefinitionEnabled = false;
 			widget.transitionsTableEnabled = false;
@@ -217,7 +242,8 @@ describe("Simulation Tests", () => {
 			assert.equal(widget.getAttribute("allowedtypes"), "pda dfa");
 			assert.equal(widget.getAttribute("allowedmodes"), "simulate");
 			assert.equal(widget.mode, "simulate");
-			assert.deepEqual(widget.allowedTransformations, []);
+			assert.equal(widget.getAttribute("allowedtransformations"), "");
+			assert.isFalse(widget.sinkStateEnabled);
 			assert.equal(widget.getAttribute("showhelp"), "false");
 			assert.isFalse(widget.automaton.showErrors);
 			assert.equal(widget.getAttribute("showformaldefinition"), "false");
@@ -309,11 +335,18 @@ describe("Simulation Tests", () => {
 			assert.equal(getComputedStyle(canvas).cursor, "none");
 			const preview = network as unknown as {
 				manipulation: { temporaryIds: { nodes: string[]; edges: string[] } };
-				body: { nodes: Record<string, { x: number; y: number; options: { opacity: number } }>; edges: Record<string, {
-					toId: number | string;
-					hover: boolean;
-					options: { label: string; hidden: boolean; smooth: { roundness: number }; color: { opacity: number } };
-				}> };
+				body: {
+					emitter: { emit(event: "click", data: { pointer: { DOM: { x: number; y: number } } }): void };
+					nodes: Record<string, { x: number; y: number; options: { opacity: number } }>;
+					edges: Record<string, {
+						toId: number | string;
+						hover: boolean;
+						options: {
+							label: string; hidden: boolean; smooth: { roundness: number };
+							color: { opacity: number }; selfReference: { angle: number; size: number };
+						};
+					}>;
+				};
 			};
 			const { nodes: [endpointId], edges: [edgeId] } = preview.manipulation.temporaryIds;
 			const canvasBounds = canvas.getBoundingClientRect();
@@ -353,6 +386,37 @@ describe("Simulation Tests", () => {
 			assert.isEmpty(visiblePoints());
 			assert.notEqual(getComputedStyle(canvas).cursor, "none");
 			assert.isEmpty(widget.transitions);
+
+			network.selectNodes([0]);
+			network.redraw();
+			visiblePoints()[0].click();
+			const origin = network.canvasToDOM(network.getPositions([0])[0]);
+			hover(origin);
+			const loopPreview = preview.body.edges[preview.manipulation.temporaryIds.edges[0]];
+			assert.equal(loopPreview.toId, 0, "The source node is a valid destination");
+			assert.equal(loopPreview.options.label, "a");
+			assert.isBelow(loopPreview.options.color.opacity, 1);
+			assert.isAbove(preview.body.nodes[preview.manipulation.temporaryIds.nodes[0]].options.opacity, 0);
+			assert.isEmpty(widget.transitions);
+			preview.body.emitter.emit("click", { pointer: { DOM: origin } });
+			assert.equal(widget.getAttribute("transitions"), "0-0[a]");
+			const savedLoop = preview.body.edges[0];
+			assert.equal(savedLoop.options.selfReference.angle, loopPreview.options.selfReference.angle);
+			assert.equal(savedLoop.options.selfReference.size, loopPreview.options.selfReference.size);
+
+			widget.setAttribute("transitions", "0-0[b]@180");
+			await widget.updateComplete;
+			network.selectNodes([0]);
+			network.redraw();
+			visiblePoints()[0].click();
+			let highlightsLoop = false;
+			network.once("beforeDrawing", () => { highlightsLoop = preview.body.edges[0].hover; });
+			hover(origin);
+			assert.isTrue(highlightsLoop);
+			assert.isTrue(preview.body.edges[preview.manipulation.temporaryIds.edges[0]].options.hidden);
+			assert.equal(widget.getAttribute("transitions"), "0-0[b]@180");
+			preview.body.emitter.emit("click", { pointer: { DOM: origin } });
+			assert.equal(widget.getAttribute("transitions"), "0-0[b,a]@180", "Extending a loop preserves its placement");
 
 			widget.setAttribute("transitions", "1-0[b]");
 			await widget.updateComplete;
@@ -419,7 +483,7 @@ describe("Simulation Tests", () => {
 			const { network } = (widget as unknown as { graph: Graph }).graph;
 			const root = widget.shadowRoot!;
 			const canvas = root.querySelector<HTMLElement>("#graphCanvas")!;
-			const plus = root.querySelector("#toolMenu")!.shadowRoot!.querySelector<HTMLElement>("sl-button")!;
+			const plus = root.querySelector("#toolMenu")!.shadowRoot!.querySelector<HTMLElement>(".toolmenu__node")!;
 			network.moveTo({ position: { x: 130, y: -85 }, scale: 1.7 });
 			const center = network.DOMtoCanvas({ x: canvas.clientWidth / 2, y: canvas.clientHeight / 2 });
 			plus.click();
@@ -473,7 +537,7 @@ describe("Simulation Tests", () => {
 			const initial = bar()!.querySelector("sl-checkbox[name=initial]")!;
 			const barBounds = bar()!.getBoundingClientRect();
 			const plusBounds = root.querySelector("#toolMenu")!.shadowRoot!
-				.querySelector(".toolmenu > sl-button")!.getBoundingClientRect();
+				.querySelector(".toolmenu__node")!.getBoundingClientRect();
 			const graphBounds = root.querySelector(".graph")!.getBoundingClientRect();
 			assert.closeTo(barBounds.right, graphBounds.right - 10, 1);
 			assert.closeTo(barBounds.bottom, plusBounds.bottom, 1);
@@ -696,6 +760,7 @@ describe("Simulation Tests", () => {
 				const help = root.querySelector(".compact-help")!;
 				assertInside(help);
 				assert.include(help.textContent, "Übergänge");
+				assert.include(help.textContent, "Add sink state");
 				assert.equal(help.scrollWidth, help.clientWidth, "German help text wraps");
 				panel.querySelector<HTMLElement>("sl-button:has(.bi-question-lg)")!.click();
 				const definition = panel.querySelector("sl-popup:has(.bi-code-slash)")!;
@@ -830,7 +895,7 @@ describe("Simulation Tests", () => {
 			widget.style.height = "300px";
 			await widget.updateComplete;
 			const root = widget.shadowRoot!;
-			const plus = root.querySelector("#toolMenu")!.shadowRoot!.querySelector("sl-button")!;
+			const plus = root.querySelector("#toolMenu")!.shadowRoot!.querySelector(".toolmenu__node")!;
 			const plusBounds = plus.getBoundingClientRect();
 			widget.mode = "simulate";
 			await widget.updateComplete;
