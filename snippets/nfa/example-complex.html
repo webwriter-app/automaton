@@ -1,1 +1,27 @@
-<webwriter-automaton nodes="#0(0|0);%1(170|0);2(0|-170);3(170|-170);4(0|170);5(170|170)" transitions="0-1[];1-1[b];0-2[a];2-3[a];3-0[b];1-4[a];4-5[b];5-1[a]" type="nfa"></webwriter-automaton>
+<webwriter-automaton>
+  <script type="application/json" slot="data">
+    {
+      "format": "webwriter-automaton",
+      "version": 1,
+      "type": "nfa",
+      "states": [
+        {"id": 0, "label": "q0", "x": 0, "y": 0, "initial": true},
+        {"id": 1, "label": "q1", "x": 170, "y": 0, "final": true},
+        {"id": 2, "label": "q2", "x": 0, "y": -170},
+        {"id": 3, "label": "q3", "x": 170, "y": -170},
+        {"id": 4, "label": "q4", "x": 0, "y": 170},
+        {"id": 5, "label": "q5", "x": 170, "y": 170}
+      ],
+      "transitions": [
+        {"id": 0, "from": 0, "to": 1, "rules": [{"read": ""}]},
+        {"id": 1, "from": 1, "to": 1, "rules": [{"read": "b"}]},
+        {"id": 2, "from": 0, "to": 2, "rules": [{"read": "a"}]},
+        {"id": 3, "from": 2, "to": 3, "rules": [{"read": "a"}]},
+        {"id": 4, "from": 3, "to": 0, "rules": [{"read": "b"}]},
+        {"id": 5, "from": 1, "to": 4, "rules": [{"read": "a"}]},
+        {"id": 6, "from": 4, "to": 5, "rules": [{"read": "b"}]},
+        {"id": 7, "from": 5, "to": 1, "rules": [{"read": "a"}]}
+      ]
+    }
+  </script>
+</webwriter-automaton>

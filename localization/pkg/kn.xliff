@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.1" srcLang="en-US" trgLang="kn">
+<file id="." original=".">
+<unit id="description"><segment><source>Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).</source><target>ಸೀಮಿತ ಆಟೋಮ್ಯಾಟಾ (ಡಿಎಫ್‌ಎ, ಎನ್‌ಎಫ್‌ಎ) ಮತ್ತು ಪುಶ್‌ಡೌನ್ ಆಟೊಮ್ಯಾಟಾ (ಪಿಡಿಎ) ನೊಂದಿಗೆ ರಚಿಸಿ, ದೃಶ್ಯೀಕರಿಸಿ ಮತ್ತು ಪ್ರಯೋಗಿಸಿ.</target></segment></unit>
+</file>
+<file id="./widgets/webwriter-automaton" original="./widgets/webwriter-automaton">
+<unit id="label"><segment><source>Automaton</source><target>ಆಟೋಮ್ಯಾಟನ್</target></segment></unit>
+</file>
+<file id="./snippets/dfa-simple" original="./snippets/dfa-simple">
+<unit id="label"><segment><source>DFA (simple)</source><target>DFA (ಸರಳ)</target></segment></unit>
+</file>
+<file id="./snippets/dfa-complex" original="./snippets/dfa-complex">
+<unit id="label"><segment><source>DFA (complex)</source><target>DFA (ಸಂಕೀರ್ಣ)</target></segment></unit>
+</file>
+<file id="./snippets/nfa-simple" original="./snippets/nfa-simple">
+<unit id="label"><segment><source>NFA (simple)</source><target>NFA (ಸರಳ)</target></segment></unit>
+</file>
+<file id="./snippets/nfa-complex" original="./snippets/nfa-complex">
+<unit id="label"><segment><source>NFA (complex)</source><target>NFA (ಸಂಕೀರ್ಣ)</target></segment></unit>
+</file>
+<file id="./snippets/pda-simple" original="./snippets/pda-simple">
+<unit id="label"><segment><source>PDA (simple)</source><target>PDA (ಸರಳ)</target></segment></unit>
+</file>
+<file id="./snippets/pda-complex" original="./snippets/pda-complex">
+<unit id="label"><segment><source>PDA (complex)</source><target>PDA (ಸಂಕೀರ್ಣ)</target></segment></unit>
+</file>
+</xliff>

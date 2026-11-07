@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.1" srcLang="en" trgLang="ja">
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.1" srcLang="en-US" trgLang="ja">
 <file id="." original=".">
 <unit id="description"><segment><source>Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).</source><target>さまざまな種類のオートマトン（DFA，NFA，PDA）を構築し，視覚化し，相互作用させる．</target></segment></unit>
 </file>
@@ -7,21 +7,21 @@
 <unit id="label"><segment><source>Automaton</source><target>オートマトン</target></segment></unit>
 </file>
 <file id="./snippets/dfa-simple" original="./snippets/dfa-simple">
-<unit id="label"><segment><source>DFA simple</source><target>DFAシンプル</target></segment></unit>
+<unit id="label"><segment><source>DFA (simple)</source><target>DFA (シンプル)</target></segment></unit>
 </file>
 <file id="./snippets/dfa-complex" original="./snippets/dfa-complex">
-<unit id="label"><segment><source>DFA complex</source><target>DFAコンプレックス</target></segment></unit>
+<unit id="label"><segment><source>DFA (complex)</source><target>DFA (複雑)</target></segment></unit>
 </file>
 <file id="./snippets/nfa-simple" original="./snippets/nfa-simple">
-<unit id="label"><segment><source>NFA simple</source><target>NFAシンプル</target></segment></unit>
+<unit id="label"><segment><source>NFA (simple)</source><target>NFA (シンプル)</target></segment></unit>
 </file>
 <file id="./snippets/nfa-complex" original="./snippets/nfa-complex">
-<unit id="label"><segment><source>NFA complex</source><target>NFAコンプレックス</target></segment></unit>
+<unit id="label"><segment><source>NFA (complex)</source><target>NFA (複雑)</target></segment></unit>
 </file>
 <file id="./snippets/pda-simple" original="./snippets/pda-simple">
-<unit id="label"><segment><source>PDA simple</source><target>PDA シンプル</target></segment></unit>
+<unit id="label"><segment><source>PDA (simple)</source><target>PDA (シンプル)</target></segment></unit>
 </file>
 <file id="./snippets/pda-complex" original="./snippets/pda-complex">
-<unit id="label"><segment><source>PDA complex</source><target>PDAコンプレックス</target></segment></unit>
+<unit id="label"><segment><source>PDA (complex)</source><target>PDA (複雑)</target></segment></unit>
 </file>
 </xliff>

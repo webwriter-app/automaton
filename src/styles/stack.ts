@@ -2,25 +2,59 @@ import { css } from 'lit';
 
 export const stackStyles = css`
     .pda__stack {
-        position: absolute;
-
+        position: relative;
         display: flex;
         flex-direction: column;
-
-        align-items: center;
-
-        right: 10px;
-        bottom: 62px;
-
-        width: 60px;
-
-        max-height: 378px;
-
+        box-sizing: border-box;
+        width: 100%;
+        max-inline-size: 100%;
+        max-height: 100%;
         border: 1px solid lightgray;
         border-radius: 5px;
         background-color: white;
-
+        pointer-events: auto;
         z-index: 1400;
+    }
+
+    .pda__stack--help {
+        z-index: 2000;
+        pointer-events: none;
+    }
+
+    .pda__stack-help {
+        position: absolute;
+        right: calc(100% + 8px);
+        bottom: 0;
+        width: max-content;
+        max-width: min(220px, 30cqw);
+    }
+
+    .pda__stack-help::part(base) {
+        height: auto;
+        min-height: calc(var(--sl-input-height-small) * 0.8);
+        line-height: 1.2;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .pda__stack-toggle {
+        display: none;
+        border: 0;
+        font: inherit;
+        cursor: pointer;
+    }
+
+    @container automaton (width < 500px) {
+        .pda__stack-title,
+        .pda__stack-toggle[aria-expanded='false'] ~ .pda__stack-button,
+        .pda__stack-toggle[aria-expanded='false'] ~ .pda__stack-items {
+            display: none;
+        }
+
+        .pda__stack-toggle {
+            display: block;
+            min-height: 44px;
+        }
     }
 
     .pda__stack sl-button::part(base),
@@ -31,7 +65,12 @@ export const stackStyles = css`
     }
 
     .pda__stack-button {
+        align-self: center;
         margin: 8px;
+    }
+
+    .pda__stack-button[hidden] {
+        display: none;
     }
 
     .pda__stack-button.dragover::part(base) {
@@ -43,7 +82,6 @@ export const stackStyles = css`
     .pda__stack-items {
         display: flex;
         flex-direction: column;
-        max-height: 298px;
         overflow-x: hidden;
         overflow-y: auto;
         width: 100%;
@@ -68,7 +106,9 @@ export const stackStyles = css`
     }
 
     .pda__stack-item {
-        max-width: 60px;
+        display: flex;
+        align-items: center;
+        gap: 2px;
         width: 100%;
         margin: 0;
 
@@ -76,6 +116,79 @@ export const stackStyles = css`
         box-sizing: border-box;
 
         border-top: 1px solid lightgray;
+    }
+
+    .pda__stack-item__tooltip {
+        display: block;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .pda__stack-item:has(.pda__stack-remove, .pda__stack-grip) sl-input::part(input) {
+        padding-inline: 4px;
+    }
+
+    @supports (field-sizing: content) {
+        .pda__stack-item__tooltip {
+            display: contents;
+        }
+
+        .pda__stack-item sl-input {
+            flex: 0 1 auto;
+            min-inline-size: 36px;
+            max-inline-size: 100%;
+        }
+
+        .pda__stack-item sl-input::part(base) {
+            inline-size: auto;
+            min-inline-size: 100%;
+            max-inline-size: 100%;
+        }
+
+        .pda__stack-item sl-input::part(input) {
+            field-sizing: content;
+            min-inline-size: 1ch;
+        }
+
+        .pda__stack-remove {
+            margin-inline-start: auto;
+        }
+    }
+
+    .pda__stack-grip,
+    .pda__stack-remove {
+        flex: 0 0 20px;
+        height: 28px;
+        padding: 0;
+        border: 0;
+        border-radius: var(--sl-border-radius-small);
+        background: transparent;
+        color: var(--sl-color-neutral-700);
+        font: 16px var(--sl-font-sans, sans-serif);
+        cursor: pointer;
+    }
+
+    .pda__stack-grip {
+        flex-basis: 24px;
+        height: 32px;
+        cursor: grab;
+        touch-action: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+    }
+
+    .pda__stack-grip:hover,
+    .pda__stack-item.dragging .pda__stack-grip {
+        background: var(--sl-color-primary-100);
+    }
+
+    .pda__stack-item.dragging .pda__stack-grip {
+        cursor: grabbing;
+    }
+
+    .pda__stack-remove:hover {
+        color: var(--sl-color-danger-700);
+        background: var(--sl-color-danger-50);
     }
 
     .pda__stack-item.dragging sl-input::part(base) {
@@ -87,32 +200,31 @@ export const stackStyles = css`
     }
 
     .pda__stack-item--empty {
+        justify-content: center;
         font-size: var(--sl-font-size-small);
         color: var(--sl-color-neutral-500);
         text-align: center;
     }
 
-    .pda__stack-title {
+    .pda__stack-title,
+    .pda__stack-toggle {
         background-color: var(--sl-color-primary-600);
         text-align: center;
         color: white;
-
+        overflow-wrap: anywhere;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
-
-        width: 60px;
-        position: sticky;
     }
 
     .drop-before {
-        border-bottom: 5px solid var(--sl-color-primary-600);
+        box-shadow: inset 0 3px var(--sl-color-primary-600);
     }
 
     .drop-after {
-        border-top: 5px solid var(--sl-color-primary-600);
+        box-shadow: inset 0 -3px var(--sl-color-primary-600);
     }
 
-    .deleteable sl-input::part(base) {
+    .drag-to-trash sl-input::part(base) {
         background-color: var(--sl-color-danger-50) !important;
         color: var(--sl-color-danger-700) !important;
         border-color: var(--sl-color-danger-300) !important;

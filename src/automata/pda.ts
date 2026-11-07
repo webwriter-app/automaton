@@ -3,13 +3,14 @@ import { TemplateResult, html } from 'lit';
 import { DataSet } from 'vis-data';
 import { LitElementWw } from '@webwriter/lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
 import { stackStyles } from '../styles/stack';
 
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button.component.js';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input.component.js';
+import SlTag from '@shoelace-style/shoelace/dist/components/tag/tag.component.js';
 import SlTooltip from '@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js';
 import { biTrash } from '../styles/icons';
-import { styleMap } from 'lit/directives/style-map.js';
 import { ManualAutoSimulator } from './manual-auto';
 import { localized, msg } from '@lit/localize';
 import { AutomatonError } from '@u/errors';
@@ -21,6 +22,7 @@ export class PDA extends Automaton {
     public type: AutomatonType = 'pda';
 
     public extension = document.createElement('stack-extension') as StackExtension;
+    public startingStack: readonly string[] = [];
 
     constructor(nodes: Node[], transitions: Transition[]) {
         super(nodes, transitions);
@@ -75,9 +77,14 @@ export class PDA extends Automaton {
         return transition.symbols.join(', ');
     }
 
-    public displayStack(stack: string[]): void {
+    public setStartingStack(stack: readonly string[]): void {
+        this.startingStack = [...stack];
         this.extension.setStack(stack);
-        this.extension.requestUpdate();
+    }
+
+    public displayStack(stack: readonly string[]): void {
+        if (this.extension.contentEditable === 'true') return;
+        this.extension.setStack(stack);
     }
 }
 
@@ -88,12 +95,11 @@ class PDASimulator extends ManualAutoSimulator {
     constructor(protected _a: PDA) {
         super(_a);
         this._currentNode = this._a.getInitialNode();
-        this._initialStack = this._a.extension.getStack();
-        this._currentStack = [...this._initialStack];
+        this.init();
         this._previousTransitions = {
-            accepted: this._currentNode.final,
+            accepted: this._currentNode?.final ?? false,
             path: {
-                nodes: [this._currentNode],
+                nodes: this._currentNode ? [this._currentNode] : [],
                 transitions: [],
                 stacks: [this._currentStack]
             }
@@ -101,8 +107,9 @@ class PDASimulator extends ManualAutoSimulator {
     }
 
     public init(): void {
-        this._initialStack = this._a.extension.getStack();
+        this._initialStack = [...this._a.startingStack];
         this._currentStack = [...this._initialStack];
+        this._a.displayStack(this._currentStack);
     }
 
     protected getPath(): SimulationResult {
@@ -297,12 +304,11 @@ class PDASimulator extends ManualAutoSimulator {
     public reset(): void {
         super.reset();
         this._a.redrawNodes();
-        this._currentStack = [...this._initialStack];
-        this._a.displayStack(this._initialStack);
+        this.init();
         this._previousTransitions = {
-            accepted: this._currentNode.final,
+            accepted: this._currentNode?.final ?? false,
             path: {
-                nodes: [this._currentNode],
+                nodes: this._currentNode ? [this._currentNode] : [],
                 transitions: [],
                 stacks: [this._currentStack]
             }
@@ -498,20 +504,33 @@ export class StackExtension extends LitElementWw {
     @property({ type: Boolean, attribute: true, reflect: true })
     public accessor change: boolean = true;
 
+    @property({ attribute: false })
+    public accessor showHelp = false;
+
     static get styles() {
         return stackStyles;
     }
-    private afterElement: HTMLElement | null = null;
-    @state() private accessor _dragging: boolean = false;
+    private stackDrag?: {
+        handle: HTMLButtonElement;
+        pointerId: number;
+        index: number;
+        start: { x: number; y: number };
+        point: { x: number; y: number };
+    };
+    private stackScrollFrame?: number;
+    @state() private accessor draggedIndex: number | undefined;
+    @state() private accessor dropTarget: number | 'trash' | undefined;
+    @state() private accessor _stackOpen = false;
 
     @query('.pda__stack-items') private accessor _stackItems!: HTMLElement;
     @query('.pda__stack-button') private accessor _stackButton!: HTMLElement;
-    @query('.dragging') private accessor _draggingElement!: HTMLElement;
 
     public static get scopedElements() {
         return {
             'sl-button': SlButton,
-            'sl-input': SlInput,
+            // Shoelace's autocorrect property predates the native HTMLElement property.
+            'sl-input': SlInput as unknown as CustomElementConstructor,
+            'sl-tag': SlTag,
             'sl-tooltip': SlTooltip,
         };
     }
@@ -523,15 +542,27 @@ export class StackExtension extends LitElementWw {
     constructor() {
         super();
         this._stack.on('*', () => {
+            this.cancelStackDrag();
             this.stack = [...this._stack.get()];
         });
+    }
+
+    protected updated() {
+        if (!this.canDragStack()) this.cancelStackDrag();
+    }
+
+    disconnectedCallback() {
+        this.cancelStackDrag();
+        super.disconnectedCallback();
     }
 
     public getStack(): string[] {
         return this._stack.get().map((s) => s.symbol).reverse();
     }
 
-    public setStack(stack: string[]): void {
+    public setStack(stack: readonly string[]): void {
+        const current = this.getStack();
+        if (stack.length === current.length && stack.every((symbol, index) => symbol === current[index])) return;
         Logger.log('Setting stack:', stack);
         this._stack.clear();
         this._stack.add([...stack].reverse().map((s, i) => ({ id: i, symbol: s })));
@@ -559,85 +590,67 @@ export class StackExtension extends LitElementWw {
     }
 
     public render(): TemplateResult {
-        return html`<div class="pda__stack">
-            <div class="pda__stack-title">${msg("Stack")}</div>
+        const label = msg("Stack");
+        const canRemove = this.isEditable() && this.delete;
+        const canMove = this.isEditable() && this.change;
+        const showTrash = canRemove && this.draggedIndex !== undefined;
+        return html`<div class=${this.showHelp ? 'pda__stack pda__stack--help' : 'pda__stack'}>
+            <div class="pda__stack-title">${label}</div>
+            ${this.showHelp ? html`<sl-tag size="small" class="pda__stack-help">
+                ${canRemove ? msg("Remove stack items with ×") : label}
+            </sl-tag>` : ''}
+            <button
+                type="button"
+                class="pda__stack-toggle"
+                aria-expanded=${this._stackOpen}
+                aria-controls="pda__stack-button pda__stack-items"
+                @click=${() => { this._stackOpen = !this._stackOpen; }}
+            >${label}</button>
             <sl-button
-                class="pda__stack-button"
-                style=${styleMap({ display: this.isEditable() ? 'block' : 'none' })}
+                class=${classMap({ 'pda__stack-button': true, 'dragover': this.dropTarget === 'trash' })}
+                ?hidden=${!this.isEditable()}
                 size="small"
                 id="pda__stack-button"
                 circle
-                ?disabled=${!this.add}
+                ?disabled=${!this.add && !showTrash}
+                aria-label=${showTrash ? msg("Remove stack item") : msg("Add symbol")}
                 @click=${() => {
+                    if (!this.isEditable() || !this.add || this.stackDrag) return;
                     this.pushItemToStack('a');
-                    this.requestUpdate();
+                    this.notifyStackEdit();
                 }}
-                @dragover=${(e: DragEvent) => {
-                    e.preventDefault();
-                    if (!this.delete) return;
-                    this.clearDropMarkers();
-                    this._stackButton.classList.add('dragover');
-                    this._draggingElement.classList.add('deleteable');
-                }}
-                @dragleave=${(e: DragEvent) => {
-                    e.preventDefault();
-                    this._stackButton.classList.remove('dragover');
-                    this._draggingElement.classList.remove('deleteable');
-                }}
-                >${this._dragging && this.delete ? biTrash : '+'}</sl-button
+                >${showTrash ? biTrash : '+'}</sl-button
             >
             ${this.stack.length > 0 ? html`
             <div
                 class="pda__stack-items"
                 id="pda__stack-items"
-                @dragover=${(e: DragEvent) => {
-                    e.preventDefault();
-                    const afterObject = this.getDragPosition(this._stackItems, e.clientY) as {
-                        element: HTMLElement;
-                        offset: number;
-                    };
-                    this.afterElement = afterObject.element;
-                    this.clearDropMarkers();
-
-                    if (!this.afterElement) {
-                        this._stackItems.classList.add('drop-before');
-                    } else {
-                        this.afterElement.classList.add('drop-after');
-                    }
-                }}
             >
                 ${this.stack.map(
                     (s, i) => html`
                         <div
-                            class="pda__stack-item"
-                            @dragstart=${(e: DragEvent) => {
-                                (e.target as HTMLElement).classList.add('dragging');
-                                e.dataTransfer?.setData('index', i.toString());
-                                e.dataTransfer?.setDragImage(document.createElement('div'), 0, 0);
-                                this._dragging = true;
-                            }}
-                            @dragend=${() => {
-                                Logger.log(this._draggingElement);
-                                if (this._draggingElement.classList.contains('deleteable')) {
-                                    this.deleteStackSymbol(i);
-                                } else {
-                                    this.reorderStack(
-                                        i,
-                                        this.afterElement
-                                            ? parseInt(this.afterElement.dataset.index!)
-                                            : this._stack.length
-                                    );
-                                }
-                                this._draggingElement.classList.remove('dragging');
-                                this._dragging = false;
-                                this.clearDropMarkers();
-                            }}
-                            @dragover=${(e: DragEvent) => {
-                                e.preventDefault();
-                            }}
-                            draggable=${this.isEditable() && this.change ? 'true' : 'false'}
+                            class=${classMap({
+                                'pda__stack-item': true,
+                                'dragging': this.draggedIndex === i,
+                                'drag-to-trash': this.draggedIndex === i && this.dropTarget === 'trash',
+                                'drop-before': this.dropTarget === i,
+                                'drop-after': i === this.stack.length - 1 && this.dropTarget === this.stack.length,
+                            })}
                             data-index=${i}
                         >
+                            ${canMove || canRemove ? html`
+                                <button type="button" class="pda__stack-grip"
+                                    aria-label="${msg("Position")}: ${s.symbol}"
+                                    aria-keyshortcuts=${canMove ? 'ArrowUp ArrowDown' : ''}
+                                    title=${msg("Move the elements by drag and drop")}
+                                    @pointerdown=${(event: PointerEvent) => this.startStackDrag(event, i)}
+                                    @pointermove=${this.moveStackDrag}
+                                    @pointerup=${this.dropStackItem}
+                                    @pointercancel=${this.interruptStackDrag}
+                                    @lostpointercapture=${this.interruptStackDrag}
+                                    @keydown=${(event: KeyboardEvent) => this.moveStackItemWithKey(event, i)}
+                                >⠿</button>
+                            ` : ''}
                             <sl-tooltip content=${s.symbol} placement="left" class="pda__stack-item__tooltip">
                                 <sl-input
                                     size="small"
@@ -651,6 +664,12 @@ export class StackExtension extends LitElementWw {
                                     spellcheck="false"
                                 ></sl-input>
                             </sl-tooltip>
+                            ${canRemove ? html`
+                                <button type="button" class="pda__stack-remove"
+                                    aria-label=${msg("Remove stack item")}
+                                    title=${msg("Remove stack item")}
+                                    @click=${() => this.deleteStackSymbol(i)}>×</button>
+                            ` : ''}
                         </div>
                     `
                 )}
@@ -680,36 +699,128 @@ export class StackExtension extends LitElementWw {
     }
 
     private changeStackSymbol(index: number, symbol: string): void {
+        if (!this.isEditable() || !this.change || !this._stack.get(index)) return;
         Logger.log('changeStackSymbol', index, symbol);
         this._stack.update({ id: index, symbol });
-        this.requestUpdate();
+        this.notifyStackEdit();
     }
 
     private deleteStackSymbol(index: number): void {
+        if (!this.isEditable() || !this.delete || !this._stack.get(index)) return;
         Logger.log('deleteStackSymbol', index, this._stack.get());
         this._stack.remove(index);
         const symbols = this._stack.get().map((s) => s.symbol);
         this._stack.clear();
         this._stack.add(symbols.map((s, i) => ({ id: i, symbol: s })));
 
-        this.requestUpdate();
+        this.notifyStackEdit();
     }
 
-    private clearDropMarkers(): void {
-        const elements = [...this._stackItems.querySelectorAll('.pda__stack-item')];
-        elements.forEach((e) => {
-            e.classList.remove('drop-after');
-            e.classList.remove('drop-before');
-            if (e !== this._draggingElement) e.classList.remove('deleteable');
+    private notifyStackEdit() {
+        this.dispatchEvent(new Event('starting-stack-change', { bubbles: true }));
+    }
+
+    private canDragStack(): boolean {
+        return this.isEditable() && !this.showHelp && (this.change || this.delete);
+    }
+
+    private startStackDrag(event: PointerEvent, index: number) {
+        if (event.button !== 0 || !event.isPrimary || this.stackDrag || !this.canDragStack()) return;
+        const handle = event.currentTarget as HTMLButtonElement;
+        const start = { x: event.clientX, y: event.clientY };
+        handle.setPointerCapture(event.pointerId);
+        this.stackDrag = { handle, pointerId: event.pointerId, index, start, point: start };
+        event.stopPropagation();
+    }
+
+    private moveStackDrag(event: PointerEvent) {
+        const drag = this.stackDrag;
+        if (drag?.pointerId !== event.pointerId) return;
+        event.stopPropagation();
+        if (!this.canDragStack()) return this.cancelStackDrag();
+
+        const point = { x: event.clientX, y: event.clientY };
+        if (this.draggedIndex === undefined && Math.hypot(point.x - drag.start.x, point.y - drag.start.y) < 5) return;
+        this.draggedIndex = drag.index;
+        drag.point = point;
+        this.dropTarget = this.getStackDropTarget(point, drag.index);
+        if (this.stackScrollFrame === undefined) this.scrollStackAtEdge();
+    }
+
+    private getStackDropTarget({ x, y }: { x: number; y: number }, index: number): number | 'trash' | undefined {
+        const contains = ({ left, right, top, bottom }: DOMRect) => x >= left && x < right && y >= top && y < bottom;
+        if (this.delete && contains(this._stackButton.getBoundingClientRect())) return 'trash';
+        if (!this.change || !contains(this._stackItems.getBoundingClientRect())) return undefined;
+
+        const next = [...this._stackItems.querySelectorAll<HTMLElement>('.pda__stack-item')].find(row => {
+            const { top, height } = row.getBoundingClientRect();
+            return Number(row.dataset.index) !== index && y < top + height / 2;
         });
-        this._stackItems.classList.remove('drop-before');
-        this._stackButton.classList.remove('dragover');
+        return next ? Number(next.dataset.index) : this._stack.length;
+    }
+
+    private scrollStackAtEdge() {
+        this.stackScrollFrame = undefined;
+        const drag = this.stackDrag;
+        if (!drag || typeof this.dropTarget !== 'number' || !this.canDragStack()) return;
+
+        const list = this._stackItems;
+        const { top, bottom, height } = list.getBoundingClientRect();
+        const edge = Math.min(24, height / 3);
+        const scrollTop = list.scrollTop;
+        if (drag.point.y < top + edge) list.scrollTop -= 8;
+        else if (drag.point.y > bottom - edge) list.scrollTop += 8;
+        if (list.scrollTop === scrollTop) return;
+
+        this.dropTarget = this.getStackDropTarget(drag.point, drag.index);
+        this.stackScrollFrame = requestAnimationFrame(() => this.scrollStackAtEdge());
+    }
+
+    private dropStackItem(event: PointerEvent) {
+        const drag = this.stackDrag;
+        if (drag?.pointerId !== event.pointerId) return;
+        event.stopPropagation();
+        const target = this.draggedIndex !== undefined && this.canDragStack()
+            ? this.getStackDropTarget({ x: event.clientX, y: event.clientY }, drag.index)
+            : undefined;
+        this.cancelStackDrag();
+        if (target === 'trash') this.deleteStackSymbol(drag.index);
+        else if (target !== undefined) this.reorderStack(drag.index, target);
+    }
+
+    private interruptStackDrag(event: PointerEvent) {
+        if (this.stackDrag?.pointerId === event.pointerId) this.cancelStackDrag();
+    }
+
+    private cancelStackDrag() {
+        const drag = this.stackDrag;
+        if (!drag) return;
+        this.stackDrag = undefined;
+        this.draggedIndex = undefined;
+        this.dropTarget = undefined;
+        if (this.stackScrollFrame !== undefined) cancelAnimationFrame(this.stackScrollFrame);
+        this.stackScrollFrame = undefined;
+        if (drag.handle.hasPointerCapture(drag.pointerId)) drag.handle.releasePointerCapture(drag.pointerId);
+    }
+
+    private async moveStackItemWithKey(event: KeyboardEvent, index: number) {
+        if (this.stackDrag || !this.canDragStack() || !this.change) return;
+        if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return;
+        event.preventDefault();
+        event.stopPropagation();
+        const next = index + (event.key === 'ArrowUp' ? -1 : 1);
+        if (next < 0 || next >= this._stack.length) return;
+        const handle = event.currentTarget;
+        this.reorderStack(index, next > index ? next + 1 : next);
+        await this.updateComplete;
+        if (this.shadowRoot?.activeElement === handle) {
+            this._stackItems.querySelector<HTMLButtonElement>(`[data-index="${next}"] .pda__stack-grip`)?.focus();
+        }
     }
 
     private reorderStack(oldIndex: number, newIndex: number): void {
-        if (oldIndex === newIndex) return;
-
         if (oldIndex < newIndex) newIndex--;
+        if (oldIndex === newIndex || !this._stack.get(oldIndex)) return;
 
         Logger.log('reorderStack', oldIndex, newIndex);
 
@@ -718,22 +829,6 @@ export class StackExtension extends LitElementWw {
         symbols.splice(newIndex, 0, item[0]);
         this._stack.clear();
         this._stack.add(symbols.map((s, i) => ({ id: i, symbol: s })));
-        this.requestUpdate();
-    }
-
-    private getDragPosition(container: HTMLElement, y: number) {
-        let elements = [...container.querySelectorAll('.pda__stack-item:not(.dragging)')];
-        return elements.reduce(
-            (closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = y - box.top - box.height / 2;
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset: offset, element: child };
-                } else {
-                    return closest;
-                }
-            },
-            { offset: Number.NEGATIVE_INFINITY }
-        );
+        this.notifyStackEdit();
     }
 }

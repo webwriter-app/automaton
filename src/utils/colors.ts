@@ -1,7 +1,7 @@
 export const COLORS = {
-    red: {
-        background: '#fee2e2',
-        border: '#991b1b',
+    warning: {
+        background: '#fef3c7',
+        border: '#b45309',
     },
     green: {
         background: '#ecfccb',

@@ -2,38 +2,25 @@ import { css } from 'lit';
 
 export const simulationMenuStyles = css`
     .simulator {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 10px;
-        padding-top: 2px;
-
-        gap: 10px;
-
+        gap: 6px;
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
-        grid-template-rows: auto auto;
-    }
-
-    .simulator::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-
-        background-color: rgb(255, 255, 255, 0.8);
-        z-index: 1400;
+        align-items: end;
     }
 
     .simulator__label {
         grid-column: 1 / -1;
+        margin-inline-end: var(--simulator-feedback-end, 0);
+        padding: 6px 8px;
+        border: 1px solid var(--sl-panel-border-color);
+        border-radius: var(--sl-border-radius-medium);
+        background: var(--sl-color-neutral-0);
 
-        font-size: var(--sl-font-size-medium);
+        font-size: var(--sl-font-size-small);
 
-        z-index: 1500;
+        max-height: min(120px, 25cqh);
+        overflow: auto;
+        overflow-wrap: anywhere;
     }
 
     .simulator__label__errors {
@@ -47,10 +34,6 @@ export const simulationMenuStyles = css`
         gap: 5px;
         margin-top: 5px;
         overflow-x: auto;
-    }
-
-    .simulator--pda .simulator__label {
-        margin-right: 80px;
     }
 
     .simulator__label__path__transition {
@@ -70,9 +53,27 @@ export const simulationMenuStyles = css`
     }
 
     .simulator__input {
-        flex-grow: 1;
+        min-width: 0;
+        --sl-input-font-size-medium: var(--sl-font-size-small);
+    }
 
-        z-index: 1500;
+    @supports (field-sizing: content) {
+        .simulator__input {
+            justify-self: end;
+            inline-size: fit-content;
+            min-inline-size: min(100%, 6rem);
+            max-inline-size: 100%;
+        }
+
+        .simulator__input::part(base) {
+            inline-size: auto;
+            min-inline-size: 100%;
+            max-inline-size: 100%;
+        }
+
+        .simulator__input::part(input) {
+            field-sizing: content;
+        }
     }
 
     .simulator__input.danger::part(base) {
@@ -102,18 +103,19 @@ export const simulationMenuStyles = css`
         justify-content: center;
     }
 
-    .simulator__input-display {
-        flex-grow: 1;
-        position: relative;
+    .simulator_buttons sl-button::part(label) {
+        padding-inline: 10px;
+    }
 
+    .simulator__input-display {
+        box-sizing: border-box;
         border: solid var(--sl-input-border-width) var(--sl-input-border-color);
 
         border-radius: var(--sl-input-border-radius-medium);
-        font-size: var(--sl-input-font-size-medium);
+        font-size: var(--sl-font-size-small);
         height: var(--sl-input-height-medium);
 
         display: inline-flex;
-        z-index: 1500;
         background-color: white;
 
         align-items: stretch;
@@ -169,9 +171,5 @@ export const simulationMenuStyles = css`
     .simulator__input-display.success {
         border-color: var(--sl-color-success-600);
         background-color: var(--sl-color-success-50);
-    }
-
-    .simulator_buttons {
-        z-index: 1500;
     }
 `;

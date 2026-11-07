@@ -1,1 +1,22 @@
-<webwriter-automaton nodes="#0(0|0);1(200|0);2(200|200);%3(0|200)" transitions="0-1[{p|%24|}];1-1[0{p|0|},1{p|1|}];1-2[{n||}];2-2[0{o|0|},1{o|1|}]@135;2-3[{o|%24|}]" type="pda"></webwriter-automaton>
+<webwriter-automaton>
+  <script type="application/json" slot="data">
+    {
+      "format": "webwriter-automaton",
+      "version": 1,
+      "type": "pda",
+      "states": [
+        {"id": 0, "label": "q0", "x": 0, "y": 0, "initial": true},
+        {"id": 1, "label": "q1", "x": 200, "y": 0},
+        {"id": 2, "label": "q2", "x": 200, "y": 200},
+        {"id": 3, "label": "q3", "x": 0, "y": 200, "final": true}
+      ],
+      "transitions": [
+        {"id": 0, "from": 0, "to": 1, "rules": [{"read": "", "stack": {"op": "push", "symbol": "$"}}]},
+        {"id": 1, "from": 1, "to": 1, "rules": [{"read": "0", "stack": {"op": "push", "symbol": "0"}}, {"read": "1", "stack": {"op": "push", "symbol": "1"}}]},
+        {"id": 2, "from": 1, "to": 2, "rules": [{"read": "", "stack": {"op": "none"}}]},
+        {"id": 3, "from": 2, "to": 2, "rules": [{"read": "0", "stack": {"op": "pop", "symbol": "0"}}, {"read": "1", "stack": {"op": "pop", "symbol": "1"}}], "loopAngle": 135},
+        {"id": 4, "from": 2, "to": 3, "rules": [{"read": "", "stack": {"op": "pop", "symbol": "$"}}]}
+      ]
+    }
+  </script>
+</webwriter-automaton>

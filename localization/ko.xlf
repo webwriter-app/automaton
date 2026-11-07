@@ -1,18 +1,14 @@
 <xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="lit-localize-inputs" datatype="plaintext" source-language="en" target-language="ko">
+  <file original="lit-localize-inputs" datatype="plaintext" source-language="en-US" target-language="ko">
     <body>
       <trans-unit id="h2e7f32ac617924d0">
-        <source>Missing transition for 
-          <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/>
-        </source>
+        <source>Missing transition for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
         <target>누락된 전환 
           <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/>
         </target>
       </trans-unit>
       <trans-unit id="h5130af20b6d54f05">
-        <source>Multiple transitions for 
-          <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/>
-        </source>
+        <source>Multiple transitions for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
         <target>다음에 대한 다중 전환 
           <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/>
         </target>
@@ -65,34 +61,6 @@
         <source>Table</source>
         <target>표</target>
       </trans-unit>
-      <trans-unit id="sfc3c36b69e4ef120">
-        <source>Alphabet:</source>
-        <target>알파벳:</target>
-      </trans-unit>
-      <trans-unit id="se6a414abec96883f">
-        <source>States:</source>
-        <target>상태:</target>
-      </trans-unit>
-      <trans-unit id="s033b7cf13e11023b">
-        <source>Transitions:</source>
-        <target>전환:</target>
-      </trans-unit>
-      <trans-unit id="sa3c972a6b05ed840">
-        <source>Initial State:</source>
-        <target>초기 상태:</target>
-      </trans-unit>
-      <trans-unit id="saa415adf36e8d84f">
-        <source>Final States:</source>
-        <target>최종 상태:</target>
-      </trans-unit>
-      <trans-unit id="s09318db807188948">
-        <source>Add Sinkstate</source>
-        <target>싱크 상태 추가</target>
-      </trans-unit>
-      <trans-unit id="s78bc8524e7c2d052">
-        <source>Sink</source>
-        <target>싱크</target>
-      </trans-unit>
       <trans-unit id="sb80ac0a010cbc647">
         <source>Automaton Type</source>
         <target>오토마톤 유형</target>
@@ -110,21 +78,14 @@
         <target>PDA</target>
       </trans-unit>
       <trans-unit id="h56d667fd1fb9d47d">
-        <source>Please fix the following 
-          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors
-          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:
-        </source>
+        <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</source>
         <target>다음을 수정하세요. 
           <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>오류
           <x id="1" equiv-text="&lt;/sl-badge&gt;"/> 를 수정하여 시뮬레이션을 실행하세요:
         </target>
       </trans-unit>
       <trans-unit id="h6c2fe3d409d7ba36">
-        <source>No valid path found. The automaton 
-          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects
-          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word 
-          <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.
-        </source>
+        <source>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</source>
         <target>유효한 경로를 찾을 수 없습니다. 오토마톤 
           <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>거부
           <x id="1" equiv-text="&lt;/sl-badge&gt;"/> 단어 
@@ -132,34 +93,22 @@
         </target>
       </trans-unit>
       <trans-unit id="h25e62c96f8182fcc">
-        <source>
-          <x id="0" equiv-text="&lt;span&gt;"/>The automaton 
-          <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts
-          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word 
-          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
-          <x id="4" equiv-text="&lt;/span&gt;"/>
-        </source>
+        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
         <target>
           <x id="0" equiv-text="&lt;span&gt;"/>오토마톤 
           <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>수락
           <x id="2" equiv-text="&lt;/sl-badge&gt;"/> 단어 
-          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.
+          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
           <x id="4" equiv-text="&lt;/span&gt;"/>
         </target>
       </trans-unit>
       <trans-unit id="h28031e78bb7297a9">
-        <source>
-          <x id="0" equiv-text="&lt;span&gt;"/>The automaton 
-          <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects
-          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word 
-          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
-          <x id="4" equiv-text="&lt;/span&gt;"/>
-        </source>
+        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
         <target>
           <x id="0" equiv-text="&lt;span&gt;"/>오토마톤 
           <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>거부
           <x id="2" equiv-text="&lt;/sl-badge&gt;"/> 단어 
-          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.
+          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
           <x id="4" equiv-text="&lt;/span&gt;"/>
         </target>
       </trans-unit>
@@ -215,10 +164,6 @@
         <source>Stop</source>
         <target>중지</target>
       </trans-unit>
-      <trans-unit id="s9d8b8aa2b404c2c8">
-        <source>Settings</source>
-        <target>설정</target>
-      </trans-unit>
       <trans-unit id="s05c44a5db696fcaf">
         <source>Editing</source>
         <target>편집</target>
@@ -247,14 +192,6 @@
         <source>Automaton Types</source>
         <target>오토마톤 유형</target>
       </trans-unit>
-      <trans-unit id="s1c2404542b3e48d9">
-        <source>Transformations</source>
-        <target>변환</target>
-      </trans-unit>
-      <trans-unit id="s568f5722bc79d077">
-        <source>Sinkstate</source>
-        <target>싱크상태</target>
-      </trans-unit>
       <trans-unit id="s7f59f507e02a2f38">
         <source>View</source>
         <target>보기</target>
@@ -271,10 +208,6 @@
         <source>Show Transitions Table</source>
         <target>전환 표 표시</target>
       </trans-unit>
-      <trans-unit id="se9d940b50ed4b85f">
-        <source>PDA Label Style</source>
-        <target>PDA 라벨 스타일</target>
-      </trans-unit>
       <trans-unit id="s35f1dd3fd023476a">
         <source>Automation</source>
         <target>자동화</target>
@@ -290,14 +223,6 @@
       <trans-unit id="s8e3f9c3e183abbda">
         <source>Predefined Alphabet</source>
         <target>사전 정의된 알파벳</target>
-      </trans-unit>
-      <trans-unit id="s21b06c38fc4164db">
-        <source>Advanced</source>
-        <target>고급</target>
-      </trans-unit>
-      <trans-unit id="s1b5a859826f8be7d">
-        <source>Verbose</source>
-        <target>Verbose</target>
       </trans-unit>
       <trans-unit id="s7df224ba56fb8e1e">
         <source>Mode Switch</source>
@@ -319,10 +244,6 @@
         <source>Test Cases</source>
         <target>테스트 사례</target>
       </trans-unit>
-      <trans-unit id="sd341bbdc948e6521">
-        <source>Add Node by click</source>
-        <target>클릭으로 노드 추가</target>
-      </trans-unit>
       <trans-unit id="s9f4a96e81b296478">
         <source>Add Transition by drag and drop</source>
         <target>드래그 앤 드롭으로 전환 추가</target>
@@ -330,14 +251,6 @@
       <trans-unit id="s7b72a2e6d7ff3291">
         <source>Move the elements by drag and drop</source>
         <target>드래그 앤 드롭으로 요소 이동</target>
-      </trans-unit>
-      <trans-unit id="s09c6c5bc21d0e1f0">
-        <source>To edit a node right click the node</source>
-        <target>노드를 편집하려면 노드를 마우스 오른쪽 버튼으로 클릭합니다.</target>
-      </trans-unit>
-      <trans-unit id="s6a7a6503441d48ee">
-        <source>To edit a transition right click the transition</source>
-        <target>전환을 편집하려면 전환을 마우스 오른쪽 버튼으로 클릭합니다.</target>
       </trans-unit>
       <trans-unit id="s71813a5a8d63ac81">
         <source>Input word</source>
@@ -411,14 +324,6 @@
         <source>Allowed modes</source>
         <target>허용 모드</target>
       </trans-unit>
-      <trans-unit id="s11b075d3731a5194">
-        <source>Add node (Ctrl+Q)</source>
-        <target>노드 추가(Ctrl+Q)</target>
-      </trans-unit>
-      <trans-unit id="s6ea31a50ccf59dcf">
-        <source>Add edge (Ctrl+E)</source>
-        <target>가장자리 추가(Ctrl+E)</target>
-      </trans-unit>
       <trans-unit id="s9274cd474969c49c">
         <source>Switch mode (Ctrl+M)</source>
         <target>모드 전환(Ctrl+M)</target>
@@ -435,6 +340,206 @@
         <source>Menu</source>
         <target>메뉴</target>
       </trans-unit>
+<trans-unit id="sc5a051b7aba488de">
+  <source>Remove stack items with ×</source>
+  <target>×가 있는 스택 항목 제거</target>
+</trans-unit>
+<trans-unit id="sfc513553a0d4ed1c">
+  <source>Remove stack item</source>
+  <target>스택 항목 제거</target>
+</trans-unit>
+<trans-unit id="sd9bdfc0f95188eea">
+  <source>Delete node</source>
+  <target>노드 삭제</target>
+</trans-unit>
+<trans-unit id="s666ab5f59c125645">
+  <source>Delete transition</source>
+  <target>전환 삭제</target>
+</trans-unit>
+<trans-unit id="sb158679e0851297f">
+  <source>Remove symbol</source>
+  <target>기호 제거</target>
+</trans-unit>
+<trans-unit id="s21a771798c563b26">
+  <source>Sink completion is only available for DFAs.</source>
+  <target>결정론적 유한 오토마타(DFA)만이 흡수 상태로 완료될 수 있습니다.</target>
+</trans-unit>
+<trans-unit id="s6bcb0cb70a6c9552">
+  <source>Sink state completion is turned off.</source>
+  <target>흡수 상태로 완료하는 것은 비활성화됩니다.</target>
+</trans-unit>
+<trans-unit id="s24db1bf1e8c00803">
+  <source>Switch to Edit mode to complete the DFA.</source>
+  <target>DFA를 완료하려면 편집 모드로 전환하세요.</target>
+</trans-unit>
+<trans-unit id="sa509e89708954725">
+  <source>Add a state before completing the DFA.</source>
+  <target>DFA를 완료하기 전에 상태를 추가하세요.</target>
+</trans-unit>
+<trans-unit id="sf01fbe6cf8d14047">
+  <source>Define an alphabet before completing the DFA.</source>
+  <target>DFA를 완료하기 전에 알파벳을 정의하십시오.</target>
+</trans-unit>
+<trans-unit id="sfe31787cc1b7e04e">
+  <source>The DFA already has a transition for every symbol at each state.</source>
+  <target>DFA에는 이미 각 상태의 모든 기호에 대한 전환이 있습니다.</target>
+</trans-unit>
+<trans-unit id="sfac37d2aebc30dcd">
+  <source>Switch to Edit mode to change the automaton type.</source>
+  <target>자동 장치 유형을 변경하려면 편집 모드로 전환하세요.</target>
+</trans-unit>
+<trans-unit id="s11d9bfbb22894ce3">
+  <source>Switching away from PDA removes its stack operations. Continue?</source>
+  <target>다른 자동화 유형으로 변경하면 PDA 스택 작업이 제거됩니다. 계속하다?</target>
+</trans-unit>
+<trans-unit id="se432909b8e9691c8">
+  <source>Complete DFA with sink</source>
+  <target>열중하는 상태로 DFA를 완료하세요.</target>
+</trans-unit>
+<trans-unit id="s5ec50a9b8d60c15f">
+  <source>Switch to DFA</source>
+  <target>DFA로 전환</target>
+</trans-unit>
+<trans-unit id="s0818a49b5c45420d">
+  <source>Switch to NFA</source>
+  <target>NFA로 전환</target>
+</trans-unit>
+<trans-unit id="sc855ea9bc9a1cc6d">
+  <source>Switch to PDA</source>
+  <target>PDA로 전환</target>
+</trans-unit>
+<trans-unit id="s8a0ee3d87938f19a">
+  <source>Nodes</source>
+  <target>노드</target>
+</trans-unit>
+<trans-unit id="se8dca0132c66ae03">
+  <source>Permissions</source>
+  <target>권한</target>
+</trans-unit>
+<trans-unit id="s699faf39e76b0a5c">
+  <source>Enable sink state</source>
+  <target>흡수 상태 활성화</target>
+</trans-unit>
+<trans-unit id="se63c78875f5b2178">
+  <source>Add node</source>
+  <target>노드 추가</target>
+</trans-unit>
+<trans-unit id="s7815e752b14f6f96">
+  <source>Add sink state</source>
+  <target>흡수 상태 추가</target>
+</trans-unit>
+<trans-unit id="s59329d2125467032">
+  <source>Automaton definition</source>
+  <target>오토마톤 정의</target>
+</trans-unit>
+<trans-unit id="s5e8250fb85d64c23">
+  <source>Close</source>
+  <target>닫기</target>
+</trans-unit>
+<trans-unit id="sad743c81472a217f">
+  <source>States</source>
+  <target>오토마톤 상태</target>
+</trans-unit>
+<trans-unit id="s27689c7297057a5a">
+  <source>Alphabet</source>
+  <target>알파벳</target>
+</trans-unit>
+<trans-unit id="s9952d0dbf104795a">
+  <source>Initial state</source>
+  <target>오토마톤의 초기 상태</target>
+</trans-unit>
+<trans-unit id="s94ede397ea7482ef">
+  <source>Final states</source>
+  <target>오토마톤의 최종 상태</target>
+</trans-unit>
+<trans-unit id="sb3fa6348186c2022">
+  <source>Stack alphabet</source>
+  <target>스택의 알파벳</target>
+</trans-unit>
+<trans-unit id="se5113f4874d8494d">
+  <source>Starting stack</source>
+  <target>스택의 초기 내용</target>
+</trans-unit>
+<trans-unit id="s5798e7f4322a6963">
+  <source>Transitions</source>
+  <target>전환</target>
+</trans-unit>
+<trans-unit id="sd07c6d5726032834">
+  <source>No transitions yet</source>
+  <target>아직 전환이 없습니다.</target>
+</trans-unit>
+<trans-unit id="s1f8d4c03eed89a7b">
+  <source>Push <x id="0" equiv-text="${label}"/></source>
+  <target>스택 맨 위에 <x id="0" equiv-text="${label}"/>를 넣습니다.</target>
+</trans-unit>
+<trans-unit id="sc6fa8596f1438baa">
+  <source>Pop <x id="0" equiv-text="${label}"/></source>
+  <target>스택 상단에서 <x id="0" equiv-text="${label}"/>를 제거합니다.</target>
+</trans-unit>
+<trans-unit id="s66fd00b9507b3fee">
+  <source>Require an empty stack</source>
+  <target>빈 스택 필요</target>
+</trans-unit>
+<trans-unit id="s9027f3efff46b1d1">
+  <source>Leave stack unchanged</source>
+  <target>스택을 변경하지 않고 그대로 둡니다.</target>
+</trans-unit>
+<trans-unit id="sdf60145f119b14de">
+  <source>Top is <x id="0" equiv-text="${condition}"/></source>
+  <target>스택의 최상위는 <x id="0" equiv-text="${condition}"/>입니다.</target>
+</trans-unit>
+<trans-unit id="sf74f8907aaf4051a">
+  <source>Transition table</source>
+  <target>전환 테이블</target>
+</trans-unit>
+<trans-unit id="sae239213b7c70376">
+  <source>State</source>
+  <target>상태</target>
+</trans-unit>
+<trans-unit id="sebb13b4e50b16dcc">
+  <source>Connect from top</source>
+  <target>상단에서 연결</target>
+</trans-unit>
+<trans-unit id="s52a408dd8b7508c0">
+  <source>Connect from left</source>
+  <target>왼쪽에서 연결</target>
+</trans-unit>
+<trans-unit id="s099877714a72ad3a">
+  <source>Connect from bottom</source>
+  <target>아래쪽에서 연결</target>
+</trans-unit>
+<trans-unit id="s638f1298728a57d5">
+  <source>Connect from right</source>
+  <target>오른쪽에서 연결</target>
+</trans-unit>
+<trans-unit id="s02232ef4da5e61a7">
+  <source>Double click / long tap to add a node</source>
+  <target>노드를 추가하려면 두 번 클릭/길게 탭하세요.</target>
+</trans-unit>
+<trans-unit id="sdb05063db77404d8">
+  <source>The automaton data block is invalid or uses an unsupported format.</source>
+  <target>오토마톤 데이터 블록이 잘못되었거나 지원되지 않는 형식을 사용합니다.</target>
+</trans-unit>
+<trans-unit id="s93ef8405b9b83023">
+  <source>State diagram</source>
+  <target>자동화 상태의 다이어그램</target>
+</trans-unit>
+<trans-unit id="s3a2084e9089a7fca">
+  <source>No states yet</source>
+  <target>오토마톤에는 아직 상태가 없습니다.</target>
+</trans-unit>
+<trans-unit id="s521208df9ea3e694">
+  <source>Click or drag + to add a node</source>
+  <target>노드를 추가하려면 +를 클릭하거나 드래그하세요.</target>
+</trans-unit>
+<trans-unit id="sc0bffa27613488fe">
+  <source>Select a node or transition to edit it</source>
+  <target>편집할 노드 또는 전환을 선택하세요.</target>
+</trans-unit>
+<trans-unit id="s8a7f6fa052132a14">
+  <source>Warnings</source>
+  <target>경고</target>
+</trans-unit>
     </body>
   </file>
 </xliff>

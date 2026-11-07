@@ -1,1 +1,24 @@
-<webwriter-automaton nodes="#0(-300|0);1(-100|0);%2(-300|200);%3(-100|200)" transitions="0-1[a];1-3[a];3-2[a];1-2[b];2-0[a,b];3-3[b]@135;0-0[b]@0"></webwriter-automaton>
+<webwriter-automaton>
+  <script type="application/json" slot="data">
+    {
+      "format": "webwriter-automaton",
+      "version": 1,
+      "type": "dfa",
+      "states": [
+        {"id": 0, "label": "q0", "x": -300, "y": 0, "initial": true},
+        {"id": 1, "label": "q1", "x": -100, "y": 0},
+        {"id": 2, "label": "q2", "x": -300, "y": 200, "final": true},
+        {"id": 3, "label": "q3", "x": -100, "y": 200, "final": true}
+      ],
+      "transitions": [
+        {"id": 0, "from": 0, "to": 1, "rules": [{"read": "a"}]},
+        {"id": 1, "from": 1, "to": 3, "rules": [{"read": "a"}]},
+        {"id": 2, "from": 3, "to": 2, "rules": [{"read": "a"}]},
+        {"id": 3, "from": 1, "to": 2, "rules": [{"read": "b"}]},
+        {"id": 4, "from": 2, "to": 0, "rules": [{"read": "a"}, {"read": "b"}]},
+        {"id": 5, "from": 3, "to": 3, "rules": [{"read": "b"}], "loopAngle": 135},
+        {"id": 6, "from": 0, "to": 0, "rules": [{"read": "b"}], "loopAngle": 0}
+      ]
+    }
+  </script>
+</webwriter-automaton>

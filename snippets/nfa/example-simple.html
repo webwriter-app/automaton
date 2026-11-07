@@ -1,1 +1,18 @@
-<webwriter-automaton nodes="#0(0|0);%1(150|0)" transitions="0-1[];0-0[a]@0;1-1[b]@90" type="nfa"></webwriter-automaton>
+<webwriter-automaton>
+  <script type="application/json" slot="data">
+    {
+      "format": "webwriter-automaton",
+      "version": 1,
+      "type": "nfa",
+      "states": [
+        {"id": 0, "label": "q0", "x": 0, "y": 0, "initial": true},
+        {"id": 1, "label": "q1", "x": 150, "y": 0, "final": true}
+      ],
+      "transitions": [
+        {"id": 0, "from": 0, "to": 1, "rules": [{"read": ""}]},
+        {"id": 1, "from": 0, "to": 0, "rules": [{"read": "a"}], "loopAngle": 0},
+        {"id": 2, "from": 1, "to": 1, "rules": [{"read": "b"}], "loopAngle": 90}
+      ]
+    }
+  </script>
+</webwriter-automaton>

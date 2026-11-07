@@ -102,7 +102,7 @@ export abstract class Automaton {
         return this.transitions.get();
     }
 
-    protected getAlphabet(): string[] {
+    public getAlphabet(): string[] {
         return [
             ...new Set(
                 this.transitions
@@ -229,11 +229,12 @@ export abstract class Automaton {
 
         this.nodes.update({
             id,
-            color: COLORS.red,
+            color: COLORS.warning,
         });
     }
 
     public highlightNode(node: Node): void {
+        if (!this.nodes.get(node.id)) return;
         this.nodes.update({
             id: node.id,
             color: COLORS.blue,
@@ -244,6 +245,7 @@ export abstract class Automaton {
         this.highlightNode(node);
 
         setTimeout(() => {
+            if (!this.nodes.get(node.id)) return;
             this.nodes.update({
                 id: node.id,
                 color: COLORS.standard,
@@ -252,6 +254,7 @@ export abstract class Automaton {
     }
 
     public highlightTransition(transition: Transition): void {
+        if (!this.transitions.get(transition.id)) return;
         this.transitions.update({
             id: transition.id,
             color: COLORS.blue.border,
@@ -263,6 +266,7 @@ export abstract class Automaton {
         this.highlightTransition(transition);
 
         setTimeout(() => {
+            if (!this.transitions.get(transition.id)) return;
             this.transitions.update({
                 id: transition.id,
                 color: COLORS.standard.border,
@@ -446,14 +450,13 @@ export abstract class Automaton {
         });
 
 
-        Graph.initialGhostNode = {
+        this.nodes.update({
             ...Graph.initialGhostNode,
             x: node.x ? node.x - 100 : -100,
             y: node.y ? node.y : 0,
             hidden: false,
             fixed: true,
-        };
-        this.nodes.update(Graph.initialGhostNode);
+        });
     }
 }
 

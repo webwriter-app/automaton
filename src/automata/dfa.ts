@@ -15,6 +15,12 @@ export class DFA extends Automaton {
         this.simulator = new DFASimulator(this);
     }
 
+    public requiredAlphabet: readonly string[] = [];
+
+    public override getAlphabet(): string[] {
+        return [...new Set([...this.requiredAlphabet, ...super.getAlphabet()])].filter(symbol => symbol !== '');
+    }
+
     checkAutomaton(): AutomatonError[] {
         const errors: AutomatonError[] = super.checkAutomaton();
         const alphabet = this.getAlphabet();

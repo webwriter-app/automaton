@@ -11,7 +11,7 @@ export abstract class ManualAutoSimulator extends AutoSimulator {
     constructor(automaton: Automaton) {
         super(automaton);
         this._currentNode = this._a.getInitialNode();
-        this._previousTransitions = { accepted: this._currentNode.final, path: { nodes: [this._currentNode], transitions: [] } };
+        this._previousTransitions = { accepted: this._currentNode?.final ?? false, path: { nodes: this._currentNode ? [this._currentNode] : [], transitions: [] } };
     }
 
     public setManualMode(manual: boolean): void {
@@ -23,7 +23,7 @@ export abstract class ManualAutoSimulator extends AutoSimulator {
         this._manualMode = false;
         this._mode = 'simulation';
         this._currentNode = this._a.getInitialNode();
-        this._previousTransitions = { accepted: this._currentNode.final, path: { nodes: [this._currentNode], transitions: [] } };
+        this._previousTransitions = { accepted: this._currentNode?.final ?? false, path: { nodes: this._currentNode ? [this._currentNode] : [], transitions: [] } };
     }
 
     protected abstract isValidTransition(transition: Transition): boolean;
