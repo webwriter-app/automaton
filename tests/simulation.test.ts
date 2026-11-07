@@ -233,6 +233,50 @@ describe("Simulation Tests", () => {
 			assert.deepEqual(widget.selectedPermissions, ["stack-add"]);
 			assert.isFalse(widget.settings.permissions.node.add);
 		});
+
+		it("refreshes drawer actions and reflects sink completion before the action finishes", async () => {
+			const widget = document.createElement("webwriter-automaton") as AutomatonComponent;
+			document.body.append(widget);
+			await widget.updateComplete;
+			assert.isTrue(widget.actions.completeDfaWithSink.disabled);
+			assert.include(widget.actions.completeDfaWithSink.disabledReason?._, "Add a state");
+			widget.setAttribute("nodes", "#0(0|0)");
+			await widget.updateComplete;
+			assert.include(widget.actions.completeDfaWithSink.disabledReason?._, "Define an alphabet");
+			let refreshes = 0;
+			widget.addEventListener("optionschange", () => { refreshes++; });
+			widget.forcedAlphabet = ["a"];
+			await widget.updateComplete;
+			assert.isAbove(refreshes, 0);
+			assert.isFalse(widget.actions.completeDfaWithSink.disabled);
+			await widget.completeDfaWithSink();
+			assert.include(widget.getAttribute("nodes"), "[sink]");
+			assert.equal(widget.getAttribute("transitions"), "1-1[a];0-1[a]");
+			assert.isTrue(widget.actions.completeDfaWithSink.disabled);
+			assert.include(widget.actions.completeDfaWithSink.disabledReason?._, "already has a transition");
+		});
+
+		it("declares confirmation only for allowed type switches that discard PDA stack operations", async () => {
+			const widget = await createConfiguredPDA();
+			await widget.updateComplete;
+			assert.exists(widget.actions.switchToDfa.confirm);
+			assert.exists(widget.actions.switchToNfa.confirm);
+			assert.isTrue(widget.actions.switchToPda.hidden);
+			widget.allowedTypes = ["pda", "nfa"];
+			await widget.updateComplete;
+			assert.isTrue(widget.actions.switchToDfa.hidden);
+			await widget.switchToDfa();
+			assert.equal(widget.type, "pda");
+			widget.setAttribute("transitions", "0-1[a{n||X}]");
+			await widget.updateComplete;
+			assert.exists(widget.actions.switchToNfa.confirm, "A stack condition affects even a no-op transition");
+			widget.setAttribute("transitions", "0-1[a{n||}]");
+			await widget.updateComplete;
+			assert.isUndefined(widget.actions.switchToNfa.confirm);
+			await widget.switchToNfa();
+			assert.equal(widget.getAttribute("type"), "nfa");
+			assert.equal(widget.getAttribute("transitions"), "0-1[a]");
+		});
 	});
 
 	describe("Responsive layout", () => {

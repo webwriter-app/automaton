@@ -1,7 +1,7 @@
 import { Graph } from '../../graph';
 import type { DFA } from '../../automata/dfa';
 
-export function AddSinkstateToDFA(dfa: DFA): boolean {
+function inspectStates(dfa: DFA) {
     const nodes = dfa.nodes.get().filter(node => node.id !== Graph.initialGhostNode.id);
     const alphabet = dfa.getAlphabet();
     const states = nodes.map(node => {
@@ -9,6 +9,18 @@ export function AddSinkstateToDFA(dfa: DFA): boolean {
         const covered = new Set(transitions.flatMap(edge => edge.symbols));
         return { node, transitions, missing: alphabet.filter(symbol => !covered.has(symbol)) };
     });
+    return { nodes, alphabet, states };
+}
+
+export function sinkStateStatus(dfa: DFA): 'empty' | 'no-alphabet' | 'complete' | 'incomplete' {
+    const { nodes, alphabet, states } = inspectStates(dfa);
+    if (!nodes.length) return 'empty';
+    if (!alphabet.length) return 'no-alphabet';
+    return states.some(state => state.missing.length) ? 'incomplete' : 'complete';
+}
+
+export function AddSinkstateToDFA(dfa: DFA): boolean {
+    const { nodes, alphabet, states } = inspectStates(dfa);
     if (!states.some(state => state.missing.length)) return false;
 
     const existingSink = states.find(({ node, transitions, missing }) =>

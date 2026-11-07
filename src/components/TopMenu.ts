@@ -21,7 +21,6 @@ import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 
 import { AutomatonComponent, type AutomatonType } from '../index';
 import { topMenuStyles } from '../styles/topMenu';
-import { AddSinkstateToDFA } from '../utils/transformations/Sinkstate';
 import { DFA } from '../automata/dfa';
 import { LitElementWw } from '@webwriter/lit';
 import { Graph } from '../graph';
@@ -308,11 +307,7 @@ export class TopMenu extends LitElementWw {
                         ${kind === 'sink' ? html`
                             <sl-button size="small" @click=${() => {
                                 this._choices = undefined;
-                                const current = this._component.automaton;
-                                if (this._component.mode === 'edit' && current instanceof DFA &&
-                                    this._component.allowedTransformations.includes('sink') && AddSinkstateToDFA(current)) {
-                                    this._component.refreshGraph();
-                                }
+                                void this._component.completeDfaWithSink();
                             }}>${msg("Add Sinkstate")}</sl-button>
                         ` : types.map(type => html`
                             <sl-button size="small" @click=${() => {

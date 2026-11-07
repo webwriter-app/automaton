@@ -6,7 +6,7 @@ import {
 	TemplateResult,
 } from "lit";
 import { customElement, property, query, state } from "lit/decorators.js";
-import { LitElementWw } from "@webwriter/lit";
+import { LitElementWw, type OptionDeclaration } from "@webwriter/lit";
 
 import { styles } from "./styles/styles";
 
@@ -39,7 +39,8 @@ import { ToolMenu } from "./components/ToolMenu";
 import { InfoMenu } from "./components/InfoMenu";
 import { SimulatorMenu } from "./components/SimulatorMenu";
 
-import { Settings, optionGroups, options } from "./components/Settings";
+import { Settings, drawerActions, optionGroups, options } from "./components/Settings";
+import { AddSinkstateToDFA } from "./utils/transformations/Sinkstate";
 
 import { biBoxes, biExclamationTriangle, biPencil } from "./styles/icons";
 
@@ -190,8 +191,10 @@ export class AutomatonComponent extends LitElementWw {
 	/** @internal */
 	public readonly settings = new Settings(this);
 
-	static get options() { return options(); }
+	// WebWriter supports the tree control before the installed Lit helper types do.
+	static get options() { return options() as unknown as Record<string, OptionDeclaration>; }
 	static get optionGroups() { return optionGroups(); }
+	public override readonly actions = drawerActions(this);
 
 	// The drawer's values differ from these settings' authored attribute formats.
 	/** @internal */
@@ -455,6 +458,10 @@ export class AutomatonComponent extends LitElementWw {
 		if (changedProperties.has("permissions") || changedProperties.has("mode")) {
 			this._graph?.network.redraw();
 		}
+		if (["type", "mode", "allowedTypes", "allowedTransformations", "forcedAlphabet", "nodes", "transitions"]
+			.some(property => changedProperties.has(property as keyof this))) {
+			this.dispatchEvent(new Event("optionschange", { bubbles: true }));
+		}
 	}
 
 	requestUpdate(
@@ -678,12 +685,26 @@ export class AutomatonComponent extends LitElementWw {
 		`;
 	}
 
-	/**
-	 * Toggles the mode between 'edit' and 'simulate'.
-	 */
 	/** @internal */
-	public refreshGraph() {
+	public async completeDfaWithSink() {
+		const { automaton } = this;
+		if (!(automaton instanceof DFA) || this.settings.sinkDisabledReason || !AddSinkstateToDFA(automaton)) return;
+		this.writeGraphAttributes(automaton);
 		this._graph?.requestUpdate();
+		await this.updateComplete;
+	}
+
+	/** @internal */
+	public switchToDfa() { return this.switchTypeFromDrawer("dfa"); }
+	/** @internal */
+	public switchToNfa() { return this.switchTypeFromDrawer("nfa"); }
+	/** @internal */
+	public switchToPda() { return this.switchTypeFromDrawer("pda"); }
+
+	private async switchTypeFromDrawer(type: AutomatonType) {
+		if (this.mode !== "edit" || !this.allowedTypes.includes(type) || this.type === type) return;
+		this.type = type;
+		await this.updateComplete;
 	}
 
 	private canSimulate() {

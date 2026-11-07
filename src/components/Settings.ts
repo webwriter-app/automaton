@@ -1,6 +1,8 @@
 import { msg } from '@lit/localize';
-import type { OptionDeclaration } from '@webwriter/lit';
-import type { AutomatonComponent } from '../';
+import type { OptionDeclaration, SelectOptionDeclaration } from '@webwriter/lit';
+import type { AutomatonComponent, AutomatonType } from '../';
+import { DFA } from '../automata/dfa';
+import { sinkStateStatus } from '../utils/transformations/Sinkstate';
 
 const permissionTargets = ['node', 'edge', 'stack'] as const;
 const permissionActions = [
@@ -36,6 +38,48 @@ export class Settings {
         ).join('');
         this.parentComponent.setAttribute('permissions', encoded);
     }
+
+    get sinkDisabledReason() {
+        const { automaton, mode, allowedTransformations } = this.parentComponent;
+        if (!(automaton instanceof DFA)) return msg('Sink completion is only available for DFAs.');
+        if (!allowedTransformations.includes('sink')) return msg('Sink completion is disabled in Transformations.');
+        if (mode !== 'edit') return msg('Switch to Edit mode to complete the DFA.');
+        switch (sinkStateStatus(automaton)) {
+            case 'empty': return msg('Add a state before completing the DFA.');
+            case 'no-alphabet': return msg('Define an alphabet before completing the DFA.');
+            case 'complete': return msg('The DFA already has a transition for every symbol at each state.');
+            case 'incomplete': return undefined;
+        }
+    }
+}
+
+export function drawerActions(widget: AutomatonComponent) {
+    const changeType = (type: AutomatonType, label: string) => {
+        const { automaton, allowedTypes, mode } = widget;
+        const hidden = type === automaton.type || !allowedTypes.includes(type);
+        const disabled = mode !== 'edit';
+        const losesStackOperations = !hidden && !disabled && automaton.type === 'pda' && type !== 'pda' &&
+            automaton.transitions.get().some(edge => edge.stackOperations?.some(op => op.operation !== 'none' || op.condition));
+        return {
+            label: { _: label }, group: 'editing', hidden, disabled,
+            disabledReason: disabled ? { _: msg('Switch to Edit mode to change the automaton type.') } : undefined,
+            confirm: losesStackOperations ? { _: msg('Switching away from PDA removes its stack operations. Continue?') } : undefined,
+        };
+    };
+
+    return {
+        get completeDfaWithSink() {
+            const reason = widget.settings.sinkDisabledReason;
+            return {
+                label: { _: msg('Complete DFA with sink') }, group: 'editing',
+                disabled: reason !== undefined,
+                disabledReason: reason === undefined ? undefined : { _: reason },
+            };
+        },
+        get switchToDfa() { return changeType('dfa', msg('Switch to DFA')); },
+        get switchToNfa() { return changeType('nfa', msg('Switch to NFA')); },
+        get switchToPda() { return changeType('pda', msg('Switch to PDA')); },
+    };
 }
 
 export function optionGroups() {
@@ -47,17 +91,26 @@ export function optionGroups() {
 }
 
 export function options() {
-    const targets = { node: msg('Node'), edge: msg('Edge'), stack: msg('Stack') };
+    const targets = { node: msg('Nodes'), edge: msg('Transitions'), stack: msg('Stack') };
     const actions = { add: msg('Add'), delete: msg('Delete'), change: msg('Change') };
+    // The installed Lit helper types predate the drawer's tree control.
+    type PermissionTree = Omit<SelectOptionDeclaration, 'options'> & {
+        group: string;
+        control: 'tree';
+        options: { label: Record<string, string>; children: NonNullable<SelectOptionDeclaration['options']> }[];
+    };
 
     return {
         selectedPermissions: {
-            type: 'select', multiple: true, attribute: false, group: 'editing',
-            label: { _: msg('Editing') },
-            options: permissionTargets.flatMap(target => permissionActions.map(({ id }) => ({
-                value: `${target}-${id}`, label: { _: `${targets[target]} · ${actions[id]}` },
-            }))),
-        },
+            type: 'select', multiple: true, attribute: false, group: 'editing', control: 'tree',
+            label: { _: msg('Permissions') },
+            options: permissionTargets.map(target => ({
+                label: { _: targets[target] },
+                children: permissionActions.map(({ id }) => ({
+                    value: `${target}-${id}`, label: { _: actions[id] },
+                })),
+            })),
+        } satisfies PermissionTree,
         allowedTypeOptions: {
             type: 'select', multiple: true, attribute: false, group: 'editing',
             label: { _: msg('Automaton Types') },
@@ -95,5 +148,5 @@ export function options() {
         testLanguage: { type: String, group: 'automation', label: { _: msg('Test Language') } },
         testWordsInput: { type: String, attribute: false, group: 'automation', label: { _: msg('Test Words') } },
         forcedAlphabetInput: { type: String, attribute: false, group: 'automation', label: { _: msg('Predefined Alphabet') } },
-    } satisfies Record<string, OptionDeclaration & { group: string; control?: 'switch' }>;
+    } satisfies Record<string, PermissionTree | (OptionDeclaration & { group: string; control?: 'switch' })>;
 }
