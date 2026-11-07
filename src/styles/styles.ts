@@ -22,6 +22,10 @@ const baseStyles = css`
         max-height: none;
     }
 
+    .print-machine {
+        display: none;
+    }
+
     #graphCanvas {
         height: 100%;
         width: 100%;
@@ -344,6 +348,46 @@ const baseStyles = css`
         background: var(--sl-color-neutral-0, white);
         border-radius: 4px;
         padding: 4px 8px;
+    }
+
+    @media print {
+        :host {
+            height: auto !important;
+            min-height: 0 !important;
+            max-height: none !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            break-inside: avoid;
+        }
+
+        .editor {
+            display: none;
+        }
+
+        .print-machine {
+            display: block;
+            margin: 0;
+            break-inside: avoid;
+            color: #222;
+            font: 10pt/1.4 var(--sl-font-sans, sans-serif);
+        }
+
+        .print-machine figcaption {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 0.25em 1em;
+            padding-block: 0.25em;
+            border-block-end: 1px solid #aaa;
+            overflow-wrap: anywhere;
+        }
+
+        .print-machine canvas {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 0.5em auto 0;
+        }
     }
 `;
 

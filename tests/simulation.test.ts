@@ -302,6 +302,45 @@ describe("Simulation Tests", () => {
 		});
 	});
 
+	describe("Printing", () => {
+		it("prints the authored diagram and starting stack independently of the canvas viewport", async () => {
+			const widget = await createConfiguredPDA();
+			widget.style.width = "300px";
+			setMachine(widget, { startingStack: ["Z"] });
+			await widget.updateComplete;
+			const { network } = (widget as unknown as { graph: Graph }).graph;
+			network.selectNodes([1]);
+			const figure = widget.shadowRoot!.querySelector<HTMLElement>(".print-machine")!;
+			const canvas = figure.querySelector("canvas")!;
+			const saved = machineText(widget);
+			assert.equal(getComputedStyle(figure).display, "none");
+
+			window.dispatchEvent(new Event("beforeprint"));
+			assert.isAbove(canvas.width, 0);
+			assert.isAbove(canvas.height, 0);
+			const ctx = canvas.getContext("2d")!;
+			const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+			assert.isTrue(pixels.some((value, index) => index % 4 === 3 && value > 0));
+			const fitted = canvas.toDataURL();
+
+			network.moveTo({ scale: 2, position: { x: 2000, y: 1000 } });
+			(widget.automaton.extension as StackExtension).setStack(["runtime"]);
+			window.dispatchEvent(new Event("beforeprint"));
+			assert.equal(canvas.toDataURL(), fitted);
+			assert.include(figure.querySelector("figcaption")!.textContent, "[Z]");
+			assert.notInclude(figure.textContent, "runtime");
+			assert.equal(machineText(widget), saved);
+			assert.equal(network.getScale(), 2);
+			assert.deepEqual(network.getSelectedNodes(), [1]);
+
+			window.dispatchEvent(new Event("afterprint"));
+			assert.equal(canvas.width, 0);
+			widget.remove();
+			window.dispatchEvent(new Event("beforeprint"));
+			assert.equal(canvas.width, 0, "Disconnected widgets no longer handle print events");
+		});
+	});
+
 	describe("Widget options", () => {
 		it("uses defaults for omitted settings and restores them when overrides are cleared", async () => {
 			const widget = await createConfiguredDFA();

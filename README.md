@@ -73,6 +73,10 @@ Put the authored machine in a direct JSON data block.
 
 The JSON block is the authored machine saved with the document. Earlier graph attributes are ignored.
 
+### Printing
+
+Print the document from WebWriter or the browser to get a fitted state diagram and, for a PDA, its authored starting stack.
+
 ## Settings
 
 Omitted settings use the defaults below. Removing an attribute restores its default. An empty allowed list is an explicit override.

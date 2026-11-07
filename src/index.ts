@@ -59,6 +59,7 @@ import { localized, msg } from "@lit/localize";
 import { ATTRIBUTE_CONVERTERS } from "@u/attributeConverters";
 
 export type AutomatonType = "dfa" | "nfa" | "pda";
+const automatonClasses = { dfa: DFA, nfa: NFA, pda: PDA };
 
 /**
  * Represents an Automaton Component.
@@ -85,6 +86,7 @@ export class AutomatonComponent extends LitElementWw {
 
 	private machineText: string | null = null;
 	private machineReadPending = false;
+	private printWindow?: Window;
 
 	/** The authored states from the JSON data block. */
 	public get nodes(): readonly Node[] { return this._machine.nodes; }
@@ -320,6 +322,39 @@ export class AutomatonComponent extends LitElementWw {
 		Logger.log("constructor");
 	}
 
+	connectedCallback() {
+		super.connectedCallback();
+		this.printWindow = this.ownerDocument.defaultView ?? undefined;
+		this.printWindow?.addEventListener("beforeprint", this.preparePrint);
+		this.printWindow?.addEventListener("afterprint", this.clearPrint);
+	}
+
+	disconnectedCallback() {
+		this.printWindow?.removeEventListener("beforeprint", this.preparePrint);
+		this.printWindow?.removeEventListener("afterprint", this.clearPrint);
+		this.printWindow = undefined;
+		this.clearPrint();
+		super.disconnectedCallback();
+	}
+
+	private preparePrint = () => {
+		this.syncMachine();
+		this.performUpdate();
+		const canvas = this.renderRoot.querySelector<HTMLCanvasElement>(".print-machine canvas");
+		if (!canvas) return;
+		const AutomatonClass = automatonClasses[this.type];
+		const { nodes, transitions } = this._machine;
+		Graph.drawForPrint(canvas, new AutomatonClass(structuredClone(nodes), structuredClone(transitions)));
+	};
+
+	private clearPrint = () => {
+		const canvas = this.renderRoot.querySelector<HTMLCanvasElement>(".print-machine canvas");
+		if (canvas) {
+			canvas.width = 0;
+			canvas.height = 0;
+		}
+	};
+
 	/**
 	 * Lifecycle callback called after the element's first update.
 	 * @param _changedProperties - Map of properties that have changed with their previous values.
@@ -372,7 +407,7 @@ export class AutomatonComponent extends LitElementWw {
 		this.machineReadPending = false;
 		const replace = type !== this.automaton.type;
 		if (replace) {
-			const AutomatonClass = { dfa: DFA, nfa: NFA, pda: PDA }[type];
+			const AutomatonClass = automatonClasses[type];
 			this.replaceAutomaton(new AutomatonClass(nodes, transitions));
 		} else if (readGraph) {
 			this._graph?.cancelConnection();
@@ -486,6 +521,26 @@ export class AutomatonComponent extends LitElementWw {
 				</div>
 				${this._helpOverlay && this._topMenuCollapsed ? this.renderCompactHelp() : ""}
 			</div>
+			${this.renderPrintMachine()}
+		`;
+	}
+
+	private renderPrintMachine() {
+		const type = this.type === "dfa" ? msg("DFA") : this.type === "nfa" ? msg("NFA") : msg("PDA");
+		return html`
+			<figure class="print-machine">
+				<figcaption>
+					<strong>${type}</strong>
+					${this.type === "pda" && !this._invalidMachineData ? html`
+						<span>${msg("Starting stack")} <code>[${this.startingStack.join(", ")}]</code></span>
+					` : ""}
+				</figcaption>
+				${this._invalidMachineData
+					? html`<p>${msg("The automaton data block is invalid or uses an unsupported format.")}</p>`
+					: this.nodes.length
+						? html`<canvas width="0" height="0" role="img" aria-label=${msg("State diagram")}></canvas>`
+						: html`<p>${msg("No states yet")}</p>`}
+			</figure>
 		`;
 	}
 

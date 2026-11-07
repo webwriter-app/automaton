@@ -20,6 +20,23 @@ const NODE_MARGIN = 5;
 const TRANSITION_CURVE = { enabled: true, type: 'curvedCW', forceDirection: 'none', roundness: 0 };
 const POINTER_CURVE = { enabled: true, type: 'continuous', roundness: 0.5 };
 const PREVIEW_OPACITY = 0.55;
+const graphStyle = {
+    nodes: {
+        shape: 'circle',
+        ctxRenderer: DRAW.ctx.doubleCircle,
+        color: {
+            background: 'white',
+            border: 'black',
+            hover: COLORS.blue,
+            highlight: COLORS.blue,
+        },
+        heightConstraint: { minimum: MIN_NODE_DIAMETER },
+        widthConstraint: { minimum: MIN_NODE_DIAMETER },
+    },
+    edges: { color: 'black', smooth: TRANSITION_CURVE, arrows: 'to', font: {} },
+    physics: false,
+    layout: { randomSeed: 1 },
+};
 
 type PreviewEdge = {
     toId: string | number;
@@ -36,6 +53,13 @@ type PreviewEdge = {
     };
     setOptions(options: EdgeOptions & { to?: string | number }): void;
 };
+
+function networkBody(network: Network) {
+    return (network as Network & { body: {
+        nodes: Record<string, Position & { options: { opacity: number } }>;
+        edges: Record<string, PreviewEdge>;
+    } }).body;
+}
 
 /**
  * Represents a graph that combines an automaton, network, and other components.
@@ -100,28 +124,7 @@ export class Graph {
         this.editingBar = new EditingBar(ac);
 
         const options = {
-            physics: false,
-            nodes: {
-                shape: 'circle',
-                ctxRenderer: DRAW.ctx.doubleCircle,
-                color: {
-                    background: 'white',
-                    border: 'black',
-                    hover: COLORS.blue,
-                    highlight: COLORS.blue,
-                },
-                heightConstraint: { minimum: MIN_NODE_DIAMETER },
-                widthConstraint: { minimum: MIN_NODE_DIAMETER },
-            },
-            edges: {
-                color: 'black',
-                smooth: TRANSITION_CURVE,
-                arrows: 'to',
-                font: {},
-            },
-            layout: {
-                randomSeed: 1,
-            },
+            ...graphStyle,
             interaction: { hover: true },
             manipulation: {
                 enabled: true,
@@ -337,10 +340,7 @@ export class Graph {
     }
 
     private get previewBody() {
-        return (this._n as Network & { body: {
-            nodes: Record<string, Position & { options: { opacity: number } }>;
-            edges: Record<string, PreviewEdge>;
-        } }).body;
+        return networkBody(this._n);
     }
 
     private previewConnectionTarget({ from, to }: { from?: string | number; to?: string | number }) {
@@ -693,26 +693,26 @@ export class Graph {
         });
     }
 
-    private updateGhostNodePosition() {
+    private static positionInitialArrow(network: Network, automaton: Automaton) {
         const ghostId = Graph.initialGhostNode.id;
-        const { nodes, edges } = this.previewBody;
+        const { nodes, edges } = networkBody(network);
         const ghost = nodes[ghostId];
-        const initial = this._a.getInitialNode();
+        const initial = automaton.getInitialNode();
         if (edges[ghostId]) edges[ghostId].options.hidden = !initial;
         if (!ghost || !initial || !nodes[initial.id]) return;
 
         const center = nodes[initial.id];
         const nodeRadius = (id: number) => {
-            const { left, right, top, bottom } = this._n.getBoundingBox(id);
+            const { left, right, top, bottom } = network.getBoundingBox(id);
             return Math.max(20, (right - left) / 2, (bottom - top) / 2);
         };
         const radius = nodeRadius(initial.id);
         const length = Math.max(100, radius + 70);
-        const obstacles = this._a.nodes.get()
+        const obstacles = automaton.nodes.get()
             .filter(node => node.id !== ghostId && node.id !== initial.id && nodes[node.id])
             .map(node => ({ position: nodes[node.id], radius: nodeRadius(node.id) + 6 }))
             .filter(node => Math.hypot(node.position.x - center.x, node.position.y - center.y) <= length + node.radius);
-        const transitions = this._a.transitions.get()
+        const transitions = automaton.transitions.get()
             .filter(transition => transition.from !== ghostId)
             .map(transition => edges[transition.id])
             .filter(edge => edge?.from && edge.to && !edge.options.hidden);
@@ -744,6 +744,92 @@ export class Graph {
         // This helper node belongs to the canvas. Its position is never authored.
         ghost.x = best.x;
         ghost.y = best.y;
+    }
+
+    private updateGhostNodePosition() {
+        Graph.positionInitialArrow(this._n, this._a);
+    }
+
+    /** Render the authored machine without changing the interactive canvas or its camera. */
+    public static drawForPrint(target: HTMLCanvasElement, automaton: Automaton) {
+        if (automaton.getInitialNode()) automaton.redrawNodes();
+        const source = target.ownerDocument.createElement('div');
+        source.style.cssText = 'position: fixed; inset: 0 auto auto -10000px; width: 1440px; height: 1000px; visibility: hidden';
+        target.getRootNode().appendChild(source);
+        let network: Network | undefined;
+        try {
+            if (!source.clientWidth) return;
+            network = new Network(source, automaton.getGraphData(), {
+                ...graphStyle, autoResize: false,
+                edges: { ...graphStyle.edges, font: { background: 'white' } },
+            });
+            network.redraw();
+            Graph.positionInitialArrow(network, automaton);
+            network.redraw();
+            const canvas = source.querySelector('canvas')!;
+            const ctx = canvas.getContext('2d')!;
+            const bounds = Graph.printBounds(network, automaton, ctx);
+            const width = bounds.right - bounds.left;
+            const height = bounds.bottom - bounds.top;
+            const scale = Math.min(2, 1440 / width, 1000 / height);
+            network.setSize(`${Math.ceil(width * scale)}px`, `${Math.ceil(height * scale)}px`);
+            network.moveTo({
+                scale,
+                position: { x: (bounds.left + bounds.right) / 2, y: (bounds.top + bounds.bottom) / 2 },
+            });
+            network.redraw();
+            target.width = canvas.width;
+            target.height = canvas.height;
+            target.style.width = `${width * Math.min(1, 720 / width, 500 / height)}px`;
+            target.getContext('2d')!.drawImage(canvas, 0, 0);
+        } finally {
+            network?.destroy();
+            source.remove();
+        }
+    }
+
+    private static printBounds(network: Network, automaton: Automaton, ctx: CanvasRenderingContext2D) {
+        const { nodes, edges } = networkBody(network);
+        let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
+        const include = (x: number, y: number, paddingX = 0, paddingY = 0) => {
+            left = Math.min(left, x - paddingX);
+            right = Math.max(right, x + paddingX);
+            top = Math.min(top, y - paddingY);
+            bottom = Math.max(bottom, y + paddingY);
+        };
+        for (const id of automaton.nodes.getIds()) {
+            const box = network.getBoundingBox(id);
+            include(box.left, box.top);
+            include(box.right, box.bottom);
+            include(nodes[id].x, nodes[id].y);
+        }
+
+        ctx.save();
+        ctx.font = '14px arial';
+        for (const transition of automaton.transitions.get()) {
+            const edge = edges[transition.id];
+            if (edge.options.hidden || !edge.from || !edge.to) continue;
+            const geometry = edge.edgeType as PreviewEdge['edgeType'] & {
+                getViaNode(): Position | undefined;
+                getPoint(fraction: number, via?: Position): Position;
+                _getCircleData(ctx: CanvasRenderingContext2D): [number, number, number];
+            };
+            const lines = (edge.options.label ?? '').split('\n');
+            const halfWidth = lines.reduce((width, line) => Math.max(width, ctx.measureText(line).width), 0) / 2;
+            const halfHeight = lines.length * 8;
+            if (transition.from === transition.to) {
+                const [x, y, radius] = geometry._getCircleData(ctx);
+                include(x, y, radius + halfWidth, radius + halfHeight);
+            } else {
+                const via = geometry.getViaNode();
+                if (via) include(via.x, via.y);
+                const label = geometry.getPoint(0.5, via);
+                include(label.x, label.y, halfWidth, halfHeight);
+            }
+        }
+        ctx.restore();
+        const margin = 14;
+        return { left: left - margin, right: right + margin, top: top - margin, bottom: bottom + margin };
     }
 
     /**
