@@ -7,6 +7,7 @@ import { stackStyles } from '../styles/stack';
 
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button.component.js';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input.component.js';
+import SlTag from '@shoelace-style/shoelace/dist/components/tag/tag.component.js';
 import SlTooltip from '@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js';
 import { biTrash } from '../styles/icons';
 import { ManualAutoSimulator } from './manual-auto';
@@ -516,6 +517,7 @@ export class StackExtension extends LitElementWw {
             'sl-button': SlButton,
             // Shoelace's autocorrect property predates the native HTMLElement property.
             'sl-input': SlInput as unknown as CustomElementConstructor,
+            'sl-tag': SlTag,
             'sl-tooltip': SlTooltip,
         };
     }
@@ -567,10 +569,9 @@ export class StackExtension extends LitElementWw {
         const canRemove = this.isEditable() && this.delete;
         return html`<div class=${this.showHelp ? 'pda__stack pda__stack--help' : 'pda__stack'}>
             <div class="pda__stack-title">${label}</div>
-            ${this.showHelp ? html`<div class="pda__stack-help">
-                <strong>${label}</strong>
-                ${canRemove ? html`<br>${msg("Click × to remove an item")}` : ''}
-            </div>` : ''}
+            ${this.showHelp ? html`<sl-tag size="small" class="pda__stack-help">
+                ${canRemove ? msg("Remove stack items with ×") : label}
+            </sl-tag>` : ''}
             <button
                 type="button"
                 class="pda__stack-toggle"

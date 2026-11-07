@@ -691,14 +691,14 @@ describe("Simulation Tests", () => {
 			menu.querySelector<HTMLElement>("sl-button:has(.bi-question-lg)")!.click();
 			await layout();
 			const compactHelp = root.querySelector(".compact-help")!;
-			const stackHelp = [...compactHelp.children].find(item => item.textContent?.includes("Click × to remove an item"))!;
+			const stackHelp = [...compactHelp.children].find(item => item.textContent?.includes("Remove stack items with ×"))!;
 			assertInside(compactHelp);
 			assert.isAtMost(stackHelp.getBoundingClientRect().bottom, compactHelp.getBoundingClientRect().bottom);
 			for (const width of [500, 800]) {
 				widget.style.width = `${width}px`;
 				await layout();
 				const help = stackRoot.querySelector(".pda__stack-help")!;
-				assert.include(help.textContent, "Click × to remove an item");
+				assert.include(help.textContent, "Remove stack items with ×");
 				assertInside(help);
 			}
 			widget.permissions = "775";

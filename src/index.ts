@@ -604,10 +604,8 @@ export class AutomatonComponent extends LitElementWw {
 				<span>${msg("Mode Switch")}</span>
 				<span>${msg("Menu")}</span>
 				${this.automaton instanceof PDA ? html`
-					<span><strong>${msg("Stack")}</strong>
-						${this.mode === "edit" && this.settings.permissions.stack.delete
-							? html`<br>${msg("Click × to remove an item")}` : ""}
-					</span>
+					<span>${this.mode === "edit" && this.settings.permissions.stack.delete
+						? msg("Remove stack items with ×") : msg("Stack")}</span>
 				` : ""}
 				${this.mode === "edit" ? html`
 					<span>${msg("Click or drag + to add a node")}</span>

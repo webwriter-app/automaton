@@ -25,11 +25,14 @@ export const stackStyles = css`
         right: calc(100% + 8px);
         bottom: 0;
         width: max-content;
-        max-width: min(220px, 26cqw);
-        padding: 4px 8px;
-        border-radius: 4px;
-        background: var(--sl-color-neutral-0, white);
-        font: var(--sl-font-size-small) var(--sl-font-sans, sans-serif);
+        max-width: min(220px, 30cqw);
+    }
+
+    .pda__stack-help::part(base) {
+        height: auto;
+        min-height: calc(var(--sl-input-height-small) * 0.8);
+        line-height: 1.2;
+        white-space: normal;
         overflow-wrap: anywhere;
     }
 
