@@ -9,7 +9,7 @@ import type { Graph } from "../src/graph";
 import type SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import type SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js";
 import { machineBlockSelector, type MachineData } from "../src/utils/machineData";
-import LOCALIZE from "../localization/generated/index.js";
+import { createLocalizer } from "../localization/localizer";
 import { sourceLocale, targetLocales } from "../localization/generated/locale-codes.js";
 
 mocha.setup(getMochaConfig());
@@ -27,6 +27,15 @@ const machineData = (widget: AutomatonComponent): MachineData => {
 };
 const setMachine = (widget: AutomatonComponent, patch: Partial<MachineData>) =>
 	widget.setData("application/json", JSON.stringify({ ...machineData(widget), ...patch }), { slot: "data" });
+
+async function waitForLocale(widget: AutomatonComponent, expected: string) {
+	const { localize } = widget as unknown as { localize: ReturnType<typeof createLocalizer> };
+	for (let frame = 0; frame < 60 && localize.getLocale() !== expected; frame++) {
+		await new Promise(resolve => requestAnimationFrame(resolve));
+	}
+	assert.equal(localize.getLocale(), expected);
+	await widget.updateComplete;
+}
 
 describe("Simulation Tests", () => {
 	let automaton: AutomatonComponent | null;
@@ -1024,26 +1033,13 @@ describe("Simulation Tests", () => {
 			assert.isTrue(simulate.disabled, "Removing the graph blocks simulation again");
 		});
 
-		it("loads every locale and resolves inherited language tags", async function () {
+		it("loads every locale and resolves regional and script variants", async function () {
 			this.timeout(10000);
-			const widget = await createConfiguredDFA();
-			try {
-				for (const locale of targetLocales) {
-					await LOCALIZE.setLocale(locale);
-					assert.equal(LOCALIZE.getLocale(), locale);
-				}
-				const parent = document.createElement("div");
-				parent.lang = "HR-hr";
-				document.body.append(parent);
-				try {
-					parent.append(widget);
-					await LOCALIZE.setLocale(widget.lang);
-					await widget.updateComplete;
-					assert.equal(LOCALIZE.getLocale(), "hr");
-					assert.include(widget.shadowRoot!.querySelector(".mode_switch__buttons")!.textContent, "Uredi");
-				} finally {
-					parent.remove();
-				}
+			const localize = createLocalizer();
+			for (const locale of targetLocales) {
+				await localize.setLocale(locale);
+				assert.equal(localize.getLocale(), locale);
+			}
 			for (const [tag, expected] of [
 				["PT-br", "pt-BR"],
 				["pt", "pt-PT"],
@@ -1059,11 +1055,47 @@ describe("Simulation Tests", () => {
 				["en", "en-US"],
 				["", sourceLocale],
 			]) {
-				await LOCALIZE.setLocale(tag);
-				assert.equal(LOCALIZE.getLocale(), expected, tag);
+				await localize.setLocale(tag);
+				assert.equal(localize.getLocale(), expected, tag);
 			}
+			await Promise.all([localize.setLocale("de-DE"), localize.setLocale(sourceLocale)]);
+			assert.equal(localize.getLocale(), sourceLocale, "A late load cannot restore an earlier language");
+		});
+
+		it("keeps separate translations when Automaton instances have different languages", async () => {
+			const parent = document.createElement("section");
+			parent.lang = "de-DE";
+			document.body.append(parent);
+			try {
+				const first = await createConfiguredPDA();
+				const second = await createConfiguredPDA();
+				parent.append(first, second);
+				await Promise.all([waitForLocale(first, "de-DE"), waitForLocale(second, "de-DE")]);
+				const editLabel = (widget: AutomatonComponent) =>
+					widget.shadowRoot!.querySelector(".mode_switch__label")!.textContent!.trim();
+				const stackLabel = (widget: AutomatonComponent) =>
+					widget.shadowRoot!.querySelector("stack-extension")!.shadowRoot!
+						.querySelector(".pda__stack-title")!.textContent;
+				assert.equal(editLabel(first), "Bearbeiten");
+				assert.equal(editLabel(second), "Bearbeiten");
+
+				second.lang = "en-GB";
+				await waitForLocale(second, "en-GB");
+				assert.equal(editLabel(first), "Bearbeiten");
+				assert.equal(editLabel(second), "Edit");
+				assert.equal(stackLabel(first), "Stapel");
+				assert.equal(stackLabel(second), "Stack");
+				assert.deepEqual(first.options.sinkStateEnabled.label, { _: "Fangzustand aktivieren" });
+				assert.deepEqual(second.options.sinkStateEnabled.label, { _: "Enable sink state" });
+
+				parent.lang = "HR-hr";
+				await waitForLocale(first, "hr");
+				assert.equal(editLabel(first), "Uredi");
+				assert.equal(stackLabel(first), "Stog");
+				assert.equal(editLabel(second), "Edit");
+				assert.isNull(first.getAttribute("lang"));
 			} finally {
-				await LOCALIZE.setLocale(sourceLocale);
+				parent.remove();
 			}
 		});
 
@@ -1072,7 +1104,7 @@ describe("Simulation Tests", () => {
 			widget.style.width = "300px";
 			widget.style.height = "300px";
 			widget.lang = "de";
-			await LOCALIZE.setLocale("de");
+			await waitForLocale(widget, "de-DE");
 			try {
 				const layout = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 				await layout();
@@ -1138,7 +1170,6 @@ describe("Simulation Tests", () => {
 				assertInside(lastVisibleTooltip.body);
 			} finally {
 				widget.remove();
-				await LOCALIZE.setLocale("en");
 			}
 		});
 

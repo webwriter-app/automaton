@@ -12,7 +12,8 @@ import SlTag from '@shoelace-style/shoelace/dist/components/tag/tag.component.js
 import SlTooltip from '@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js';
 import { biTrash } from '../styles/icons';
 import { ManualAutoSimulator } from './manual-auto';
-import { localized, msg } from '@lit/localize';
+import type { MsgFn } from '@lit/localize';
+import { sourceMsg } from '../../localization/localizer';
 import { AutomatonError } from '@u/errors';
 import { Logger } from '@u/logger';
 import { AutomatonType } from 'index';
@@ -423,6 +424,7 @@ class PDASimulator extends ManualAutoSimulator {
             dialog.style.transform = 'translate(-50%, -50%)';
             dialog.style.zIndex = '1000';
 
+            const msg = this._graph?.component.msg ?? sourceMsg;
             const p = document.createElement('p');
             p.innerText = msg('Choose a move:');
             dialog.appendChild(p);
@@ -487,8 +489,9 @@ type StackItem = {
 };
 
 @customElement('stack-extension')
-@localized()
 export class StackExtension extends LitElementWw {
+    @property({ attribute: false }) public accessor msg: MsgFn = sourceMsg;
+
     private _stack: DataSet<StackItem> = new DataSet<StackItem>();
 
     @property({ type: Array }) public accessor stack: StackItem[] = [];
@@ -588,6 +591,7 @@ export class StackExtension extends LitElementWw {
     }
 
     public render(): TemplateResult {
+        const { msg } = this;
         const label = msg("Stack");
         const canRemove = this.isEditable() && this.delete;
         const canMove = this.isEditable() && this.change;

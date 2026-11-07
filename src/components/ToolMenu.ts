@@ -9,10 +9,8 @@ import type { Node, Transition } from '../automata';
 import type { Position } from 'vis-network';
 import { toolMenuStyles } from '../styles/toolMenu';
 import { LitElementWw } from '@webwriter/lit';
-import { localized, msg } from '@lit/localize';
 
 @customElement('webwriter-automaton-toolmenu')
-@localized()
 export class ToolMenu extends LitElementWw {
     private nodeDrag?: { pointerId: number; start: Position; moved: boolean };
 
@@ -78,6 +76,7 @@ export class ToolMenu extends LitElementWw {
     render() {
         const component = this._graph?.component;
         if (!component) return nothing;
+        const { msg } = component;
         const canAddNode = component.settings.permissions.node.add;
         const showSink = component.automaton.type === 'dfa' && component.sinkStateEnabled;
         if (!canAddNode && !showSink) return nothing;

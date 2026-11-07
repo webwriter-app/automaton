@@ -53,9 +53,7 @@ import { NFA } from "./automata/nfa";
 import { PDA, StackExtension } from "./automata/pda";
 
 
-// @ts-ignore
-import LOCALIZE from "../localization/generated";
-import { localized, msg } from "@lit/localize";
+import { createLocalizer, sourceMsg } from "../localization/localizer";
 import { ATTRIBUTE_CONVERTERS } from "@u/attributeConverters";
 
 export type AutomatonType = "dfa" | "nfa" | "pda";
@@ -66,7 +64,6 @@ const automatonClasses = { dfa: DFA, nfa: NFA, pda: PDA };
  * This component is responsible for rendering and managing the automaton editor and simulator.
  */
 @customElement("webwriter-automaton")
-@localized()
 export class AutomatonComponent extends LitElementWw {
 	@query("#graphCanvas") private accessor graphCanvas!: HTMLElement;
 	@query("#toolMenu") private accessor toolMenu!: ToolMenu;
@@ -74,7 +71,16 @@ export class AutomatonComponent extends LitElementWw {
 	@query("#infoMenu") private accessor infoMenu!: InfoMenu;
 	@query("#topMenu") private accessor topMenu!: TopMenu;
 
-	protected localize = LOCALIZE;
+	protected localize = createLocalizer(() => {
+		Object.assign(this.options, options(this.msg));
+		Object.assign(this.optionGroups, optionGroups(this.msg));
+		if (this.automaton instanceof PDA) this.automaton.extension.requestUpdate();
+		this.requestUpdate();
+		if (this.isConnected) this.dispatchEvent(new Event("optionschange", { bubbles: true }));
+	});
+
+	/** @internal */
+	public readonly msg = this.localize.msg;
 
 	static override readonly dataType = "application/json";
 
@@ -186,8 +192,10 @@ export class AutomatonComponent extends LitElementWw {
 	public readonly settings = new Settings(this);
 
 	// WebWriter supports the tree control before the installed Lit helper types do.
-	static get options() { return options() as unknown as Record<string, OptionDeclaration>; }
-	static get optionGroups() { return optionGroups(); }
+	static get options() { return options(sourceMsg) as unknown as Record<string, OptionDeclaration>; }
+	static get optionGroups() { return optionGroups(sourceMsg); }
+	public override readonly options = options(this.msg) as unknown as Record<string, OptionDeclaration>;
+	public readonly optionGroups = optionGroups(this.msg);
 	public override readonly actions = drawerActions(this);
 
 	// The drawer's values differ from these settings' authored attribute formats.
@@ -433,6 +441,7 @@ export class AutomatonComponent extends LitElementWw {
 		const stackChanged = machineChanged && previous?.startingStack !== startingStack;
 		if (this.automaton instanceof PDA) {
 			const stack = this.automaton.extension;
+			stack.msg = this.msg;
 			const permissions = this.settings.permissions.stack;
 			const editable = String(this.mode === "edit" && !this._invalidMachineData);
 			if (stack.contentEditable !== editable) stack.contentEditable = editable;
@@ -496,7 +505,7 @@ export class AutomatonComponent extends LitElementWw {
 						<div id="graphCanvas"></div>
 						${this.mode === "edit" && this.settings.permissions.node.add &&
 							this.automaton.nodes.getIds().every(id => id === Graph.initialGhostNode.id) ? html`
-								<div class="empty-canvas-hint">${msg("Double click / long tap to add a node")}</div>
+								<div class="empty-canvas-hint">${this.msg("Double click / long tap to add a node")}</div>
 							` : ""}
 						${this._graph ? html`<div class="connection-points">${this._graph.renderConnectionPoints()}</div>` : ""}
 						${this.renderModeSwitch()}
@@ -525,20 +534,20 @@ export class AutomatonComponent extends LitElementWw {
 	}
 
 	private renderPrintMachine() {
-		const type = this.type === "dfa" ? msg("DFA") : this.type === "nfa" ? msg("NFA") : msg("PDA");
+		const type = this.type === "dfa" ? this.msg("DFA") : this.type === "nfa" ? this.msg("NFA") : this.msg("PDA");
 		return html`
 			<figure class="print-machine">
 				<figcaption>
 					<strong>${type}</strong>
 					${this.type === "pda" && !this._invalidMachineData ? html`
-						<span>${msg("Starting stack")} <code>[${this.startingStack.join(", ")}]</code></span>
+						<span>${this.msg("Starting stack")} <code>[${this.startingStack.join(", ")}]</code></span>
 					` : ""}
 				</figcaption>
 				${this._invalidMachineData
-					? html`<p>${msg("The automaton data block is invalid or uses an unsupported format.")}</p>`
+					? html`<p>${this.msg("The automaton data block is invalid or uses an unsupported format.")}</p>`
 					: this.nodes.length
-						? html`<canvas width="0" height="0" role="img" aria-label=${msg("State diagram")}></canvas>`
-						: html`<p>${msg("No states yet")}</p>`}
+						? html`<canvas width="0" height="0" role="img" aria-label=${this.msg("State diagram")}></canvas>`
+						: html`<p>${this.msg("No states yet")}</p>`}
 			</figure>
 		`;
 	}
@@ -552,11 +561,11 @@ export class AutomatonComponent extends LitElementWw {
 			<div class="help-backdrop"></div>
 			<div class="help-overlay">
 				<sl-tag size="small" style="top:50px;left:10px"
-					>${msg("Mode Switch")}</sl-tag
+					>${this.msg("Mode Switch")}</sl-tag
 				>
 
 				<sl-tag size="small" class="help-overlay__fullscreen"
-					>${msg("Fullscreen")}</sl-tag
+					>${this.msg("Fullscreen")}</sl-tag
 				>
 				<div
 					class="line"
@@ -564,12 +573,12 @@ export class AutomatonComponent extends LitElementWw {
 				></div>
 
 				<sl-tag size="small" style="top:18px;right:275px"
-					>${msg("Type")}</sl-tag
+					>${this.msg("Type")}</sl-tag
 				>
 				<div class="line" style="top:28px;right:260px;width:10px"></div>
 
 				<sl-tag size="small" style="top: 186px;right: 275px;"
-					>${msg("Help")}</sl-tag
+					>${this.msg("Help")}</sl-tag
 				>
 				<div
 					class="line"
@@ -577,7 +586,7 @@ export class AutomatonComponent extends LitElementWw {
 				></div>
 
 				<sl-tag size="small" style="top: 144px;right: 275px;"
-					>${msg("Test Cases")}</sl-tag
+					>${this.msg("Test Cases")}</sl-tag
 				>
 				<div
 					class="line"
@@ -585,7 +594,7 @@ export class AutomatonComponent extends LitElementWw {
 				></div>
 
 				<sl-tag size="small" style="top: 102px;right: 275px;"
-					>${msg("Definition")}</sl-tag
+					>${this.msg("Definition")}</sl-tag
 				>
 				<div
 					class="line"
@@ -600,27 +609,27 @@ export class AutomatonComponent extends LitElementWw {
 				})}
 			>
 				${this.automaton instanceof DFA && this.sinkStateEnabled ? html`
-					<sl-tag size="small" class="edit-help__sink">${msg("Add sink state")}</sl-tag>
+					<sl-tag size="small" class="edit-help__sink">${this.msg("Add sink state")}</sl-tag>
 				` : ""}
 				${this.settings.permissions.node.add ? html`<sl-tag size="small" style="bottom: 26px;left: 70px;"
-					>${msg("Click or drag + to add a node")}</sl-tag
+					>${this.msg("Click or drag + to add a node")}</sl-tag
 				>` : ""}
 				<sl-tag size="small" class="edit-help__transition"
-					>${msg("Add Transition by drag and drop")}</sl-tag
+					>${this.msg("Add Transition by drag and drop")}</sl-tag
 				>
 
 				<sl-tag size="small" style="bottom: 110px;right: 30px;"
-					>${msg("Move the elements by drag and drop")}</sl-tag
+					>${this.msg("Move the elements by drag and drop")}</sl-tag
 				>
 				<sl-tag size="small" style="bottom: 70px;right: 30px;"
-					>${msg("Select a node or transition to edit it")}</sl-tag
+					>${this.msg("Select a node or transition to edit it")}</sl-tag
 				>
 			</div>
 
 			${this.mode === "simulate" ? html`
 				<div class="help-overlay simulator-help">
-					<sl-tag size="small">${msg("Input word")}</sl-tag>
-					<sl-tag size="small">${msg("Simulation Controls")}</sl-tag>
+					<sl-tag size="small">${this.msg("Input word")}</sl-tag>
+					<sl-tag size="small">${this.msg("Simulation Controls")}</sl-tag>
 				</div>
 			` : ""}
 		`;
@@ -629,21 +638,21 @@ export class AutomatonComponent extends LitElementWw {
 	private renderCompactHelp(): TemplateResult {
 		return html`
 			<div class="help-backdrop"></div>
-			<div class="compact-help" role="region" aria-label=${msg("Help")} tabindex="0">
-				<span>${msg("Mode Switch")}</span>
-				<span>${msg("Menu")}</span>
+			<div class="compact-help" role="region" aria-label=${this.msg("Help")} tabindex="0">
+				<span>${this.msg("Mode Switch")}</span>
+				<span>${this.msg("Menu")}</span>
 				${this.automaton instanceof PDA ? html`
 					<span>${this.mode === "edit" && this.settings.permissions.stack.delete
-						? msg("Remove stack items with ×") : msg("Stack")}</span>
+						? this.msg("Remove stack items with ×") : this.msg("Stack")}</span>
 				` : ""}
 				${this.mode === "edit" ? html`
-					${this.automaton instanceof DFA && this.sinkStateEnabled ? html`<span>${msg("Add sink state")}</span>` : ""}
-					${this.settings.permissions.node.add ? html`<span>${msg("Click or drag + to add a node")}</span>` : ""}
-					<span>${msg("Add Transition by drag and drop")}</span>
-					<span>${msg("Select a node or transition to edit it")}</span>
+					${this.automaton instanceof DFA && this.sinkStateEnabled ? html`<span>${this.msg("Add sink state")}</span>` : ""}
+					${this.settings.permissions.node.add ? html`<span>${this.msg("Click or drag + to add a node")}</span>` : ""}
+					<span>${this.msg("Add Transition by drag and drop")}</span>
+					<span>${this.msg("Select a node or transition to edit it")}</span>
 				` : html`
-					<span>${msg("Input word")}</span>
-					<span>${msg("Simulation Controls")}</span>
+					<span>${this.msg("Input word")}</span>
+					<span>${this.msg("Simulation Controls")}</span>
 				`}
 			</div>
 		`;
@@ -656,10 +665,10 @@ export class AutomatonComponent extends LitElementWw {
 	private renderModeSwitch(): TemplateResult {
 		return html`<div class="mode_switch">
 			<sl-tooltip
-				content=${msg("Switch mode (Ctrl+M)")}
+				content=${this.msg("Switch mode (Ctrl+M)")}
 				placement="bottom-start"
 			>
-				<div class="mode_switch__buttons" role="group" aria-label=${msg("Mode Switch")} contenteditable="false">
+				<div class="mode_switch__buttons" role="group" aria-label=${this.msg("Mode Switch")} contenteditable="false">
 					<button
 						type="button"
 						aria-pressed=${this.mode === "edit"}
@@ -667,7 +676,7 @@ export class AutomatonComponent extends LitElementWw {
 						@click=${() => { this.mode = "edit"; }}
 					>
 						<span aria-hidden="true">${biPencil}</span>
-						<span class="mode_switch__label">${msg("Edit")}</span>
+						<span class="mode_switch__label">${this.msg("Edit")}</span>
 					</button>
 					<button
 						type="button"
@@ -676,12 +685,12 @@ export class AutomatonComponent extends LitElementWw {
 						@click=${() => { this.mode = "simulate"; }}
 					>
 						<span aria-hidden="true">${biBoxes}</span>
-						<span class="mode_switch__label">${msg("Simulate")}</span>
+						<span class="mode_switch__label">${this.msg("Simulate")}</span>
 					</button>
 				</div>
 			</sl-tooltip>
 			${this.showHelp === "true" && this._graph?.errors.length ? html`
-				<button type="button" class="mode_switch__error_indicator" aria-label=${msg("Warnings")}
+				<button type="button" class="mode_switch__error_indicator" aria-label=${this.msg("Warnings")}
 					aria-describedby="automaton-warnings" contenteditable="false">
 					<span aria-hidden="true">${biExclamationTriangle}</span>
 				</button>
@@ -692,7 +701,7 @@ export class AutomatonComponent extends LitElementWw {
 	private renderWarnings() {
 		if (this._invalidMachineData) return html`
 			<sl-alert class="warning-panel" variant="warning" open>
-				${msg("The automaton data block is invalid or uses an unsupported format.")}
+				${this.msg("The automaton data block is invalid or uses an unsupported format.")}
 			</sl-alert>
 		`;
 		if (this.showHelp !== "true" || !this._graph?.errors.length) return;
@@ -701,13 +710,13 @@ export class AutomatonComponent extends LitElementWw {
 			<sl-alert id="automaton-warnings" class="warning-panel warning-panel--all" variant="warning" open>
 				<ul>
 					${errors.map(error => html`
-						<li>${error.node ? html`<b>${error.node.label}:</b> ` : ""}${error.message}</li>
+						<li>${error.node ? html`<b>${error.node.label}:</b> ` : ""}${error.message(this.msg)}</li>
 					`)}
 				</ul>
 			</sl-alert>
 			${nodeWarnings.length ? html`
 				<sl-alert class="warning-panel warning-panel--node" variant="warning" open>
-					<ul>${nodeWarnings.map(error => html`<li>${error.message}</li>`)}</ul>
+					<ul>${nodeWarnings.map(error => html`<li>${error.message(this.msg)}</li>`)}</ul>
 				</sl-alert>
 			` : ""}
 		`;

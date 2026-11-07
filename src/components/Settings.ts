@@ -1,4 +1,4 @@
-import { msg } from '@lit/localize';
+import type { MsgFn } from '@lit/localize';
 import type { OptionDeclaration, SelectOptionDeclaration } from '@webwriter/lit';
 import type { AutomatonComponent, AutomatonType } from '../';
 import { DFA } from '../automata/dfa';
@@ -44,7 +44,7 @@ export class Settings {
     }
 
     get sinkDisabledReason() {
-        const { automaton, mode, sinkStateEnabled } = this.parentComponent;
+        const { automaton, mode, sinkStateEnabled, msg } = this.parentComponent;
         if (!(automaton instanceof DFA)) return msg('Sink completion is only available for DFAs.');
         if (!sinkStateEnabled) return msg('Sink state completion is turned off.');
         if (mode !== 'edit') return msg('Switch to Edit mode to complete the DFA.');
@@ -58,6 +58,7 @@ export class Settings {
 }
 
 export function drawerActions(widget: AutomatonComponent) {
+    const { msg } = widget;
     const changeType = (type: AutomatonType, label: string) => {
         const { automaton, allowedTypes, mode } = widget;
         const hidden = type === automaton.type || !allowedTypes.includes(type);
@@ -86,7 +87,7 @@ export function drawerActions(widget: AutomatonComponent) {
     };
 }
 
-export function optionGroups() {
+export function optionGroups(msg: MsgFn) {
     return {
         editing: { label: msg('Editing'), collapsible: true },
         view: { label: msg('View'), collapsible: true },
@@ -94,7 +95,7 @@ export function optionGroups() {
     };
 }
 
-export function options() {
+export function options(msg: MsgFn) {
     const targets = { node: msg('Nodes'), edge: msg('Transitions'), stack: msg('Stack') };
     const actions = { add: msg('Add'), delete: msg('Delete'), change: msg('Change') };
     // The installed Lit helper types predate the drawer's tree control.

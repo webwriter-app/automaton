@@ -7,7 +7,6 @@ import { html } from 'lit';
 import { COLORS } from './utils/colors';
 import { AutomatonComponent } from './index';
 import { AutomatonError } from '@u/errors';
-import { msg } from '@lit/localize';
 
 type ConnectionSide = 'top' | 'left' | 'bottom' | 'right';
 type CanvasGesture = {
@@ -483,10 +482,10 @@ export class Graph {
 
     public renderConnectionPoints() {
         const labels = {
-            top: msg("Connect from top"),
-            left: msg("Connect from left"),
-            bottom: msg("Connect from bottom"),
-            right: msg("Connect from right"),
+            top: this._ac.msg("Connect from top"),
+            left: this._ac.msg("Connect from left"),
+            bottom: this._ac.msg("Connect from bottom"),
+            right: this._ac.msg("Connect from right"),
         };
         return html`${(Object.keys(labels) as ConnectionSide[]).map(side => html`
             <button type="button" class="connection-point" data-side=${side} hidden

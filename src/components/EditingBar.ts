@@ -3,7 +3,7 @@ import { html } from 'lit';
 import { keyed } from 'lit/directives/keyed.js';
 import { biDatabase, biDatabaseAdd, biDatabaseDash, biDatabaseSlash, biPlus, biTrash } from '../styles/icons';
 import type { AutomatonComponent } from '../index';
-import { msg } from '@lit/localize';
+import type { MsgFn } from '@lit/localize';
 
 export type EditableSelection =
     | { type: 'node'; data: Node }
@@ -13,10 +13,10 @@ export type EditPermission = 'add' | 'change' | 'delete';
 type UpdateEdge = (patch: (edge: Transition) => Partial<Transition>, permission?: EditPermission, commit?: boolean) => void;
 
 const stackActions = [
-    ['push', biDatabaseAdd, () => msg("Push")],
-    ['pop', biDatabaseDash, () => msg("Pop")],
-    ['empty', biDatabaseSlash, () => msg("Empty Check")],
-    ['none', biDatabase, () => msg("Keep")],
+    ['push', biDatabaseAdd, (msg: MsgFn) => msg("Push")],
+    ['pop', biDatabaseDash, (msg: MsgFn) => msg("Pop")],
+    ['empty', biDatabaseSlash, (msg: MsgFn) => msg("Empty Check")],
+    ['none', biDatabase, (msg: MsgFn) => msg("Keep")],
 ] as const;
 
 export class EditingBar {
@@ -28,6 +28,7 @@ export class EditingBar {
         remove: () => void,
     ) {
         const { type, data } = selection;
+        const { msg } = this.parentComponent;
         const permissions = this.parentComponent.settings.permissions[type];
         const name = type === 'node' ? msg("Node") : msg("Edge");
         const updateEdge: UpdateEdge = (getPatch, permission, commit) =>
@@ -83,7 +84,7 @@ export class EditingBar {
                 return { symbols };
             });
         };
-        const label = msg("Symbol");
+        const label = this.parentComponent.msg("Symbol");
         return alphabet.length ? html`
             <sl-select label=${label} placeholder=${label} .value=${symbol} size="small" hoist
                 ?disabled=${disabled} @sl-change=${change}>
@@ -97,6 +98,7 @@ export class EditingBar {
     }
 
     private edgeFields(edge: Transition, update: UpdateEdge) {
+        const { msg } = this.parentComponent;
         const { add, change, delete: canDelete } = this.parentComponent.settings.permissions.edge;
         const changeOperation = (index: number, patch: Partial<StackOperation>) => update(current => {
             const stackOperations = current.stackOperations?.map((operation, i) =>
@@ -136,7 +138,7 @@ export class EditingBar {
                                     @sl-input=${(event: Event) => changeOperation(index, { condition: this.value(event) })}></sl-input>
                                 <div class="editing-bar__stack-actions" role="group" aria-label=${msg("Stack Actions")}>
                                     ${stackActions.map(([action, icon, label]) => html`
-                                        <sl-button circle size="small" title=${label()}
+                                        <sl-button circle size="small" title=${label(msg)}
                                             variant=${operation.operation === action ? 'primary' : 'default'}
                                             ?disabled=${!change}
                                             @click=${() => changeOperation(index, {

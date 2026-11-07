@@ -27,12 +27,13 @@ import type { Node, StackOperation, Transition } from '../automata';
 import { PDA } from '../automata/pda';
 import RandExp from 'randexp';
 import { SimulationStatus } from 'automata';
-import { localized, msg, str } from '@lit/localize';
+import { str } from '@lit/localize';
 import { Logger } from '@u/logger';
 
 @customElement('webwriter-automaton-topmenu')
-@localized()
 export class TopMenu extends LitElementWw {
+    private get msg() { return this.component.msg; }
+
     @property({ type: Object, attribute: false })
     private accessor _component!: AutomatonComponent;
     public set component(component: AutomatonComponent) {
@@ -129,7 +130,7 @@ export class TopMenu extends LitElementWw {
                     <sl-button
                         class="topmenu__button"
                         circle
-                        aria-label=${msg("Menu")}
+                        aria-label=${this.msg("Menu")}
                         aria-expanded=${this._menuOpen || this._helpOverlay}
                         aria-controls="compact-menu"
                         @click=${() => {
@@ -203,7 +204,7 @@ export class TopMenu extends LitElementWw {
                         ${biClipboard}</sl-button
                     >
                     <div class="topmenu__popup">
-                        <b>${msg("Language:")} </b>${this.component.testLanguage}
+                        <b>${this.msg("Language:")} </b>${this.component.testLanguage}
                         <br />
                         <sl-button
                             @click=${(e: Event) => {
@@ -222,7 +223,7 @@ export class TopMenu extends LitElementWw {
 
                                 (e.target as SlButton).variant = accepted ? 'success' : 'danger';
                             }}
-                            >${msg("Check Automaton")}</sl-button
+                            >${this.msg("Check Automaton")}</sl-button
                         >
 
                         ${this.component.testWords.map(
@@ -243,7 +244,7 @@ export class TopMenu extends LitElementWw {
             </div>
             <div class="topmenu__button_group">
                 <sl-button class="topmenu__button definition-trigger" size=${buttonSize} circle
-                    aria-label=${msg("Definition")} title=${msg("Definition")}
+                    aria-label=${this.msg("Definition")} title=${this.msg("Definition")}
                     aria-expanded=${this._definitionOpen}
                     aria-controls=${this._definitionOpen ? 'definition-pane' : nothing}
                     ?disabled=${!this.component.formalDefinitionEnabled && !this.component.transitionsTableEnabled}
@@ -254,11 +255,11 @@ export class TopMenu extends LitElementWw {
     }
 
     private renderTypeMenu(size: string, boundary?: HTMLElement) {
-        const label = msg("Automaton Type");
+        const label = this.msg("Automaton Type");
         const { automaton, mode, allowedTypes } = this._component;
         const types = (['dfa', 'nfa', 'pda'] as const).filter(type => allowedTypes.includes(type) && type !== automaton.type);
         const disabled = mode !== 'edit' || types.length === 0;
-        const typeLabel = (type: AutomatonType) => type === 'dfa' ? msg('DFA') : type === 'nfa' ? msg('NFA') : msg('PDA');
+        const typeLabel = (type: AutomatonType) => type === 'dfa' ? this.msg('DFA') : type === 'nfa' ? this.msg('NFA') : this.msg('PDA');
         return html`
             <div class="topmenu__button_group" @keydown=${(event: KeyboardEvent) => {
                 if (event.key === 'Escape') this._typeMenuOpen = false;
@@ -323,18 +324,18 @@ export class TopMenu extends LitElementWw {
         const tableAlphabet = transitions.some(edge => edge.symbols.includes('')) ? [...alphabet, ''] : alphabet;
 
         return html`
-            <section id="definition-pane" class="definition-pane" aria-label=${msg("Automaton definition")}
+            <section id="definition-pane" class="definition-pane" aria-label=${this.msg("Automaton definition")}
                 contenteditable="false"
                 @keydown=${this.handleDefinitionKeydown}>
                 <button type="button" class="definition-pane__close"
-                    aria-label=${msg("Close")} title=${msg("Close")}
+                    aria-label=${this.msg("Close")} title=${this.msg("Close")}
                     @click=${() => void this.setDefinitionOpen(false)}>×</button>
                 ${keyed(`${formalDefinitionEnabled}/${transitionsTableEnabled}`, html`
                     <sl-tab-group placement="top">
                         <sl-tab slot="nav" panel="def" ?disabled=${!formalDefinitionEnabled}
-                            ?active=${formalDefinitionEnabled}>${msg("Definition")}</sl-tab>
+                            ?active=${formalDefinitionEnabled}>${this.msg("Definition")}</sl-tab>
                         <sl-tab slot="nav" panel="table" ?disabled=${!transitionsTableEnabled}
-                            ?active=${!formalDefinitionEnabled && transitionsTableEnabled}>${msg("Table")}</sl-tab>
+                            ?active=${!formalDefinitionEnabled && transitionsTableEnabled}>${this.msg("Table")}</sl-tab>
                         ${formalDefinitionEnabled ? html`
                             <sl-tab-panel name="def" active tabindex="0">
                                 ${this.renderFormalSummary(nodes, alphabet, transitions, automaton instanceof PDA ? automaton.startingStack : undefined)}
@@ -366,14 +367,14 @@ export class TopMenu extends LitElementWw {
         }
         const initial = nodes.filter(node => node.initial).map(node => node.label);
         const rows = [
-            ['Q', msg("States"), set(nodes.map(node => node.label))],
-            ['Σ', msg("Alphabet"), set(alphabet)],
-            ['q₀', msg("Initial state"), initial.length > 1 ? set(initial) : initial[0] ?? '—'],
-            ['F', msg("Final states"), set(nodes.filter(node => node.final).map(node => node.label))],
+            ['Q', this.msg("States"), set(nodes.map(node => node.label))],
+            ['Σ', this.msg("Alphabet"), set(alphabet)],
+            ['q₀', this.msg("Initial state"), initial.length > 1 ? set(initial) : initial[0] ?? '—'],
+            ['F', this.msg("Final states"), set(nodes.filter(node => node.final).map(node => node.label))],
         ];
         if (startingStack) rows.push(
-            ['Γ', msg("Stack alphabet"), set([...stackAlphabet].sort())],
-            ['', msg("Starting stack"), `[${startingStack.map(stackSymbol).join(', ')}]`],
+            ['Γ', this.msg("Stack alphabet"), set([...stackAlphabet].sort())],
+            ['', this.msg("Starting stack"), `[${startingStack.map(stackSymbol).join(', ')}]`],
         );
         return html`
             <dl class="definition-summary">
@@ -390,7 +391,7 @@ export class TopMenu extends LitElementWw {
     private renderGroupedTransitions(nodes: Node[], outgoing: Map<number, Transition[]>, labels: Map<number, string>) {
         const groups = nodes.filter(node => outgoing.get(node.id)!.some(edge => edge.symbols.length));
         return html`
-            <h3 class="definition-transitions-title"><code>δ</code> · ${msg("Transitions")}</h3>
+            <h3 class="definition-transitions-title"><code>δ</code> · ${this.msg("Transitions")}</h3>
             ${groups.length ? groups.map(node => {
                 const rules = outgoing.get(node.id)!.flatMap(edge => edge.symbols.map((symbol, index) => ({
                     symbol, to: edge.to, operation: edge.stackOperations?.[index],
@@ -409,31 +410,31 @@ export class TopMenu extends LitElementWw {
                         </ul>
                     </section>
                 `;
-            }) : html`<p class="definition-empty">${msg("No transitions yet")}</p>`}
+            }) : html`<p class="definition-empty">${this.msg("No transitions yet")}</p>`}
         `;
     }
 
     private renderStackOperation({ operation, symbol, condition }: StackOperation) {
         const label = symbol || '""';
         const action = {
-            push: () => msg(str`Push ${label}`),
-            pop: () => msg(str`Pop ${label}`),
-            empty: () => msg("Require an empty stack"),
-            none: () => msg("Leave stack unchanged"),
+            push: () => this.msg(str`Push ${label}`),
+            pop: () => this.msg(str`Pop ${label}`),
+            empty: () => this.msg("Require an empty stack"),
+            none: () => this.msg("Leave stack unchanged"),
         }[operation]();
         return html`
             <span class="definition-stack-operation">
                 ${action}${condition && !(operation === 'pop' && condition === symbol)
-                    ? html` · ${msg(str`Top is ${condition}`)}` : nothing}
+                    ? html` · ${this.msg(str`Top is ${condition}`)}` : nothing}
             </span>
         `;
     }
 
     private renderTransitionsTable(nodes: Node[], outgoing: Map<number, Transition[]>, labels: Map<number, string>, alphabet: string[]) {
-        return html`<table class="definition-table" aria-label=${msg("Transition table")}>
+        return html`<table class="definition-table" aria-label=${this.msg("Transition table")}>
             <thead>
                 <tr>
-                    <th scope="col">${msg("State")}</th>
+                    <th scope="col">${this.msg("State")}</th>
                     ${alphabet.map(symbol => html`<th scope="col">${symbol || 'ε'}</th>`)}
                 </tr>
             </thead>
