@@ -61,7 +61,6 @@ export const targetLocales = [
   `ms`,
   `mt`,
   `my`,
-  `nb`,
   `ne`,
   `nl`,
   `no`,
@@ -70,8 +69,6 @@ export const targetLocales = [
   `pl`,
   `ps`,
   `pt`,
-  `pt-BR`,
-  `pt-PT`,
   `ro`,
   `ru`,
   `si`,
@@ -93,8 +90,6 @@ export const targetLocales = [
   `uz`,
   `vi`,
   `zh`,
-  `zh-hans`,
-  `zh-hant`,
 ];
 
 /**
@@ -152,7 +147,6 @@ export const allLocales = [
   `ms`,
   `mt`,
   `my`,
-  `nb`,
   `ne`,
   `nl`,
   `no`,
@@ -161,8 +155,6 @@ export const allLocales = [
   `pl`,
   `ps`,
   `pt`,
-  `pt-BR`,
-  `pt-PT`,
   `ro`,
   `ru`,
   `si`,
@@ -184,6 +176,4 @@ export const allLocales = [
   `uz`,
   `vi`,
   `zh`,
-  `zh-hans`,
-  `zh-hant`,
 ];

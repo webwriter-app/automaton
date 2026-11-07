@@ -80,12 +80,7 @@
     "ka",
     "hy",
     "az",
-    "tpi",
-    "nb",
-    "pt-PT",
-    "pt-BR",
-    "zh-hans",
-    "zh-hant"
+    "tpi"
   ],
   "tsConfig": "./tsconfig.json",
   "output": {

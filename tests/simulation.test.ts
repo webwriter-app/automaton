@@ -985,7 +985,9 @@ describe("Simulation Tests", () => {
 					parent.remove();
 				}
 				await LOCALIZE.setLocale("PT-br");
-				assert.equal(LOCALIZE.getLocale(), "pt-BR");
+				assert.equal(LOCALIZE.getLocale(), "pt");
+				await LOCALIZE.setLocale("zh-Hant");
+				assert.equal(LOCALIZE.getLocale(), "zh");
 				await LOCALIZE.setLocale("en-US");
 				assert.equal(LOCALIZE.getLocale(), sourceLocale);
 			} finally {
