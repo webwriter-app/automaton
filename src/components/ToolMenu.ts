@@ -180,7 +180,12 @@ export class ToolMenu extends LitElementWw {
         this._graph.commitEdit();
     }
 
-    public planTransition(edgeData: Pick<Transition, 'from' | 'to'> & Partial<Transition>) {
+    public planTransition(edgeData: Pick<Transition, 'from' | 'to'> & Partial<Transition>): {
+        transition: Transition;
+        existing: Transition | undefined;
+        reverse: Transition | undefined;
+        smooth: { enabled: boolean; type: string; roundness: number } | undefined;
+    } {
         const { automaton } = this._graph;
         const transitions = automaton.transitions.get();
         const existing = transitions.find(edge => edge.from === edgeData.from && edge.to === edgeData.to);
