@@ -40,7 +40,7 @@ export class SimulatorMenu extends LitElementWw {
     }
 
     @property({ type: Object, attribute: false })
-    public accessor graph!: Graph;
+    public accessor graph: Graph | undefined;
 
     @state()
     private accessor _result!: {
@@ -420,11 +420,12 @@ export class SimulatorMenu extends LitElementWw {
         };
         this._simulationResult = null;
         this._mode = 'idle';
-        this._nextButton.disabled = false;
-        this._backButton.disabled = true;
+        this._animationRunning = false;
+        if (this._nextButton) this._nextButton.disabled = false;
+        if (this._backButton) this._backButton.disabled = true;
 
-        this._toggleButton.disabled = false;
-        this._stopButton.disabled = false;
+        if (this._toggleButton) this._toggleButton.disabled = false;
+        if (this._stopButton) this._stopButton.disabled = false;
 
         this.requestUpdate();
     }
@@ -434,6 +435,7 @@ export class SimulatorMenu extends LitElementWw {
     }
 
     private startStepByStep(manual = false) {
+        if (!this.graph) return;
         this.reset();
         this._mode = 'step';
 

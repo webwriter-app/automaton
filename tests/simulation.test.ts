@@ -4,6 +4,7 @@ import { assert } from "chai";
 import "../src";
 import { AutomatonComponent } from "../src";
 import type { StackExtension } from "../src/automata/pda";
+import type { ManualAutoSimulator } from "../src/automata/manual-auto";
 import type { Graph } from "../src/graph";
 import type SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import type SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js";
@@ -236,6 +237,65 @@ describe("Simulation Tests", () => {
 				"dfa",
 				"Should be configured as DFA"
 			);
+		});
+
+		it("releases the graph on removal and restores it from authored data on reconnect", async () => {
+			const widget = await createConfiguredDFA();
+			const graphOf = () => (widget as unknown as { graph?: Graph }).graph;
+			const canvas = widget.shadowRoot!.querySelector("#graphCanvas")!;
+			const previous = graphOf()!;
+			assert.exists(canvas.querySelector("canvas"));
+
+			widget.remove();
+			assert.isUndefined(graphOf());
+			assert.isNull(canvas.querySelector("canvas"));
+			assert.isTrue(widget.dispatchEvent(new KeyboardEvent("keydown", {
+				key: "m", ctrlKey: true, cancelable: true,
+			})), "A detached widget no longer intercepts graph shortcuts");
+
+			const machine = machineData(widget);
+			machine.states[0].x = -250;
+			setMachine(widget, machine);
+			document.body.append(widget);
+			await widget.updateComplete;
+
+			const restored = graphOf()!;
+			assert.notEqual(restored.network, previous.network);
+			assert.exists(canvas.querySelector("canvas"));
+			assert.deepEqual(machineData(widget), machine);
+			assert.equal(restored.network.getPosition(0).x, -250);
+
+			restored.network.selectNodes([0]);
+			widget.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
+			assert.equal(machineData(widget).states[0].x, -240);
+		});
+
+		it("dismisses a pending manual simulation choice when the widget is removed", async () => {
+			const widget = document.createElement("webwriter-automaton") as AutomatonComponent;
+			setMachine(widget, {
+				type: "nfa",
+				states: [state(0, 0, 0, { initial: true }), state(1, 170, 0, { final: true })],
+				transitions: [edge(0, 0, 1, "", "a")],
+			});
+			widget.mode = "simulate";
+			document.body.append(widget);
+			await widget.updateComplete;
+
+			const { graph } = widget as unknown as { graph: Graph };
+			const simulator = widget.automaton.simulator as ManualAutoSimulator;
+			simulator.word = "a";
+			simulator.setManualMode(true);
+			simulator.initStepByStep(graph, () => {});
+			const network = graph.network as unknown as { body: {
+				emitter: { emit(event: string, selection: { edges: number[] }): void };
+			} };
+			network.body.emitter.emit("selectEdge", { edges: [0] });
+			assert.exists(widget.shadowRoot!.querySelector("dialog[open]"));
+
+			widget.remove();
+			document.body.append(widget);
+			await widget.updateComplete;
+			assert.isNull(widget.shadowRoot!.querySelector("dialog"));
 		});
 
 		it("creates a machine block on the first edit and preserves unrelated light DOM", async () => {

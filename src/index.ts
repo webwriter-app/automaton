@@ -174,11 +174,11 @@ export class AutomatonComponent extends LitElementWw {
 	public accessor allowedTransformations: string[] = ["sink"];
 
 	@state()
-	private accessor _graph!: Graph;
+	private accessor _graph: Graph | undefined;
 	protected set graph(g: Graph) {
 		this._graph = g;
 	}
-	protected get graph() {
+	protected get graph(): Graph | undefined {
 		return this._graph;
 	}
 
@@ -327,6 +327,7 @@ export class AutomatonComponent extends LitElementWw {
 		this.printWindow = this.ownerDocument.defaultView ?? undefined;
 		this.printWindow?.addEventListener("beforeprint", this.preparePrint);
 		this.printWindow?.addEventListener("afterprint", this.clearPrint);
+		if (this.hasUpdated) this.requestUpdate();
 	}
 
 	disconnectedCallback() {
@@ -334,6 +335,13 @@ export class AutomatonComponent extends LitElementWw {
 		this.printWindow?.removeEventListener("afterprint", this.clearPrint);
 		this.printWindow = undefined;
 		this.clearPrint();
+		if (this._graph) {
+			this.simulatorMenu.reset();
+			this.simulatorMenu.graph = undefined;
+			this._graph.destroy();
+			this.toolMenu.graph = undefined;
+			this._graph = undefined;
+		}
 		super.disconnectedCallback();
 	}
 
@@ -355,15 +363,7 @@ export class AutomatonComponent extends LitElementWw {
 		}
 	};
 
-	/**
-	 * Lifecycle callback called after the element's first update.
-	 * @param _changedProperties - Map of properties that have changed with their previous values.
-	 */
-	protected firstUpdated(
-		_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>
-	): void {
-		super.firstUpdated(_changedProperties);
-
+	private connectGraph() {
 		this._graph = new Graph(
 			this.graphCanvas,
 			this.automaton,
@@ -384,8 +384,6 @@ export class AutomatonComponent extends LitElementWw {
 		this.simulatorMenu.graph = this._graph;
 		this._graph.setInteractive(this.mode === "edit" && !this._invalidMachineData);
 		if (this.mode === "simulate") this.simulatorMenu.init();
-
-		Logger.log("first updated");
 	}
 
 	/**
@@ -462,6 +460,7 @@ export class AutomatonComponent extends LitElementWw {
 
 	protected updated(changedProperties: PropertyValueMap<this>): void {
 		super.updated(changedProperties);
+		if (this.isConnected && !this._graph) this.connectGraph();
 		if (changedProperties.has("permissions") || changedProperties.has("mode")) {
 			this._graph?.network.redraw();
 		}

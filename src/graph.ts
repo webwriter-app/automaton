@@ -65,6 +65,12 @@ function networkBody(network: Network) {
  * Represents a graph that combines an automaton, network, and other components.
  */
 export class Graph {
+    private readonly lifetime = new AbortController();
+
+    public get signal(): AbortSignal {
+        return this.lifetime.signal;
+    }
+
     private _a: Automaton;
     public get automaton(): Automaton {
         return this._a;
@@ -137,22 +143,32 @@ export class Graph {
         };
 
         this._n = new Network(canvas, a.getGraphData(), options);
+        const { signal } = this;
         canvas.addEventListener('pointermove', event => {
             if (this._connection) this.moveConnectionPreview(event);
-        });
+        }, { signal });
         canvas.addEventListener('pointerleave', () => {
             this.hideNodeWarning();
             if (!this._connection || this._connectionDrag) return;
             this.previewConnectionTarget({});
             this._n.redraw();
-        });
+        }, { signal });
         canvas.addEventListener('pointerdown', () => {
             // Remove the temporary endpoint before vis-network hit-tests the clicked node.
             if (this._connection) this.connectionPreview._cleanupTemporaryNodesAndEdges();
-        }, { capture: true });
+        }, { capture: true, signal });
         this._errors = this._a.checkAutomaton();
         this.displayErrors();
         this.setupListeners();
+    }
+
+    public destroy(): void {
+        if (this.signal.aborted) return;
+        this.lifetime.abort();
+        this.cancelConnection();
+        this._tm.cancelNodeDrag();
+        this._tm.mode = 'idle';
+        this._n.destroy();
     }
 
     /**
@@ -618,6 +634,7 @@ export class Graph {
             // vis-network emits resize before scaling the camera to the new canvas size.
             queueMicrotask(() => {
                 scaleBeforeResize = undefined;
+                if (this.signal.aborted) return;
                 if (this._n.getScale() !== scale) this._n.moveTo({ scale });
             });
         });
@@ -690,7 +707,7 @@ export class Graph {
                     this.commitEdit();
                 }
             }
-        });
+        }, { signal: this.signal });
     }
 
     private static positionInitialArrow(network: Network, automaton: Automaton) {

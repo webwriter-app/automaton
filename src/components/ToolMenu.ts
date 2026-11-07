@@ -26,8 +26,8 @@ export class ToolMenu extends LitElementWw {
     }
 
     @property({ type: Object, attribute: false })
-    private accessor _graph!: Graph;
-    public set graph(graph: Graph) {
+    private accessor _graph: Graph | undefined;
+    public set graph(graph: Graph | undefined) {
         this._graph = graph;
     }
 
@@ -101,7 +101,7 @@ export class ToolMenu extends LitElementWw {
                     @lostpointercapture=${this.interruptNodeDrag}
                     @click=${(event: MouseEvent) => {
                         // Pointer activation is handled on release. Keyboard activation still clicks the button.
-                        if (event.detail === 0) this._graph.insertNodeFromButton();
+                        if (event.detail === 0) this._graph?.insertNodeFromButton();
                     }}>${biPlus}</sl-button>` : nothing}
             </div>
         `;
@@ -113,7 +113,7 @@ export class ToolMenu extends LitElementWw {
     }
 
     private startNodeDrag(event: PointerEvent) {
-        if (event.button !== 0 || !event.isPrimary || !this._graph.canAddNode) return;
+        if (event.button !== 0 || !event.isPrimary || !this._graph?.canAddNode) return;
         this.nodeDrag = {
             pointerId: event.pointerId,
             start: { x: event.clientX, y: event.clientY },
@@ -126,7 +126,7 @@ export class ToolMenu extends LitElementWw {
         const drag = this.nodeDrag;
         if (drag?.pointerId !== event.pointerId) return;
         drag.moved ||= Math.hypot(event.clientX - drag.start.x, event.clientY - drag.start.y) >= 5;
-        if (drag.moved) this._graph.previewNodeDrop(this.dropPoint(event));
+        if (drag.moved) this._graph?.previewNodeDrop(this.dropPoint(event));
     }
 
     private finishNodeDrag(event: PointerEvent) {
@@ -134,8 +134,8 @@ export class ToolMenu extends LitElementWw {
         if (drag?.pointerId !== event.pointerId) return;
         const point = this.dropPoint(event);
         this.cancelNodeDrag();
-        if (drag.moved && point) this._graph.insertNodeFromButton(point);
-        if (!drag.moved && !point) this._graph.insertNodeFromButton();
+        if (drag.moved && point) this._graph?.insertNodeFromButton(point);
+        if (!drag.moved && !point) this._graph?.insertNodeFromButton();
     }
 
     private dropPoint(event: PointerEvent): Position | undefined {
@@ -152,11 +152,11 @@ export class ToolMenu extends LitElementWw {
     public cancelNodeDrag() {
         if (!this.nodeDrag) return;
         this.nodeDrag = undefined;
-        this._graph.previewNodeDrop();
+        this._graph?.previewNodeDrop();
     }
 
     public insertNode(position: Position, add: (node: Node) => void) {
-        const { automaton } = this._graph;
+        const { automaton } = this._graph!;
         const node = {
             ...position,
             id: automaton.getNewNodeId(),
@@ -169,6 +169,7 @@ export class ToolMenu extends LitElementWw {
     }
 
     public handleNodeAdd(nodeData: Position, callback: (node: Node) => void) {
+        if (!this._graph) return;
         this.insertNode(nodeData, callback);
         if (!this._lockNodeAdd) {
             this._mode = 'idle';
@@ -186,13 +187,13 @@ export class ToolMenu extends LitElementWw {
         reverse: Transition | undefined;
         smooth: { enabled: boolean; type: string; roundness: number } | undefined;
     } {
-        const { automaton } = this._graph;
+        const { automaton, component } = this._graph!;
         const transitions = automaton.transitions.get();
         const existing = transitions.find(edge => edge.from === edgeData.from && edge.to === edgeData.to);
         const reverse = edgeData.from === edgeData.to ? undefined
             : transitions.find(edge => edge.from === edgeData.to && edge.to === edgeData.from);
         const smooth = reverse ? { enabled: true, type: 'curvedCW', roundness: 0.2 } : undefined;
-        const symbol = this._graph.component.forcedAlphabet[0] || 'a';
+        const symbol = component.forcedAlphabet[0] || 'a';
 
         const transition: Transition = {
             ...edgeData,
@@ -216,7 +217,7 @@ export class ToolMenu extends LitElementWw {
         edgeData: Pick<Transition, 'from' | 'to'> & Partial<Transition>,
         add: (transition: Transition) => void,
     ) {
-        if (edgeData.to === Graph.initialGhostNode.id || edgeData.from === Graph.initialGhostNode.id) return;
+        if (!this._graph || edgeData.to === Graph.initialGhostNode.id || edgeData.from === Graph.initialGhostNode.id) return;
 
         const { transition, existing, reverse, smooth } = this.planTransition(edgeData);
         if (reverse) this._graph.automaton.transitions.update({ id: reverse.id, smooth });
@@ -228,7 +229,7 @@ export class ToolMenu extends LitElementWw {
         edgeData: Pick<Transition, 'from' | 'to'> & Partial<Transition>,
         callback: (transition: Transition) => void,
     ) {
-        if (edgeData.from === Graph.initialGhostNode.id || edgeData.to === Graph.initialGhostNode.id) return;
+        if (!this._graph || edgeData.from === Graph.initialGhostNode.id || edgeData.to === Graph.initialGhostNode.id) return;
 
         this.insertTransition(edgeData, callback);
         if (!this._lockEdgeAdd) {
@@ -243,6 +244,7 @@ export class ToolMenu extends LitElementWw {
     }
 
     public addNode() {
+        if (!this._graph) return;
         this._graph.cancelConnection();
         if (this._mode === 'addNode') {
             this._mode = 'idle';
@@ -255,6 +257,7 @@ export class ToolMenu extends LitElementWw {
     }
 
     public addEdge() {
+        if (!this._graph) return;
         this._graph.cancelConnection();
         if (this._mode === 'addEdge') {
             this._mode = 'idle';

@@ -448,15 +448,13 @@ class PDASimulator extends ManualAutoSimulator {
                 button.innerHTML = `${symbol === '' ? 'ε' : symbol}, ${opLabel}`;
                 button.addEventListener('click', () => {
                     dialog.close();
-                    dialog.remove();
                     resolve({ to, symbol, stackOpIndex, transition });
                 });
                 return button;
             });
 
             dialog.append(...buttons);
-            this._graph?.component.shadowRoot?.appendChild(dialog);
-            dialog.showModal();
+            this.showMoveDialog(dialog, () => resolve(null));
         });
     }
 

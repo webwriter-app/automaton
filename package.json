@@ -120,7 +120,7 @@
   "author": "Jorik van Genuchten",
   "repository": "github:webwriter-app/automaton",
   "scripts": {
-    "prepublishOnly": "npx @webwriter/build"
+    "prepublishOnly": "npx @webwriter/build && esbuild tests/simulation.test.ts --bundle --format=esm --target=es2022 --outfile=dist/tests/simulation.js"
   },
   "dependencies": {
     "@lit/localize": "^0.12.2",
@@ -138,6 +138,7 @@
     "@types/mocha": "^10.0.10",
     "@webwriter/build": "^1.13.1",
     "chai": "^6.3.0",
+    "esbuild": "0.25.12",
     "mocha": "^12.0.3",
     "typescript": "~5.9.3"
   },
