@@ -9,6 +9,7 @@ import type SlButton from "@shoelace-style/shoelace/dist/components/button/butto
 import type SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js";
 import { machineBlockSelector, type MachineData } from "../src/utils/machineData";
 import LOCALIZE from "../localization/generated/index.js";
+import { sourceLocale, targetLocales } from "../localization/generated/locale-codes.js";
 
 mocha.setup(getMochaConfig());
 
@@ -963,6 +964,35 @@ describe("Simulation Tests", () => {
 			assert.isTrue(simulate.disabled, "Removing the graph blocks simulation again");
 		});
 
+		it("loads every locale and resolves inherited language tags", async function () {
+			this.timeout(10000);
+			const widget = await createConfiguredDFA();
+			try {
+				for (const locale of targetLocales) {
+					await LOCALIZE.setLocale(locale);
+					assert.equal(LOCALIZE.getLocale(), locale);
+				}
+				const parent = document.createElement("div");
+				parent.lang = "HR-hr";
+				document.body.append(parent);
+				try {
+					parent.append(widget);
+					await LOCALIZE.setLocale(widget.lang);
+					await widget.updateComplete;
+					assert.equal(LOCALIZE.getLocale(), "hr");
+					assert.include(widget.shadowRoot!.querySelector(".mode_switch__buttons")!.textContent, "Uredi");
+				} finally {
+					parent.remove();
+				}
+				await LOCALIZE.setLocale("PT-br");
+				assert.equal(LOCALIZE.getLocale(), "pt-BR");
+				await LOCALIZE.setLocale("en-US");
+				assert.equal(LOCALIZE.getLocale(), sourceLocale);
+			} finally {
+				await LOCALIZE.setLocale(sourceLocale);
+			}
+		});
+
 		it("fits the compact menu, German help and mode buttons at 300 by 300 pixels", async () => {
 			const widget = await createConfiguredDFA();
 			widget.style.width = "300px";
@@ -993,7 +1023,7 @@ describe("Simulation Tests", () => {
 				const help = root.querySelector(".compact-help")!;
 				assertInside(help);
 				assert.include(help.textContent, "Übergänge");
-				assert.include(help.textContent, "Add sink state");
+				assert.include(help.textContent, "Fangzustand hinzufügen");
 				assert.equal(help.scrollWidth, help.clientWidth, "German help text wraps");
 				panel.querySelector<HTMLElement>("sl-button:has(.bi-question-lg)")!.click();
 				panel.querySelector<SlButton>(".definition-trigger")!.click();

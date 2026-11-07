@@ -2,17 +2,13 @@
   <file original="lit-localize-inputs" datatype="plaintext" source-language="en" target-language="lv">
     <body>
       <trans-unit id="h2e7f32ac617924d0">
-        <source>Missing transition for 
-          <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/>
-        </source>
+        <source>Missing transition for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
         <target>Trūkstošā pāreja 
           <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/>
         </target>
       </trans-unit>
       <trans-unit id="h5130af20b6d54f05">
-        <source>Multiple transitions for 
-          <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/>
-        </source>
+        <source>Multiple transitions for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
         <target>Vairākas pārejas 
           <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/>
         </target>
@@ -65,34 +61,6 @@
         <source>Table</source>
         <target>Tabula</target>
       </trans-unit>
-      <trans-unit id="sfc3c36b69e4ef120">
-        <source>Alphabet:</source>
-        <target>Alfabēts:</target>
-      </trans-unit>
-      <trans-unit id="se6a414abec96883f">
-        <source>States:</source>
-        <target>Valstis:</target>
-      </trans-unit>
-      <trans-unit id="s033b7cf13e11023b">
-        <source>Transitions:</source>
-        <target>Pārejas:</target>
-      </trans-unit>
-      <trans-unit id="sa3c972a6b05ed840">
-        <source>Initial State:</source>
-        <target>Sākotnējais stāvoklis:</target>
-      </trans-unit>
-      <trans-unit id="saa415adf36e8d84f">
-        <source>Final States:</source>
-        <target>Galīgās valstis:</target>
-      </trans-unit>
-      <trans-unit id="s09318db807188948">
-        <source>Add Sinkstate</source>
-        <target>Pievienot Sinkstate</target>
-      </trans-unit>
-      <trans-unit id="s78bc8524e7c2d052">
-        <source>Sink</source>
-        <target>Izlietne</target>
-      </trans-unit>
       <trans-unit id="sb80ac0a010cbc647">
         <source>Automaton Type</source>
         <target>Automāta tips</target>
@@ -110,21 +78,14 @@
         <target>PDA</target>
       </trans-unit>
       <trans-unit id="h56d667fd1fb9d47d">
-        <source>Please fix the following 
-          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors
-          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:
-        </source>
+        <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</source>
         <target>Lūdzu, salabojiet šādu 
           <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>kļūdas
           <x id="1" equiv-text="&lt;/sl-badge&gt;"/> lai palaistu simulāciju:
         </target>
       </trans-unit>
       <trans-unit id="h6c2fe3d409d7ba36">
-        <source>No valid path found. The automaton 
-          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects
-          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word 
-          <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.
-        </source>
+        <source>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</source>
         <target>Nav atrasts derīgs ceļš. Automāts 
           <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>noraida
           <x id="1" equiv-text="&lt;/sl-badge&gt;"/> vārdu 
@@ -132,34 +93,22 @@
         </target>
       </trans-unit>
       <trans-unit id="h25e62c96f8182fcc">
-        <source>
-          <x id="0" equiv-text="&lt;span&gt;"/>The automaton 
-          <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts
-          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word 
-          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
-          <x id="4" equiv-text="&lt;/span&gt;"/>
-        </source>
+        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
         <target>
           <x id="0" equiv-text="&lt;span&gt;"/>Automāts 
           <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>pieņem
           <x id="2" equiv-text="&lt;/sl-badge&gt;"/> vārdu 
-          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.
+          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
           <x id="4" equiv-text="&lt;/span&gt;"/>
         </target>
       </trans-unit>
       <trans-unit id="h28031e78bb7297a9">
-        <source>
-          <x id="0" equiv-text="&lt;span&gt;"/>The automaton 
-          <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects
-          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word 
-          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
-          <x id="4" equiv-text="&lt;/span&gt;"/>
-        </source>
+        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
         <target>
           <x id="0" equiv-text="&lt;span&gt;"/>Automāts 
           <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>noraida
           <x id="2" equiv-text="&lt;/sl-badge&gt;"/> vārdu 
-          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.
+          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
           <x id="4" equiv-text="&lt;/span&gt;"/>
         </target>
       </trans-unit>
@@ -215,10 +164,6 @@
         <source>Stop</source>
         <target>Pārtraukt</target>
       </trans-unit>
-      <trans-unit id="s9d8b8aa2b404c2c8">
-        <source>Settings</source>
-        <target>Iestatījumi</target>
-      </trans-unit>
       <trans-unit id="s05c44a5db696fcaf">
         <source>Editing</source>
         <target>Rediģēšana</target>
@@ -247,14 +192,6 @@
         <source>Automaton Types</source>
         <target>Automātu tipi</target>
       </trans-unit>
-      <trans-unit id="s1c2404542b3e48d9">
-        <source>Transformations</source>
-        <target>Transformācijas</target>
-      </trans-unit>
-      <trans-unit id="s568f5722bc79d077">
-        <source>Sinkstate</source>
-        <target>Sinkstate</target>
-      </trans-unit>
       <trans-unit id="s7f59f507e02a2f38">
         <source>View</source>
         <target>Skatīt</target>
@@ -271,10 +208,6 @@
         <source>Show Transitions Table</source>
         <target>Rādīt pāreju tabulu</target>
       </trans-unit>
-      <trans-unit id="se9d940b50ed4b85f">
-        <source>PDA Label Style</source>
-        <target>PDA etiķetes stils</target>
-      </trans-unit>
       <trans-unit id="s35f1dd3fd023476a">
         <source>Automation</source>
         <target>Automatizācija</target>
@@ -290,14 +223,6 @@
       <trans-unit id="s8e3f9c3e183abbda">
         <source>Predefined Alphabet</source>
         <target>Iepriekš definēts alfabēts</target>
-      </trans-unit>
-      <trans-unit id="s21b06c38fc4164db">
-        <source>Advanced</source>
-        <target>Advanced</target>
-      </trans-unit>
-      <trans-unit id="s1b5a859826f8be7d">
-        <source>Verbose</source>
-        <target>Verbose</target>
       </trans-unit>
       <trans-unit id="s7df224ba56fb8e1e">
         <source>Mode Switch</source>
@@ -319,10 +244,6 @@
         <source>Test Cases</source>
         <target>Testēšanas gadījumi</target>
       </trans-unit>
-      <trans-unit id="sd341bbdc948e6521">
-        <source>Add Node by click</source>
-        <target>Pievienojiet mezglu ar klikšķi</target>
-      </trans-unit>
       <trans-unit id="s9f4a96e81b296478">
         <source>Add Transition by drag and drop</source>
         <target>Pārejas pievienošana, velkot un nometot</target>
@@ -330,14 +251,6 @@
       <trans-unit id="s7b72a2e6d7ff3291">
         <source>Move the elements by drag and drop</source>
         <target>Pārvietot elementus, velkot un nometot</target>
-      </trans-unit>
-      <trans-unit id="s09c6c5bc21d0e1f0">
-        <source>To edit a node right click the node</source>
-        <target>Lai rediģētu mezglu, noklikšķiniet uz tā ar peles labo pogu</target>
-      </trans-unit>
-      <trans-unit id="s6a7a6503441d48ee">
-        <source>To edit a transition right click the transition</source>
-        <target>Lai rediģētu pāreju, noklikšķiniet uz pārejas ar peles labo pogu</target>
       </trans-unit>
       <trans-unit id="s71813a5a8d63ac81">
         <source>Input word</source>
@@ -411,14 +324,6 @@
         <source>Allowed modes</source>
         <target>Atļautie režīmi</target>
       </trans-unit>
-      <trans-unit id="s11b075d3731a5194">
-        <source>Add node (Ctrl+Q)</source>
-        <target>Pievienot mezglu (Ctrl+Q)</target>
-      </trans-unit>
-      <trans-unit id="s6ea31a50ccf59dcf">
-        <source>Add edge (Ctrl+E)</source>
-        <target>Pievienot malu (Ctrl+E)</target>
-      </trans-unit>
       <trans-unit id="s9274cd474969c49c">
         <source>Switch mode (Ctrl+M)</source>
         <target>Režīma pārslēgšana (Ctrl+M)</target>
@@ -435,6 +340,206 @@
         <source>Menu</source>
         <target>Izvēlne</target>
       </trans-unit>
+<trans-unit id="sc5a051b7aba488de">
+  <source>Remove stack items with ×</source>
+  <target>Noņemiet steka elementus ar ×</target>
+</trans-unit>
+<trans-unit id="sfc513553a0d4ed1c">
+  <source>Remove stack item</source>
+  <target>Noņemt elementu no steka</target>
+</trans-unit>
+<trans-unit id="sd9bdfc0f95188eea">
+  <source>Delete node</source>
+  <target>Dzēst mezglu</target>
+</trans-unit>
+<trans-unit id="s666ab5f59c125645">
+  <source>Delete transition</source>
+  <target>Dzēst pāreju</target>
+</trans-unit>
+<trans-unit id="sb158679e0851297f">
+  <source>Remove symbol</source>
+  <target>Noņemt simbolu</target>
+</trans-unit>
+<trans-unit id="s21a771798c563b26">
+  <source>Sink completion is only available for DFAs.</source>
+  <target>Tikai DFA var papildināt ar slazda stāvokli.</target>
+</trans-unit>
+<trans-unit id="s6bcb0cb70a6c9552">
+  <source>Sink state completion is turned off.</source>
+  <target>Papildināšana ar slazda stāvokli ir izslēgta.</target>
+</trans-unit>
+<trans-unit id="s24db1bf1e8c00803">
+  <source>Switch to Edit mode to complete the DFA.</source>
+  <target>Pārslēdzieties uz rediģēšanas režīmu, lai papildinātu DFA.</target>
+</trans-unit>
+<trans-unit id="sa509e89708954725">
+  <source>Add a state before completing the DFA.</source>
+  <target>Pirms DFA papildināšanas pievienojiet stāvokli.</target>
+</trans-unit>
+<trans-unit id="sf01fbe6cf8d14047">
+  <source>Define an alphabet before completing the DFA.</source>
+  <target>Pirms DFA papildināšanas definējiet alfabētu.</target>
+</trans-unit>
+<trans-unit id="sfe31787cc1b7e04e">
+  <source>The DFA already has a transition for every symbol at each state.</source>
+  <target>DFA katrā stāvoklī jau ir pāreja katram simbolam.</target>
+</trans-unit>
+<trans-unit id="sfac37d2aebc30dcd">
+  <source>Switch to Edit mode to change the automaton type.</source>
+  <target>Pārslēdzieties uz rediģēšanas režīmu, lai mainītu automāta veidu.</target>
+</trans-unit>
+<trans-unit id="s11d9bfbb22894ce3">
+  <source>Switching away from PDA removes its stack operations. Continue?</source>
+  <target>Mainot veidu, PDA steka operācijas tiks noņemtas. Vai turpināt?</target>
+</trans-unit>
+<trans-unit id="se432909b8e9691c8">
+  <source>Complete DFA with sink</source>
+  <target>Papildināt DFA ar slazda stāvokli</target>
+</trans-unit>
+<trans-unit id="s5ec50a9b8d60c15f">
+  <source>Switch to DFA</source>
+  <target>Pārslēgties uz DFA</target>
+</trans-unit>
+<trans-unit id="s0818a49b5c45420d">
+  <source>Switch to NFA</source>
+  <target>Pārslēgties uz NFA</target>
+</trans-unit>
+<trans-unit id="sc855ea9bc9a1cc6d">
+  <source>Switch to PDA</source>
+  <target>Pārslēgties uz PDA</target>
+</trans-unit>
+<trans-unit id="s8a0ee3d87938f19a">
+  <source>Nodes</source>
+  <target>Mezgli</target>
+</trans-unit>
+<trans-unit id="se8dca0132c66ae03">
+  <source>Permissions</source>
+  <target>Atļaujas</target>
+</trans-unit>
+<trans-unit id="s699faf39e76b0a5c">
+  <source>Enable sink state</source>
+  <target>Iespējot slazda stāvokli</target>
+</trans-unit>
+<trans-unit id="se63c78875f5b2178">
+  <source>Add node</source>
+  <target>Pievienot mezglu</target>
+</trans-unit>
+<trans-unit id="s7815e752b14f6f96">
+  <source>Add sink state</source>
+  <target>Pievienot slazda stāvokli</target>
+</trans-unit>
+<trans-unit id="s59329d2125467032">
+  <source>Automaton definition</source>
+  <target>Automāta definīcija</target>
+</trans-unit>
+<trans-unit id="s5e8250fb85d64c23">
+  <source>Close</source>
+  <target>Aizvērt</target>
+</trans-unit>
+<trans-unit id="sad743c81472a217f">
+  <source>States</source>
+  <target>Stāvokļi</target>
+</trans-unit>
+<trans-unit id="s27689c7297057a5a">
+  <source>Alphabet</source>
+  <target>Alfabēts</target>
+</trans-unit>
+<trans-unit id="s9952d0dbf104795a">
+  <source>Initial state</source>
+  <target>Sākuma stāvoklis</target>
+</trans-unit>
+<trans-unit id="s94ede397ea7482ef">
+  <source>Final states</source>
+  <target>Beigu stāvokļi</target>
+</trans-unit>
+<trans-unit id="sb3fa6348186c2022">
+  <source>Stack alphabet</source>
+  <target>Steka alfabēts</target>
+</trans-unit>
+<trans-unit id="se5113f4874d8494d">
+  <source>Starting stack</source>
+  <target>Sākuma steks</target>
+</trans-unit>
+<trans-unit id="s5798e7f4322a6963">
+  <source>Transitions</source>
+  <target>Pārejas</target>
+</trans-unit>
+<trans-unit id="sd07c6d5726032834">
+  <source>No transitions yet</source>
+  <target>Vēl nav pāreju</target>
+</trans-unit>
+<trans-unit id="s1f8d4c03eed89a7b">
+  <source>Push <x id="0" equiv-text="${label}"/></source>
+  <target>Ievietot <x id="0" equiv-text="${label}"/> steka virsotnē</target>
+</trans-unit>
+<trans-unit id="sc6fa8596f1438baa">
+  <source>Pop <x id="0" equiv-text="${label}"/></source>
+  <target>Noņemt <x id="0" equiv-text="${label}"/> no steka virsotnes</target>
+</trans-unit>
+<trans-unit id="s66fd00b9507b3fee">
+  <source>Require an empty stack</source>
+  <target>Prasīt tukšu steku</target>
+</trans-unit>
+<trans-unit id="s9027f3efff46b1d1">
+  <source>Leave stack unchanged</source>
+  <target>Atstāt steku nemainītu</target>
+</trans-unit>
+<trans-unit id="sdf60145f119b14de">
+  <source>Top is <x id="0" equiv-text="${condition}"/></source>
+  <target>Steka virsotnē ir <x id="0" equiv-text="${condition}"/></target>
+</trans-unit>
+<trans-unit id="sf74f8907aaf4051a">
+  <source>Transition table</source>
+  <target>Pāreju tabula</target>
+</trans-unit>
+<trans-unit id="sae239213b7c70376">
+  <source>State</source>
+  <target>Stāvoklis</target>
+</trans-unit>
+<trans-unit id="sebb13b4e50b16dcc">
+  <source>Connect from top</source>
+  <target>Savienot no augšas</target>
+</trans-unit>
+<trans-unit id="s52a408dd8b7508c0">
+  <source>Connect from left</source>
+  <target>Savienot no kreisās puses</target>
+</trans-unit>
+<trans-unit id="s099877714a72ad3a">
+  <source>Connect from bottom</source>
+  <target>Savienot no apakšas</target>
+</trans-unit>
+<trans-unit id="s638f1298728a57d5">
+  <source>Connect from right</source>
+  <target>Savienot no labās puses</target>
+</trans-unit>
+<trans-unit id="s02232ef4da5e61a7">
+  <source>Double click / long tap to add a node</source>
+  <target>Veiciet dubultklikšķi vai turiet nospiestu, lai pievienotu mezglu</target>
+</trans-unit>
+<trans-unit id="sdb05063db77404d8">
+  <source>The automaton data block is invalid or uses an unsupported format.</source>
+  <target>Automāta datu bloks nav derīgs vai izmanto neatbalstītu formātu.</target>
+</trans-unit>
+<trans-unit id="s93ef8405b9b83023">
+  <source>State diagram</source>
+  <target>Stāvokļu diagramma</target>
+</trans-unit>
+<trans-unit id="s3a2084e9089a7fca">
+  <source>No states yet</source>
+  <target>Vēl nav stāvokļu</target>
+</trans-unit>
+<trans-unit id="s521208df9ea3e694">
+  <source>Click or drag + to add a node</source>
+  <target>Noklikšķiniet uz + vai velciet to, lai pievienotu mezglu</target>
+</trans-unit>
+<trans-unit id="sc0bffa27613488fe">
+  <source>Select a node or transition to edit it</source>
+  <target>Atlasiet mezglu vai pāreju, ko rediģēt</target>
+</trans-unit>
+<trans-unit id="s8a7f6fa052132a14">
+  <source>Warnings</source>
+  <target>Brīdinājumi</target>
+</trans-unit>
     </body>
   </file>
 </xliff>

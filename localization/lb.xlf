@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<file target-language="lb" source-language="en" original="lit-localize-inputs" datatype="plaintext">
+<body>
+<trans-unit id="s1b00cf75d5f4f616">
+  <source>Choose a move:</source>
+  <target>Wielt eng Beweegung:</target>
+</trans-unit>
+<trans-unit id="s6c80030e2762459d">
+  <source>push</source>
+  <target>op Stack addéieren</target>
+</trans-unit>
+<trans-unit id="s779b5819564f2f50">
+  <source>pop</source>
+  <target>ewechzehuelen aus Stack</target>
+</trans-unit>
+<trans-unit id="s904fefb3d01cb2ae">
+  <source>empty</source>
+  <target>eidel</target>
+</trans-unit>
+<trans-unit id="s3c0d17bad169557b">
+  <source>none</source>
+  <target>keng</target>
+</trans-unit>
+<trans-unit id="sae4f7c13b7ec18ff">
+  <source>Stack</source>
+  <target>Stack</target>
+</trans-unit>
+<trans-unit id="sc5a051b7aba488de">
+  <source>Remove stack items with ×</source>
+  <target>Ewechzehuelen Stack Elementer mat ×</target>
+</trans-unit>
+<trans-unit id="sfc513553a0d4ed1c">
+  <source>Remove stack item</source>
+  <target>Ewechzehuelen Stack Element</target>
+</trans-unit>
+<trans-unit id="s970d041a28d1067d">
+  <source>Push</source>
+  <target>Add to Stack</target>
+</trans-unit>
+<trans-unit id="s8da37819f40688b0">
+  <source>Pop</source>
+  <target>Ewechzehuelen aus Stack</target>
+</trans-unit>
+<trans-unit id="s66da3efd9a45b25a">
+  <source>Empty Check</source>
+  <target>Check fir eidel Stack</target>
+</trans-unit>
+<trans-unit id="sd60a7dde73859828">
+  <source>Keep</source>
+  <target>Halen</target>
+</trans-unit>
+<trans-unit id="s66bd1cc6d2f6b68d">
+  <source>Node</source>
+  <target>Node</target>
+</trans-unit>
+<trans-unit id="s6503256c2de2745c">
+  <source>Edge</source>
+  <target>Rand</target>
+</trans-unit>
+<trans-unit id="sd9bdfc0f95188eea">
+  <source>Delete node</source>
+  <target>Node läschen</target>
+</trans-unit>
+<trans-unit id="s666ab5f59c125645">
+  <source>Delete transition</source>
+  <target>Iwwergank läschen</target>
+</trans-unit>
+<trans-unit id="s5590dbf7e425789d">
+  <source>Label</source>
+  <target>Label</target>
+</trans-unit>
+<trans-unit id="sfb68cae41d749423">
+  <source>Initial</source>
+  <target>Ufank</target>
+</trans-unit>
+<trans-unit id="s8f1034e1a9d93097">
+  <source>Final</source>
+  <target>Akzeptéieren</target>
+</trans-unit>
+<trans-unit id="sd083d3aa96af5af1">
+  <source>Symbol</source>
+  <target>Symbol</target>
+</trans-unit>
+<trans-unit id="sb158679e0851297f">
+  <source>Remove symbol</source>
+  <target>Ewechzehuelen Symbol</target>
+</trans-unit>
+<trans-unit id="s09243007b5b91006">
+  <source>If</source>
+  <target>Wann</target>
+</trans-unit>
+<trans-unit id="s3de7bee91528e5cc">
+  <source>Stack Actions</source>
+  <target>Stack Aktiounen</target>
+</trans-unit>
+<trans-unit id="sba6693303903d6b8">
+  <source>Add symbol</source>
+  <target>Add Symbol</target>
+</trans-unit>
+<trans-unit id="sc1611c0558728a2a">
+  <source>Position</source>
+  <target>Positioun</target>
+</trans-unit>
+<trans-unit id="sa0a141a796a5b36a">
+  <source>Bend</source>
+  <target>Curve</target>
+</trans-unit>
+<trans-unit id="s21a771798c563b26">
+  <source>Sink completion is only available for DFAs.</source>
+  <target>Nëmmen deterministesch finite Automaten (DFA) kënne mat engem absorbéierende Staat ofgeschloss ginn.</target>
+</trans-unit>
+<trans-unit id="s6bcb0cb70a6c9552">
+  <source>Sink state completion is turned off.</source>
+  <target>Fäerdegstellung mat engem absorbéierende Staat ass behënnert.</target>
+</trans-unit>
+<trans-unit id="s24db1bf1e8c00803">
+  <source>Switch to Edit mode to complete the DFA.</source>
+  <target>Wiesselt op Edit Modus fir den DFA ofzeschléissen.</target>
+</trans-unit>
+<trans-unit id="sa509e89708954725">
+  <source>Add a state before completing the DFA.</source>
+  <target>Füügt e Staat un ier Dir den DFA ofgeschloss hutt.</target>
+</trans-unit>
+<trans-unit id="sf01fbe6cf8d14047">
+  <source>Define an alphabet before completing the DFA.</source>
+  <target>Definéiert en Alphabet ier Dir den DFA ofgeschloss hutt.</target>
+</trans-unit>
+<trans-unit id="sfe31787cc1b7e04e">
+  <source>The DFA already has a transition for every symbol at each state.</source>
+  <target>D'DFA huet schonn en Iwwergank fir all Symbol an all Staat.</target>
+</trans-unit>
+<trans-unit id="sfac37d2aebc30dcd">
+  <source>Switch to Edit mode to change the automaton type.</source>
+  <target>Wiesselt op Edit Modus fir den Automatentyp z'änneren.</target>
+</trans-unit>
+<trans-unit id="s11d9bfbb22894ce3">
+  <source>Switching away from PDA removes its stack operations. Continue?</source>
+  <target>Änneren op en aneren Automatentyp läscht d'PDA Stack Operatiounen. Fuert weider?</target>
+</trans-unit>
+<trans-unit id="se432909b8e9691c8">
+  <source>Complete DFA with sink</source>
+  <target>Fëllt d'DFA mat engem absorbéierende Staat aus</target>
+</trans-unit>
+<trans-unit id="s5ec50a9b8d60c15f">
+  <source>Switch to DFA</source>
+  <target>Wiesselt op DFA</target>
+</trans-unit>
+<trans-unit id="s0818a49b5c45420d">
+  <source>Switch to NFA</source>
+  <target>Wiesselt op NFA</target>
+</trans-unit>
+<trans-unit id="sc855ea9bc9a1cc6d">
+  <source>Switch to PDA</source>
+  <target>Wiesselt op PDA</target>
+</trans-unit>
+<trans-unit id="s05c44a5db696fcaf">
+  <source>Editing</source>
+  <target>Redaktioun</target>
+</trans-unit>
+<trans-unit id="s7f59f507e02a2f38">
+  <source>View</source>
+  <target>Vue</target>
+</trans-unit>
+<trans-unit id="s35f1dd3fd023476a">
+  <source>Automation</source>
+  <target>Automatisatioun</target>
+</trans-unit>
+<trans-unit id="s8a0ee3d87938f19a">
+  <source>Nodes</source>
+  <target>Noden</target>
+</trans-unit>
+<trans-unit id="sf9aee319a006c9b4">
+  <source>Add</source>
+  <target>Addéieren</target>
+</trans-unit>
+<trans-unit id="sdc673e73b5c13aea">
+  <source>Delete</source>
+  <target>Läschen</target>
+</trans-unit>
+<trans-unit id="s2f64461723d3df5d">
+  <source>Change</source>
+  <target>Änneren</target>
+</trans-unit>
+<trans-unit id="se8dca0132c66ae03">
+  <source>Permissions</source>
+  <target>Permissiounen</target>
+</trans-unit>
+<trans-unit id="s860b83fc8a41ca5c">
+  <source>Automaton Types</source>
+  <target>Typen vun Automaten</target>
+</trans-unit>
+<trans-unit id="s699faf39e76b0a5c">
+  <source>Enable sink state</source>
+  <target>Aktivéiert den absorbéierende Staat</target>
+</trans-unit>
+<trans-unit id="s261af1b4598fef3f">
+  <source>Allowed modes</source>
+  <target>Erlaabt Modi</target>
+</trans-unit>
+<trans-unit id="s64ef2a6c2dd1d3d1">
+  <source>Edit</source>
+  <target>Edit</target>
+</trans-unit>
+<trans-unit id="scfcffcf35292bc6f">
+  <source>Simulate</source>
+  <target>Run Simulatioun</target>
+</trans-unit>
+<trans-unit id="sb508f35111b54817">
+  <source>Show Help</source>
+  <target>Weisen Hëllef</target>
+</trans-unit>
+<trans-unit id="sf62fea3229bf87c8">
+  <source>Show Formal Definition</source>
+  <target>Show formell Definitioun</target>
+</trans-unit>
+<trans-unit id="s3050764b15c8baf0">
+  <source>Show Transitions Table</source>
+  <target>Show Transitions Table</target>
+</trans-unit>
+<trans-unit id="s3e141c08e0ace321">
+  <source>Test Language</source>
+  <target>Test Sprooch</target>
+</trans-unit>
+<trans-unit id="scbb4cdb4d52edc80">
+  <source>Test Words</source>
+  <target>Test Wierder</target>
+</trans-unit>
+<trans-unit id="s8e3f9c3e183abbda">
+  <source>Predefined Alphabet</source>
+  <target>Virdefinéiert Alphabet</target>
+</trans-unit>
+<trans-unit id="h56d667fd1fb9d47d">
+  <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</source>
+  <target>Fixéiert déi folgend <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>Feeler<x id="1" equiv-text="&lt;/sl-badge&gt;"/> fir d'Simulatioun auszeféieren:</target>
+</trans-unit>
+<trans-unit id="h6c2fe3d409d7ba36">
+  <source>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</source>
+  <target>Kee gültege Wee fonnt. Den Automat <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>refuséiert<x id="1" equiv-text="&lt;/sl-badge&gt;"/> d'Wuert <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</target>
+</trans-unit>
+<trans-unit id="h25e62c96f8182fcc">
+  <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+  <target><x id="0" equiv-text="&lt;span&gt;"/>Den Automat <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>akzeptéiert<x id="2" equiv-text="&lt;/sl-badge&gt;"/> d'Wuert <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></target>
+</trans-unit>
+<trans-unit id="h28031e78bb7297a9">
+  <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+  <target><x id="0" equiv-text="&lt;span&gt;"/>Den Automat <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>refuséiert<x id="2" equiv-text="&lt;/sl-badge&gt;"/> d'Wuert <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></target>
+</trans-unit>
+<trans-unit id="s4f6476c3d1856c19">
+  <source>No further moves possible. Try a different path.</source>
+  <target>Keng weider Beweegunge méiglech. Probéiert en anere Wee.</target>
+</trans-unit>
+<trans-unit id="sed72ab193dd16a0a">
+  <source>Simulation paused.</source>
+  <target>Simulatioun gestoppt.</target>
+</trans-unit>
+<trans-unit id="saad05eab0e59411c">
+  <source>Input Word e.g. aaabbb, step;step;stop</source>
+  <target>Input Wuert, zum Beispill aaabbb oder step;step;stop</target>
+</trans-unit>
+<trans-unit id="s956c5a9fb7ee0b23">
+  <source>Manual</source>
+  <target>Manuell</target>
+</trans-unit>
+<trans-unit id="s61f0ff0bab2b8310">
+  <source>Animate</source>
+  <target>Animéieren</target>
+</trans-unit>
+<trans-unit id="s36494e700fe1e5c6">
+  <source>Step by Step</source>
+  <target>Schrëtt fir Schrëtt</target>
+</trans-unit>
+<trans-unit id="s42cbd8dca939a9c7">
+  <source>Check</source>
+  <target>Verifizéieren</target>
+</trans-unit>
+<trans-unit id="sc16e00a7a8b2fde2">
+  <source>Back</source>
+  <target>Virdrun</target>
+</trans-unit>
+<trans-unit id="s0fbf6dc6a1966408">
+  <source>Next</source>
+  <target>Nächst</target>
+</trans-unit>
+<trans-unit id="s255857544a9d5ec0">
+  <source>Reset</source>
+  <target>Zerécksetzen</target>
+</trans-unit>
+<trans-unit id="s061cc20e3432dead">
+  <source>Pause</source>
+  <target>Paus</target>
+</trans-unit>
+<trans-unit id="scd105819b5a10243">
+  <source>Play</source>
+  <target>Lafen</target>
+</trans-unit>
+<trans-unit id="sd9ad53251f2330a5">
+  <source>Stop</source>
+  <target>Stop</target>
+</trans-unit>
+<trans-unit id="se63c78875f5b2178">
+  <source>Add node</source>
+  <target>Node addéieren</target>
+</trans-unit>
+<trans-unit id="s7815e752b14f6f96">
+  <source>Add sink state</source>
+  <target>Füügt en absorbéierende Staat</target>
+</trans-unit>
+<trans-unit id="s6d8c02aee480af7a">
+  <source>Menu</source>
+  <target>Menu</target>
+</trans-unit>
+<trans-unit id="s42b6431842b835b3">
+  <source>Language:</source>
+  <target>Sprooch:</target>
+</trans-unit>
+<trans-unit id="sa4088b649da557a5">
+  <source>Check Automaton</source>
+  <target>Kontrolléiert den Automat</target>
+</trans-unit>
+<trans-unit id="sea4f20ea1ece70a0">
+  <source>Definition</source>
+  <target>Definitioun</target>
+</trans-unit>
+<trans-unit id="sb80ac0a010cbc647">
+  <source>Automaton Type</source>
+  <target>Typ vun Finite-State Automat</target>
+</trans-unit>
+<trans-unit id="se033711991bc46ea">
+  <source>DFA</source>
+  <target>DFA</target>
+</trans-unit>
+<trans-unit id="s36dfd719c2d7c63c">
+  <source>NFA</source>
+  <target>NFA</target>
+</trans-unit>
+<trans-unit id="s8d5ca919f3cad950">
+  <source>PDA</source>
+  <target>PDA</target>
+</trans-unit>
+<trans-unit id="s59329d2125467032">
+  <source>Automaton definition</source>
+  <target>Automatesch Definitioun</target>
+</trans-unit>
+<trans-unit id="s5e8250fb85d64c23">
+  <source>Close</source>
+  <target>Zoumaachen</target>
+</trans-unit>
+<trans-unit id="s337a1e9022a8d19f">
+  <source>Table</source>
+  <target>Dësch</target>
+</trans-unit>
+<trans-unit id="sad743c81472a217f">
+  <source>States</source>
+  <target>Automatesch Staaten</target>
+</trans-unit>
+<trans-unit id="s27689c7297057a5a">
+  <source>Alphabet</source>
+  <target>Alphabet</target>
+</trans-unit>
+<trans-unit id="s9952d0dbf104795a">
+  <source>Initial state</source>
+  <target>Ufankszoustand vum Automat</target>
+</trans-unit>
+<trans-unit id="s94ede397ea7482ef">
+  <source>Final states</source>
+  <target>Finale Staaten vun der Automat</target>
+</trans-unit>
+<trans-unit id="sb3fa6348186c2022">
+  <source>Stack alphabet</source>
+  <target>Alphabet vum Stack</target>
+</trans-unit>
+<trans-unit id="se5113f4874d8494d">
+  <source>Starting stack</source>
+  <target>Éischt Inhalt vum Stack</target>
+</trans-unit>
+<trans-unit id="s5798e7f4322a6963">
+  <source>Transitions</source>
+  <target>Iwwergäng</target>
+</trans-unit>
+<trans-unit id="sd07c6d5726032834">
+  <source>No transitions yet</source>
+  <target>Nach keng Iwwergäng</target>
+</trans-unit>
+<trans-unit id="s1f8d4c03eed89a7b">
+  <source>Push <x id="0" equiv-text="${label}"/></source>
+  <target>Setzt <x id="0" equiv-text="${label}"/> op de Stack</target>
+</trans-unit>
+<trans-unit id="sc6fa8596f1438baa">
+  <source>Pop <x id="0" equiv-text="${label}"/></source>
+  <target>Ewechzehuelen <x id="0" equiv-text="${label}"/> vun der Spëtzt vum Stack</target>
+</trans-unit>
+<trans-unit id="s66fd00b9507b3fee">
+  <source>Require an empty stack</source>
+  <target>Verlaangen eng eidel Stack</target>
+</trans-unit>
+<trans-unit id="s9027f3efff46b1d1">
+  <source>Leave stack unchanged</source>
+  <target>Loosst de Stack onverännert</target>
+</trans-unit>
+<trans-unit id="sdf60145f119b14de">
+  <source>Top is <x id="0" equiv-text="${condition}"/></source>
+  <target>Uewen um Stack ass <x id="0" equiv-text="${condition}"/></target>
+</trans-unit>
+<trans-unit id="sf74f8907aaf4051a">
+  <source>Transition table</source>
+  <target>Iwwergank Dësch</target>
+</trans-unit>
+<trans-unit id="sae239213b7c70376">
+  <source>State</source>
+  <target>Zoustand</target>
+</trans-unit>
+<trans-unit id="sebb13b4e50b16dcc">
+  <source>Connect from top</source>
+  <target>Connect vun uewen</target>
+</trans-unit>
+<trans-unit id="s52a408dd8b7508c0">
+  <source>Connect from left</source>
+  <target>Connect vu lénks</target>
+</trans-unit>
+<trans-unit id="s099877714a72ad3a">
+  <source>Connect from bottom</source>
+  <target>Connect vun ënnen</target>
+</trans-unit>
+<trans-unit id="s638f1298728a57d5">
+  <source>Connect from right</source>
+  <target>Connect vu riets</target>
+</trans-unit>
+<trans-unit id="s02232ef4da5e61a7">
+  <source>Double click / long tap to add a node</source>
+  <target>Duebelklick / laang klickt fir en Node derbäi ze ginn</target>
+</trans-unit>
+<trans-unit id="sdb05063db77404d8">
+  <source>The automaton data block is invalid or uses an unsupported format.</source>
+  <target>Den automateschen Dateblock ass ongëlteg oder benotzt en net ënnerstëtzte Format.</target>
+</trans-unit>
+<trans-unit id="s93ef8405b9b83023">
+  <source>State diagram</source>
+  <target>Diagramm vun Automatenzoustand</target>
+</trans-unit>
+<trans-unit id="s3a2084e9089a7fca">
+  <source>No states yet</source>
+  <target>Den Automat huet nach keng Staaten</target>
+</trans-unit>
+<trans-unit id="s7df224ba56fb8e1e">
+  <source>Mode Switch</source>
+  <target>Modus Schalter</target>
+</trans-unit>
+<trans-unit id="s4b10acae683d2978">
+  <source>Fullscreen</source>
+  <target>Vollbildschierm</target>
+</trans-unit>
+<trans-unit id="sd2223afb7d6b100d">
+  <source>Type</source>
+  <target>Typ</target>
+</trans-unit>
+<trans-unit id="s352719d86112de9a">
+  <source>Help</source>
+  <target>Hëllef</target>
+</trans-unit>
+<trans-unit id="sc725a41694d85bb0">
+  <source>Test Cases</source>
+  <target>Test Fäll</target>
+</trans-unit>
+<trans-unit id="s521208df9ea3e694">
+  <source>Click or drag + to add a node</source>
+  <target>Klickt oder zitt + fir en Node derbäizefügen</target>
+</trans-unit>
+<trans-unit id="s9f4a96e81b296478">
+  <source>Add Transition by drag and drop</source>
+  <target>Füügt Iwwergang duerch Drag a Drop</target>
+</trans-unit>
+<trans-unit id="s7b72a2e6d7ff3291">
+  <source>Move the elements by drag and drop</source>
+  <target>Beweegt d'Elementer duerch Drag a Drop</target>
+</trans-unit>
+<trans-unit id="sc0bffa27613488fe">
+  <source>Select a node or transition to edit it</source>
+  <target>Wielt en Node oder Iwwergang fir se z'änneren</target>
+</trans-unit>
+<trans-unit id="s71813a5a8d63ac81">
+  <source>Input word</source>
+  <target>Input Wuert</target>
+</trans-unit>
+<trans-unit id="sa82cf626cfa888ac">
+  <source>Simulation Controls</source>
+  <target>Simulatioun Kontrollen</target>
+</trans-unit>
+<trans-unit id="s9274cd474969c49c">
+  <source>Switch mode (Ctrl+M)</source>
+  <target>Wiessel tëscht Edit an Simulatioun Modus (Ctrl+M)</target>
+</trans-unit>
+<trans-unit id="s8a7f6fa052132a14">
+  <source>Warnings</source>
+  <target>Warnungen</target>
+</trans-unit>
+<trans-unit id="h2e7f32ac617924d0">
+  <source>Missing transition for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
+  <target>Vermësst Iwwergang fir Symbol <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></target>
+</trans-unit>
+<trans-unit id="h5130af20b6d54f05">
+  <source>Multiple transitions for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
+  <target>Multiple Iwwergäng fir Symbol <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></target>
+</trans-unit>
+<trans-unit id="s2ea31ea953b32ee5">
+  <source>Transition with empty symbol</source>
+  <target>Iwwergank mat eidel Symbol</target>
+</trans-unit>
+<trans-unit id="s335050fdf97d8f6e">
+  <source>No initial state defined</source>
+  <target>Keen initialen Zoustand definéiert</target>
+</trans-unit>
+<trans-unit id="s74a96f52fd23c3e8">
+  <source>Multiple initial states defined</source>
+  <target>Multiple initial Staaten definéiert</target>
+</trans-unit>
+<trans-unit id="s5787e20cab57b383">
+  <source>Unknown error</source>
+  <target>Onbekannt Feeler</target>
+</trans-unit>
+</body>
+</file>
+</xliff>

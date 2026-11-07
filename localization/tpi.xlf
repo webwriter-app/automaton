@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<file target-language="tpi" source-language="en" original="lit-localize-inputs" datatype="plaintext">
+<body>
+<trans-unit id="s1b00cf75d5f4f616">
+  <source>Choose a move:</source>
+  <target>Yu ken makim wanpela muv:</target>
+</trans-unit>
+<trans-unit id="s6c80030e2762459d">
+  <source>push</source>
+  <target>putim long stak</target>
+</trans-unit>
+<trans-unit id="s779b5819564f2f50">
+  <source>pop</source>
+  <target>rausim long stak</target>
+</trans-unit>
+<trans-unit id="s904fefb3d01cb2ae">
+  <source>empty</source>
+  <target>emti</target>
+</trans-unit>
+<trans-unit id="s3c0d17bad169557b">
+  <source>none</source>
+  <target>nogat</target>
+</trans-unit>
+<trans-unit id="sae4f7c13b7ec18ff">
+  <source>Stack</source>
+  <target>Stak</target>
+</trans-unit>
+<trans-unit id="sc5a051b7aba488de">
+  <source>Remove stack items with ×</source>
+  <target>Klikim × bilong rausim ol samting long stak</target>
+</trans-unit>
+<trans-unit id="sfc513553a0d4ed1c">
+  <source>Remove stack item</source>
+  <target>Rausim stak samting</target>
+</trans-unit>
+<trans-unit id="s970d041a28d1067d">
+  <source>Push</source>
+  <target>Putim long stak</target>
+</trans-unit>
+<trans-unit id="s8da37819f40688b0">
+  <source>Pop</source>
+  <target>Rausim long stak</target>
+</trans-unit>
+<trans-unit id="s66da3efd9a45b25a">
+  <source>Empty Check</source>
+  <target>Sekim sapos i gat emti stak</target>
+</trans-unit>
+<trans-unit id="sd60a7dde73859828">
+  <source>Keep</source>
+  <target>Kipim</target>
+</trans-unit>
+<trans-unit id="s66bd1cc6d2f6b68d">
+  <source>Node</source>
+  <target>Nod</target>
+</trans-unit>
+<trans-unit id="s6503256c2de2745c">
+  <source>Edge</source>
+  <target>Arere</target>
+</trans-unit>
+<trans-unit id="sd9bdfc0f95188eea">
+  <source>Delete node</source>
+  <target>Rausim nod</target>
+</trans-unit>
+<trans-unit id="s666ab5f59c125645">
+  <source>Delete transition</source>
+  <target>Rausim senis</target>
+</trans-unit>
+<trans-unit id="s5590dbf7e425789d">
+  <source>Label</source>
+  <target>Lebol</target>
+</trans-unit>
+<trans-unit id="sfb68cae41d749423">
+  <source>Initial</source>
+  <target>Namba wan</target>
+</trans-unit>
+<trans-unit id="s8f1034e1a9d93097">
+  <source>Final</source>
+  <target>Akseptim</target>
+</trans-unit>
+<trans-unit id="sd083d3aa96af5af1">
+  <source>Symbol</source>
+  <target>Simbol</target>
+</trans-unit>
+<trans-unit id="sb158679e0851297f">
+  <source>Remove symbol</source>
+  <target>Rausim simbol</target>
+</trans-unit>
+<trans-unit id="s09243007b5b91006">
+  <source>If</source>
+  <target>Sapos</target>
+</trans-unit>
+<trans-unit id="s3de7bee91528e5cc">
+  <source>Stack Actions</source>
+  <target>Ol wok bilong stak</target>
+</trans-unit>
+<trans-unit id="sba6693303903d6b8">
+  <source>Add symbol</source>
+  <target>Putim simbol</target>
+</trans-unit>
+<trans-unit id="sc1611c0558728a2a">
+  <source>Position</source>
+  <target>Posisen</target>
+</trans-unit>
+<trans-unit id="sa0a141a796a5b36a">
+  <source>Bend</source>
+  <target>Krungut</target>
+</trans-unit>
+<trans-unit id="s21a771798c563b26">
+  <source>Sink completion is only available for DFAs.</source>
+  <target>DFA tasol inap pinis wantaim wanpela stet we i no gat rot i go ausait.</target>
+</trans-unit>
+<trans-unit id="s6bcb0cb70a6c9552">
+  <source>Sink state completion is turned off.</source>
+  <target>Rot bilong pinisim DFA wantaim sink stet i pas.</target>
+</trans-unit>
+<trans-unit id="s24db1bf1e8c00803">
+  <source>Switch to Edit mode to complete the DFA.</source>
+  <target>Go long rot bilong stretim bilong pinisim DFA.</target>
+</trans-unit>
+<trans-unit id="sa509e89708954725">
+  <source>Add a state before completing the DFA.</source>
+  <target>Putim wanpela stet pastaim long yu pinisim DFA.</target>
+</trans-unit>
+<trans-unit id="sf01fbe6cf8d14047">
+  <source>Define an alphabet before completing the DFA.</source>
+  <target>Tok klia long wanpela alfabet pastaim long yu pinisim DFA.</target>
+</trans-unit>
+<trans-unit id="sfe31787cc1b7e04e">
+  <source>The DFA already has a transition for every symbol at each state.</source>
+  <target>DFA i gat pinis wanpela senis bilong olgeta simbol long olgeta stet.</target>
+</trans-unit>
+<trans-unit id="sfac37d2aebc30dcd">
+  <source>Switch to Edit mode to change the automaton type.</source>
+  <target>Go long rot bilong stretim bilong senisim kain otomaton.</target>
+</trans-unit>
+<trans-unit id="s11d9bfbb22894ce3">
+  <source>Switching away from PDA removes its stack operations. Continue?</source>
+  <target>Sapos yu senisim kain otomaton, ol wok bilong stak long PDA bai lus. Yu laik go yet?</target>
+</trans-unit>
+<trans-unit id="se432909b8e9691c8">
+  <source>Complete DFA with sink</source>
+  <target>Pinisim DFA wantaim wanpela sink stet</target>
+</trans-unit>
+<trans-unit id="s5ec50a9b8d60c15f">
+  <source>Switch to DFA</source>
+  <target>Senis i go long DFA</target>
+</trans-unit>
+<trans-unit id="s0818a49b5c45420d">
+  <source>Switch to NFA</source>
+  <target>Senis i go long NFA</target>
+</trans-unit>
+<trans-unit id="sc855ea9bc9a1cc6d">
+  <source>Switch to PDA</source>
+  <target>Senis i go long PDA</target>
+</trans-unit>
+<trans-unit id="s05c44a5db696fcaf">
+  <source>Editing</source>
+  <target>Stretim</target>
+</trans-unit>
+<trans-unit id="s7f59f507e02a2f38">
+  <source>View</source>
+  <target>Lukim</target>
+</trans-unit>
+<trans-unit id="s35f1dd3fd023476a">
+  <source>Automation</source>
+  <target>Otomesen</target>
+</trans-unit>
+<trans-unit id="s8a0ee3d87938f19a">
+  <source>Nodes</source>
+  <target>Ol nod</target>
+</trans-unit>
+<trans-unit id="sf9aee319a006c9b4">
+  <source>Add</source>
+  <target>Putim</target>
+</trans-unit>
+<trans-unit id="sdc673e73b5c13aea">
+  <source>Delete</source>
+  <target>Rausim</target>
+</trans-unit>
+<trans-unit id="s2f64461723d3df5d">
+  <source>Change</source>
+  <target>Senis</target>
+</trans-unit>
+<trans-unit id="se8dca0132c66ae03">
+  <source>Permissions</source>
+  <target>Ol tok orait</target>
+</trans-unit>
+<trans-unit id="s860b83fc8a41ca5c">
+  <source>Automaton Types</source>
+  <target>Ol kain otomata</target>
+</trans-unit>
+<trans-unit id="s699faf39e76b0a5c">
+  <source>Enable sink state</source>
+  <target>Mekim sink stet i wok</target>
+</trans-unit>
+<trans-unit id="s261af1b4598fef3f">
+  <source>Allowed modes</source>
+  <target>Ol rot yu inap yusim</target>
+</trans-unit>
+<trans-unit id="s64ef2a6c2dd1d3d1">
+  <source>Edit</source>
+  <target>Stretim</target>
+</trans-unit>
+<trans-unit id="scfcffcf35292bc6f">
+  <source>Simulate</source>
+  <target>Ranim simulesen</target>
+</trans-unit>
+<trans-unit id="sb508f35111b54817">
+  <source>Show Help</source>
+  <target>Soim helpim</target>
+</trans-unit>
+<trans-unit id="sf62fea3229bf87c8">
+  <source>Show Formal Definition</source>
+  <target>Soim fomal mining</target>
+</trans-unit>
+<trans-unit id="s3050764b15c8baf0">
+  <source>Show Transitions Table</source>
+  <target>Soim Tebol bilong ol senis</target>
+</trans-unit>
+<trans-unit id="s3e141c08e0ace321">
+  <source>Test Language</source>
+  <target>Tokples bilong testim</target>
+</trans-unit>
+<trans-unit id="scbb4cdb4d52edc80">
+  <source>Test Words</source>
+  <target>Ol Tok bilong Test</target>
+</trans-unit>
+<trans-unit id="s8e3f9c3e183abbda">
+  <source>Predefined Alphabet</source>
+  <target>Alfabet we ol i makim pinis</target>
+</trans-unit>
+<trans-unit id="h56d667fd1fb9d47d">
+  <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</source>
+  <target>Stretim ol dispela <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>error<x id="1" equiv-text="&lt;/sl-badge&gt;"/> long ranim simulesen:</target>
+</trans-unit>
+<trans-unit id="h6c2fe3d409d7ba36">
+  <source>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</source>
+  <target>Nogat gutpela rot i stap. Otomaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>i sakim<x id="1" equiv-text="&lt;/sl-badge&gt;"/> dispela wod <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</target>
+</trans-unit>
+<trans-unit id="h25e62c96f8182fcc">
+  <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+  <target><x id="0" equiv-text="&lt;span&gt;"/>Otomaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>i kisim<x id="2" equiv-text="&lt;/sl-badge&gt;"/> dispela wod <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></target>
+</trans-unit>
+<trans-unit id="h28031e78bb7297a9">
+  <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+  <target><x id="0" equiv-text="&lt;span&gt;"/>Otomaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>i sakim<x id="2" equiv-text="&lt;/sl-badge&gt;"/> dispela wod <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></target>
+</trans-unit>
+<trans-unit id="s4f6476c3d1856c19">
+  <source>No further moves possible. Try a different path.</source>
+  <target>Nogat moa muv i posibol. Traim narapela rot.</target>
+</trans-unit>
+<trans-unit id="sed72ab193dd16a0a">
+  <source>Simulation paused.</source>
+  <target>Simulesen i stop.</target>
+</trans-unit>
+<trans-unit id="saad05eab0e59411c">
+  <source>Input Word e.g. aaabbb, step;step;stop</source>
+  <target>Putim wod, olsem aaabbb o step;step;stop</target>
+</trans-unit>
+<trans-unit id="s956c5a9fb7ee0b23">
+  <source>Manual</source>
+  <target>Wok long han</target>
+</trans-unit>
+<trans-unit id="s61f0ff0bab2b8310">
+  <source>Animate</source>
+  <target>Soim i muv</target>
+</trans-unit>
+<trans-unit id="s36494e700fe1e5c6">
+  <source>Step by Step</source>
+  <target>Wanpela step long wanpela taim</target>
+</trans-unit>
+<trans-unit id="s42cbd8dca939a9c7">
+  <source>Check</source>
+  <target>Sekim</target>
+</trans-unit>
+<trans-unit id="sc16e00a7a8b2fde2">
+  <source>Back</source>
+  <target>Bipo</target>
+</trans-unit>
+<trans-unit id="s0fbf6dc6a1966408">
+  <source>Next</source>
+  <target>Neks</target>
+</trans-unit>
+<trans-unit id="s255857544a9d5ec0">
+  <source>Reset</source>
+  <target>Setim gen</target>
+</trans-unit>
+<trans-unit id="s061cc20e3432dead">
+  <source>Pause</source>
+  <target>Wet liklik</target>
+</trans-unit>
+<trans-unit id="scd105819b5a10243">
+  <source>Play</source>
+  <target>Stat</target>
+</trans-unit>
+<trans-unit id="sd9ad53251f2330a5">
+  <source>Stop</source>
+  <target>Stop</target>
+</trans-unit>
+<trans-unit id="se63c78875f5b2178">
+  <source>Add node</source>
+  <target>Putim nod</target>
+</trans-unit>
+<trans-unit id="s7815e752b14f6f96">
+  <source>Add sink state</source>
+  <target>Putim wanpela sink stet</target>
+</trans-unit>
+<trans-unit id="s6d8c02aee480af7a">
+  <source>Menu</source>
+  <target>Menu</target>
+</trans-unit>
+<trans-unit id="s42b6431842b835b3">
+  <source>Language:</source>
+  <target>Tokples:</target>
+</trans-unit>
+<trans-unit id="sa4088b649da557a5">
+  <source>Check Automaton</source>
+  <target>Sekim otomaton</target>
+</trans-unit>
+<trans-unit id="sea4f20ea1ece70a0">
+  <source>Definition</source>
+  <target>Mining</target>
+</trans-unit>
+<trans-unit id="sb80ac0a010cbc647">
+  <source>Automaton Type</source>
+  <target>Kain bilong otomaton</target>
+</trans-unit>
+<trans-unit id="se033711991bc46ea">
+  <source>DFA</source>
+  <target>DFA</target>
+</trans-unit>
+<trans-unit id="s36dfd719c2d7c63c">
+  <source>NFA</source>
+  <target>NFA</target>
+</trans-unit>
+<trans-unit id="s8d5ca919f3cad950">
+  <source>PDA</source>
+  <target>PDA</target>
+</trans-unit>
+<trans-unit id="s59329d2125467032">
+  <source>Automaton definition</source>
+  <target>Mining bilong otomaton</target>
+</trans-unit>
+<trans-unit id="s5e8250fb85d64c23">
+  <source>Close</source>
+  <target>Klosim</target>
+</trans-unit>
+<trans-unit id="s337a1e9022a8d19f">
+  <source>Table</source>
+  <target>Tebol</target>
+</trans-unit>
+<trans-unit id="sad743c81472a217f">
+  <source>States</source>
+  <target>Ol Stet</target>
+</trans-unit>
+<trans-unit id="s27689c7297057a5a">
+  <source>Alphabet</source>
+  <target>Alfabet</target>
+</trans-unit>
+<trans-unit id="s9952d0dbf104795a">
+  <source>Initial state</source>
+  <target>Pastaim stet</target>
+</trans-unit>
+<trans-unit id="s94ede397ea7482ef">
+  <source>Final states</source>
+  <target>Ol laspela stet</target>
+</trans-unit>
+<trans-unit id="sb3fa6348186c2022">
+  <source>Stack alphabet</source>
+  <target>Stak alfabet</target>
+</trans-unit>
+<trans-unit id="se5113f4874d8494d">
+  <source>Starting stack</source>
+  <target>Stat stak</target>
+</trans-unit>
+<trans-unit id="s5798e7f4322a6963">
+  <source>Transitions</source>
+  <target>Ol senis</target>
+</trans-unit>
+<trans-unit id="sd07c6d5726032834">
+  <source>No transitions yet</source>
+  <target>Nogat senis yet</target>
+</trans-unit>
+<trans-unit id="s1f8d4c03eed89a7b">
+  <source>Push <x id="0" equiv-text="${label}"/></source>
+  <target>Putim <x id="0" equiv-text="${label}"/> antap long stak</target>
+</trans-unit>
+<trans-unit id="sc6fa8596f1438baa">
+  <source>Pop <x id="0" equiv-text="${label}"/></source>
+  <target>Rausim <x id="0" equiv-text="${label}"/> antap long stak</target>
+</trans-unit>
+<trans-unit id="s66fd00b9507b3fee">
+  <source>Require an empty stack</source>
+  <target>Yu nidim wanpela emti stak</target>
+</trans-unit>
+<trans-unit id="s9027f3efff46b1d1">
+  <source>Leave stack unchanged</source>
+  <target>Larim stak i no senis</target>
+</trans-unit>
+<trans-unit id="sdf60145f119b14de">
+  <source>Top is <x id="0" equiv-text="${condition}"/></source>
+  <target>Antap long stak em <x id="0" equiv-text="${condition}"/></target>
+</trans-unit>
+<trans-unit id="sf74f8907aaf4051a">
+  <source>Transition table</source>
+  <target>Tebol bilong senis</target>
+</trans-unit>
+<trans-unit id="sae239213b7c70376">
+  <source>State</source>
+  <target>Stet</target>
+</trans-unit>
+<trans-unit id="sebb13b4e50b16dcc">
+  <source>Connect from top</source>
+  <target>Konektim long antap</target>
+</trans-unit>
+<trans-unit id="s52a408dd8b7508c0">
+  <source>Connect from left</source>
+  <target>Konektim long lephan sait</target>
+</trans-unit>
+<trans-unit id="s099877714a72ad3a">
+  <source>Connect from bottom</source>
+  <target>Konektim long daunbilo</target>
+</trans-unit>
+<trans-unit id="s638f1298728a57d5">
+  <source>Connect from right</source>
+  <target>Konektim long rait sait</target>
+</trans-unit>
+<trans-unit id="s02232ef4da5e61a7">
+  <source>Double click / long tap to add a node</source>
+  <target>Klik tupela taim o holim liklik bilong putim wanpela nod</target>
+</trans-unit>
+<trans-unit id="sdb05063db77404d8">
+  <source>The automaton data block is invalid or uses an unsupported format.</source>
+  <target>Data blok bilong otomaton i no stret o i yusim wanpela fomat we i no gat sapot.</target>
+</trans-unit>
+<trans-unit id="s93ef8405b9b83023">
+  <source>State diagram</source>
+  <target>Stet diagram</target>
+</trans-unit>
+<trans-unit id="s3a2084e9089a7fca">
+  <source>No states yet</source>
+  <target>Nogat stet yet</target>
+</trans-unit>
+<trans-unit id="s7df224ba56fb8e1e">
+  <source>Mode Switch</source>
+  <target>Senisim rot bilong wok</target>
+</trans-unit>
+<trans-unit id="s4b10acae683d2978">
+  <source>Fullscreen</source>
+  <target>Fulskrin</target>
+</trans-unit>
+<trans-unit id="sd2223afb7d6b100d">
+  <source>Type</source>
+  <target>Taip</target>
+</trans-unit>
+<trans-unit id="s352719d86112de9a">
+  <source>Help</source>
+  <target>Helpim</target>
+</trans-unit>
+<trans-unit id="sc725a41694d85bb0">
+  <source>Test Cases</source>
+  <target>Ol Test Kes</target>
+</trans-unit>
+<trans-unit id="s521208df9ea3e694">
+  <source>Click or drag + to add a node</source>
+  <target>Klikim o pulim + bilong putim wanpela nod</target>
+</trans-unit>
+<trans-unit id="s9f4a96e81b296478">
+  <source>Add Transition by drag and drop</source>
+  <target>Pulim na lusim bilong putim senis</target>
+</trans-unit>
+<trans-unit id="s7b72a2e6d7ff3291">
+  <source>Move the elements by drag and drop</source>
+  <target>Pulim na lusim bilong muvim ol samting</target>
+</trans-unit>
+<trans-unit id="sc0bffa27613488fe">
+  <source>Select a node or transition to edit it</source>
+  <target>Makim wanpela nod o senis bilong stretim</target>
+</trans-unit>
+<trans-unit id="s71813a5a8d63ac81">
+  <source>Input word</source>
+  <target>Putim wod</target>
+</trans-unit>
+<trans-unit id="sa82cf626cfa888ac">
+  <source>Simulation Controls</source>
+  <target>Ol Simulesen Kontrol</target>
+</trans-unit>
+<trans-unit id="s9274cd474969c49c">
+  <source>Switch mode (Ctrl+M)</source>
+  <target>Senisim mode (Ctrl+M)</target>
+</trans-unit>
+<trans-unit id="s8a7f6fa052132a14">
+  <source>Warnings</source>
+  <target>Tok lukaut</target>
+</trans-unit>
+<trans-unit id="h2e7f32ac617924d0">
+  <source>Missing transition for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
+  <target>Nogat senis bilong simbol <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></target>
+</trans-unit>
+<trans-unit id="h5130af20b6d54f05">
+  <source>Multiple transitions for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
+  <target>Planti senis bilong simbol <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></target>
+</trans-unit>
+<trans-unit id="s2ea31ea953b32ee5">
+  <source>Transition with empty symbol</source>
+  <target>Senis wantaim emti simbol</target>
+</trans-unit>
+<trans-unit id="s335050fdf97d8f6e">
+  <source>No initial state defined</source>
+  <target>Nogat namba wan stet i stap</target>
+</trans-unit>
+<trans-unit id="s74a96f52fd23c3e8">
+  <source>Multiple initial states defined</source>
+  <target>Planti namba wan stet i stap</target>
+</trans-unit>
+<trans-unit id="s5787e20cab57b383">
+  <source>Unknown error</source>
+  <target>Asua i no klia</target>
+</trans-unit>
+</body>
+</file>
+</xliff>

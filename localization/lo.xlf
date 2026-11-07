@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<file target-language="lo" source-language="en" original="lit-localize-inputs" datatype="plaintext">
+<body>
+<trans-unit id="s1b00cf75d5f4f616">
+  <source>Choose a move:</source>
+  <target>ເລືອກການເຄື່ອນໄຫວ:</target>
+</trans-unit>
+<trans-unit id="s6c80030e2762459d">
+  <source>push</source>
+  <target>ເພີ່ມໃສ່ stack</target>
+</trans-unit>
+<trans-unit id="s779b5819564f2f50">
+  <source>pop</source>
+  <target>ເອົາອອກຈາກ stack</target>
+</trans-unit>
+<trans-unit id="s904fefb3d01cb2ae">
+  <source>empty</source>
+  <target>ຫວ່າງເປົ່າ</target>
+</trans-unit>
+<trans-unit id="s3c0d17bad169557b">
+  <source>none</source>
+  <target>ບໍ່ມີ</target>
+</trans-unit>
+<trans-unit id="sae4f7c13b7ec18ff">
+  <source>Stack</source>
+  <target>stack</target>
+</trans-unit>
+<trans-unit id="sc5a051b7aba488de">
+  <source>Remove stack items with ×</source>
+  <target>ເອົາລາຍການ stack ດ້ວຍ ×</target>
+</trans-unit>
+<trans-unit id="sfc513553a0d4ed1c">
+  <source>Remove stack item</source>
+  <target>ເອົາລາຍການ stack ອອກ</target>
+</trans-unit>
+<trans-unit id="s970d041a28d1067d">
+  <source>Push</source>
+  <target>ເພີ່ມໃສ່ stack</target>
+</trans-unit>
+<trans-unit id="s8da37819f40688b0">
+  <source>Pop</source>
+  <target>ເອົາອອກຈາກ stack</target>
+</trans-unit>
+<trans-unit id="s66da3efd9a45b25a">
+  <source>Empty Check</source>
+  <target>ກວດເບິ່ງ stack ຫວ່າງເປົ່າ</target>
+</trans-unit>
+<trans-unit id="sd60a7dde73859828">
+  <source>Keep</source>
+  <target>ຮັກສາ</target>
+</trans-unit>
+<trans-unit id="s66bd1cc6d2f6b68d">
+  <source>Node</source>
+  <target>ໂນດ</target>
+</trans-unit>
+<trans-unit id="s6503256c2de2745c">
+  <source>Edge</source>
+  <target>ຂອບ</target>
+</trans-unit>
+<trans-unit id="sd9bdfc0f95188eea">
+  <source>Delete node</source>
+  <target>ລຶບ node</target>
+</trans-unit>
+<trans-unit id="s666ab5f59c125645">
+  <source>Delete transition</source>
+  <target>ລຶບການຫັນປ່ຽນ</target>
+</trans-unit>
+<trans-unit id="s5590dbf7e425789d">
+  <source>Label</source>
+  <target>ປ້າຍກຳກັບ</target>
+</trans-unit>
+<trans-unit id="sfb68cae41d749423">
+  <source>Initial</source>
+  <target>ເບື້ອງຕົ້ນ</target>
+</trans-unit>
+<trans-unit id="s8f1034e1a9d93097">
+  <source>Final</source>
+  <target>ຍອມຮັບ</target>
+</trans-unit>
+<trans-unit id="sd083d3aa96af5af1">
+  <source>Symbol</source>
+  <target>ສັນຍາລັກ</target>
+</trans-unit>
+<trans-unit id="sb158679e0851297f">
+  <source>Remove symbol</source>
+  <target>ເອົາສັນຍາລັກອອກ</target>
+</trans-unit>
+<trans-unit id="s09243007b5b91006">
+  <source>If</source>
+  <target>ຖ້າ</target>
+</trans-unit>
+<trans-unit id="s3de7bee91528e5cc">
+  <source>Stack Actions</source>
+  <target>ຄຳສັ່ງຊ້ອນກັນ</target>
+</trans-unit>
+<trans-unit id="sba6693303903d6b8">
+  <source>Add symbol</source>
+  <target>ເພີ່ມສັນຍາລັກ</target>
+</trans-unit>
+<trans-unit id="sc1611c0558728a2a">
+  <source>Position</source>
+  <target>ຕໍາແໜ່ງ</target>
+</trans-unit>
+<trans-unit id="sa0a141a796a5b36a">
+  <source>Bend</source>
+  <target>ໂຄ້ງ</target>
+</trans-unit>
+<trans-unit id="s21a771798c563b26">
+  <source>Sink completion is only available for DFAs.</source>
+  <target>ພຽງແຕ່ automata finite deterministic (DFA) ສາມາດສໍາເລັດດ້ວຍສະຖານະດູດຊຶມ.</target>
+</trans-unit>
+<trans-unit id="s6bcb0cb70a6c9552">
+  <source>Sink state completion is turned off.</source>
+  <target>ການສໍາເລັດດ້ວຍສະຖານະດູດຊຶມຖືກປິດໃຊ້ງານ.</target>
+</trans-unit>
+<trans-unit id="s24db1bf1e8c00803">
+  <source>Switch to Edit mode to complete the DFA.</source>
+  <target>ສະຫຼັບໄປໂໝດແກ້ໄຂເພື່ອເຮັດສຳເລັດ DFA.</target>
+</trans-unit>
+<trans-unit id="sa509e89708954725">
+  <source>Add a state before completing the DFA.</source>
+  <target>ເພີ່ມສະຖານະກ່ອນທີ່ຈະສໍາເລັດ DFA.</target>
+</trans-unit>
+<trans-unit id="sf01fbe6cf8d14047">
+  <source>Define an alphabet before completing the DFA.</source>
+  <target>ກໍານົດຕົວອັກສອນກ່ອນທີ່ຈະສໍາເລັດ DFA.</target>
+</trans-unit>
+<trans-unit id="sfe31787cc1b7e04e">
+  <source>The DFA already has a transition for every symbol at each state.</source>
+  <target>DFA ມີການຫັນປ່ຽນສໍາລັບທຸກໆສັນຍາລັກໃນແຕ່ລະລັດ.</target>
+</trans-unit>
+<trans-unit id="sfac37d2aebc30dcd">
+  <source>Switch to Edit mode to change the automaton type.</source>
+  <target>ສະຫຼັບໄປໂໝດແກ້ໄຂເພື່ອປ່ຽນປະເພດອັດຕະໂນມັດ.</target>
+</trans-unit>
+<trans-unit id="s11d9bfbb22894ce3">
+  <source>Switching away from PDA removes its stack operations. Continue?</source>
+  <target>ການປ່ຽນເປັນປະເພດ automaton ອື່ນເອົາການດໍາເນີນການ stack PDA. ສືບຕໍ່?</target>
+</trans-unit>
+<trans-unit id="se432909b8e9691c8">
+  <source>Complete DFA with sink</source>
+  <target>ເຮັດສໍາເລັດ DFA ດ້ວຍສະຖານະດູດຊຶມ</target>
+</trans-unit>
+<trans-unit id="s5ec50a9b8d60c15f">
+  <source>Switch to DFA</source>
+  <target>ປ່ຽນເປັນ DFA</target>
+</trans-unit>
+<trans-unit id="s0818a49b5c45420d">
+  <source>Switch to NFA</source>
+  <target>ປ່ຽນເປັນ NFA</target>
+</trans-unit>
+<trans-unit id="sc855ea9bc9a1cc6d">
+  <source>Switch to PDA</source>
+  <target>ປ່ຽນເປັນ PDA</target>
+</trans-unit>
+<trans-unit id="s05c44a5db696fcaf">
+  <source>Editing</source>
+  <target>ການແກ້ໄຂ</target>
+</trans-unit>
+<trans-unit id="s7f59f507e02a2f38">
+  <source>View</source>
+  <target>ເບິ່ງ</target>
+</trans-unit>
+<trans-unit id="s35f1dd3fd023476a">
+  <source>Automation</source>
+  <target>ອັດຕະໂນມັດ</target>
+</trans-unit>
+<trans-unit id="s8a0ee3d87938f19a">
+  <source>Nodes</source>
+  <target>ຂໍ້</target>
+</trans-unit>
+<trans-unit id="sf9aee319a006c9b4">
+  <source>Add</source>
+  <target>ເພີ່ມ</target>
+</trans-unit>
+<trans-unit id="sdc673e73b5c13aea">
+  <source>Delete</source>
+  <target>ລຶບ</target>
+</trans-unit>
+<trans-unit id="s2f64461723d3df5d">
+  <source>Change</source>
+  <target>ປ່ຽນແປງ</target>
+</trans-unit>
+<trans-unit id="se8dca0132c66ae03">
+  <source>Permissions</source>
+  <target>ການອະນຸຍາດ</target>
+</trans-unit>
+<trans-unit id="s860b83fc8a41ca5c">
+  <source>Automaton Types</source>
+  <target>ປະເພດຂອງ automata</target>
+</trans-unit>
+<trans-unit id="s699faf39e76b0a5c">
+  <source>Enable sink state</source>
+  <target>ເປີດໃຊ້ສະຖານະດູດຊຶມ</target>
+</trans-unit>
+<trans-unit id="s261af1b4598fef3f">
+  <source>Allowed modes</source>
+  <target>ໂໝດທີ່ອະນຸຍາດ</target>
+</trans-unit>
+<trans-unit id="s64ef2a6c2dd1d3d1">
+  <source>Edit</source>
+  <target>ແກ້ໄຂ</target>
+</trans-unit>
+<trans-unit id="scfcffcf35292bc6f">
+  <source>Simulate</source>
+  <target>ດໍາເນີນການຈໍາລອງ</target>
+</trans-unit>
+<trans-unit id="sb508f35111b54817">
+  <source>Show Help</source>
+  <target>ສະແດງການຊ່ວຍເຫຼືອ</target>
+</trans-unit>
+<trans-unit id="sf62fea3229bf87c8">
+  <source>Show Formal Definition</source>
+  <target>ສະແດງຄໍານິຍາມຢ່າງເປັນທາງການ</target>
+</trans-unit>
+<trans-unit id="s3050764b15c8baf0">
+  <source>Show Transitions Table</source>
+  <target>ສະແດງຕາຕະລາງການຫັນປ່ຽນ</target>
+</trans-unit>
+<trans-unit id="s3e141c08e0ace321">
+  <source>Test Language</source>
+  <target>ພາສາທົດສອບ</target>
+</trans-unit>
+<trans-unit id="scbb4cdb4d52edc80">
+  <source>Test Words</source>
+  <target>ທົດສອບຄໍາສັບ</target>
+</trans-unit>
+<trans-unit id="s8e3f9c3e183abbda">
+  <source>Predefined Alphabet</source>
+  <target>ຕົວອັກສອນທີ່ກຳນົດໄວ້ລ່ວງໜ້າ</target>
+</trans-unit>
+<trans-unit id="h56d667fd1fb9d47d">
+  <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</source>
+  <target>ແກ້ໄຂ <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>ຄວາມຜິດພາດ<x id="1" equiv-text="&lt;/sl-badge&gt;"/> ຕໍ່ໄປນີ້ເພື່ອດໍາເນີນການຈໍາລອງ:</target>
+</trans-unit>
+<trans-unit id="h6c2fe3d409d7ba36">
+  <source>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</source>
+  <target>ບໍ່ພົບເສັ້ນທາງທີ່ຖືກຕ້ອງ. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>ປະຕິເສດ<x id="1" equiv-text="&lt;/sl-badge&gt;"/> ຄຳສັບ <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</target>
+</trans-unit>
+<trans-unit id="h25e62c96f8182fcc">
+  <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+  <target><x id="0" equiv-text="&lt;span&gt;"/>automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>ຍອມຮັບ<x id="2" equiv-text="&lt;/sl-badge&gt;"/> ຄຳສັບ <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></target>
+</trans-unit>
+<trans-unit id="h28031e78bb7297a9">
+  <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+  <target><x id="0" equiv-text="&lt;span&gt;"/>automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>ປະຕິເສດ<x id="2" equiv-text="&lt;/sl-badge&gt;"/> ຄຳສັບ <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></target>
+</trans-unit>
+<trans-unit id="s4f6476c3d1856c19">
+  <source>No further moves possible. Try a different path.</source>
+  <target>ບໍ່ມີການເຄື່ອນໄຫວເພີ່ມເຕີມທີ່ເປັນໄປໄດ້. ລອງເສັ້ນທາງອື່ນ.</target>
+</trans-unit>
+<trans-unit id="sed72ab193dd16a0a">
+  <source>Simulation paused.</source>
+  <target>ການຈຳລອງຢຸດຊົ່ວຄາວ.</target>
+</trans-unit>
+<trans-unit id="saad05eab0e59411c">
+  <source>Input Word e.g. aaabbb, step;step;stop</source>
+  <target>ໃສ່ຄຳສັບ, ຕົວຢ່າງ aaabbb ຫຼື step;step;stop</target>
+</trans-unit>
+<trans-unit id="s956c5a9fb7ee0b23">
+  <source>Manual</source>
+  <target>ຄູ່ມື</target>
+</trans-unit>
+<trans-unit id="s61f0ff0bab2b8310">
+  <source>Animate</source>
+  <target>ສັດ</target>
+</trans-unit>
+<trans-unit id="s36494e700fe1e5c6">
+  <source>Step by Step</source>
+  <target>ຂັ້ນ​ຕອນ​ທີ​</target>
+</trans-unit>
+<trans-unit id="s42cbd8dca939a9c7">
+  <source>Check</source>
+  <target>ຢືນຢັນ</target>
+</trans-unit>
+<trans-unit id="sc16e00a7a8b2fde2">
+  <source>Back</source>
+  <target>ທີ່ຜ່ານມາ</target>
+</trans-unit>
+<trans-unit id="s0fbf6dc6a1966408">
+  <source>Next</source>
+  <target>ຕໍ່ໄປ</target>
+</trans-unit>
+<trans-unit id="s255857544a9d5ec0">
+  <source>Reset</source>
+  <target>ຣີເຊັດ</target>
+</trans-unit>
+<trans-unit id="s061cc20e3432dead">
+  <source>Pause</source>
+  <target>ຢຸດຊົ່ວຄາວ</target>
+</trans-unit>
+<trans-unit id="scd105819b5a10243">
+  <source>Play</source>
+  <target>ແລ່ນ</target>
+</trans-unit>
+<trans-unit id="sd9ad53251f2330a5">
+  <source>Stop</source>
+  <target>ຢຸດ</target>
+</trans-unit>
+<trans-unit id="se63c78875f5b2178">
+  <source>Add node</source>
+  <target>ເພີ່ມ node</target>
+</trans-unit>
+<trans-unit id="s7815e752b14f6f96">
+  <source>Add sink state</source>
+  <target>ເພີ່ມສະຖານະດູດຊຶມ</target>
+</trans-unit>
+<trans-unit id="s6d8c02aee480af7a">
+  <source>Menu</source>
+  <target>ເມນູ</target>
+</trans-unit>
+<trans-unit id="s42b6431842b835b3">
+  <source>Language:</source>
+  <target>ພາສາ:</target>
+</trans-unit>
+<trans-unit id="sa4088b649da557a5">
+  <source>Check Automaton</source>
+  <target>ກວດເບິ່ງອັດຕະໂນມັດ</target>
+</trans-unit>
+<trans-unit id="sea4f20ea1ece70a0">
+  <source>Definition</source>
+  <target>ຄໍານິຍາມ</target>
+</trans-unit>
+<trans-unit id="sb80ac0a010cbc647">
+  <source>Automaton Type</source>
+  <target>ປະເພດຂອງ automaton finite-state</target>
+</trans-unit>
+<trans-unit id="se033711991bc46ea">
+  <source>DFA</source>
+  <target>DFA</target>
+</trans-unit>
+<trans-unit id="s36dfd719c2d7c63c">
+  <source>NFA</source>
+  <target>NFA</target>
+</trans-unit>
+<trans-unit id="s8d5ca919f3cad950">
+  <source>PDA</source>
+  <target>PDA</target>
+</trans-unit>
+<trans-unit id="s59329d2125467032">
+  <source>Automaton definition</source>
+  <target>ຄໍານິຍາມອັດຕະໂນມັດ</target>
+</trans-unit>
+<trans-unit id="s5e8250fb85d64c23">
+  <source>Close</source>
+  <target>ປິດ</target>
+</trans-unit>
+<trans-unit id="s337a1e9022a8d19f">
+  <source>Table</source>
+  <target>ຕາຕະລາງ</target>
+</trans-unit>
+<trans-unit id="sad743c81472a217f">
+  <source>States</source>
+  <target>Automaton ລັດ</target>
+</trans-unit>
+<trans-unit id="s27689c7297057a5a">
+  <source>Alphabet</source>
+  <target>ຕົວອັກສອນ</target>
+</trans-unit>
+<trans-unit id="s9952d0dbf104795a">
+  <source>Initial state</source>
+  <target>ສະຖານະເບື້ອງຕົ້ນຂອງ automaton</target>
+</trans-unit>
+<trans-unit id="s94ede397ea7482ef">
+  <source>Final states</source>
+  <target>ລັດສຸດທ້າຍຂອງ automaton</target>
+</trans-unit>
+<trans-unit id="sb3fa6348186c2022">
+  <source>Stack alphabet</source>
+  <target>ຕົວອັກສອນຂອງ stack ໄດ້</target>
+</trans-unit>
+<trans-unit id="se5113f4874d8494d">
+  <source>Starting stack</source>
+  <target>ເນື້ອໃນເບື້ອງຕົ້ນຂອງ stack ໄດ້</target>
+</trans-unit>
+<trans-unit id="s5798e7f4322a6963">
+  <source>Transitions</source>
+  <target>ການຫັນປ່ຽນ</target>
+</trans-unit>
+<trans-unit id="sd07c6d5726032834">
+  <source>No transitions yet</source>
+  <target>ບໍ່ມີການຫັນປ່ຽນເທື່ອ</target>
+</trans-unit>
+<trans-unit id="s1f8d4c03eed89a7b">
+  <source>Push <x id="0" equiv-text="${label}"/></source>
+  <target>ເອົາ <x id="0" equiv-text="${label}"/> ຢູ່ເທິງສຸດຂອງ stack</target>
+</trans-unit>
+<trans-unit id="sc6fa8596f1438baa">
+  <source>Pop <x id="0" equiv-text="${label}"/></source>
+  <target>ເອົາ <x id="0" equiv-text="${label}"/> ອອກຈາກດ້ານເທິງຂອງ stack</target>
+</trans-unit>
+<trans-unit id="s66fd00b9507b3fee">
+  <source>Require an empty stack</source>
+  <target>ຕ້ອງການ stack ຫວ່າງເປົ່າ</target>
+</trans-unit>
+<trans-unit id="s9027f3efff46b1d1">
+  <source>Leave stack unchanged</source>
+  <target>ປ່ອຍໃຫ້ stack ບໍ່ປ່ຽນແປງ</target>
+</trans-unit>
+<trans-unit id="sdf60145f119b14de">
+  <source>Top is <x id="0" equiv-text="${condition}"/></source>
+  <target>ເທິງສຸດຂອງ stack ແມ່ນ <x id="0" equiv-text="${condition}"/></target>
+</trans-unit>
+<trans-unit id="sf74f8907aaf4051a">
+  <source>Transition table</source>
+  <target>ຕາຕະລາງການຫັນປ່ຽນ</target>
+</trans-unit>
+<trans-unit id="sae239213b7c70376">
+  <source>State</source>
+  <target>ສະຖານະ</target>
+</trans-unit>
+<trans-unit id="sebb13b4e50b16dcc">
+  <source>Connect from top</source>
+  <target>ເຊື່ອມຕໍ່ຈາກດ້ານເທິງ</target>
+</trans-unit>
+<trans-unit id="s52a408dd8b7508c0">
+  <source>Connect from left</source>
+  <target>ເຊື່ອມຕໍ່ຈາກຊ້າຍ</target>
+</trans-unit>
+<trans-unit id="s099877714a72ad3a">
+  <source>Connect from bottom</source>
+  <target>ເຊື່ອມຕໍ່ຈາກລຸ່ມສຸດ</target>
+</trans-unit>
+<trans-unit id="s638f1298728a57d5">
+  <source>Connect from right</source>
+  <target>ເຊື່ອມຕໍ່ຈາກຂວາ</target>
+</trans-unit>
+<trans-unit id="s02232ef4da5e61a7">
+  <source>Double click / long tap to add a node</source>
+  <target>ຄລິກສອງຄັ້ງ / ແຕະຍາວເພື່ອເພີ່ມ node</target>
+</trans-unit>
+<trans-unit id="sdb05063db77404d8">
+  <source>The automaton data block is invalid or uses an unsupported format.</source>
+  <target>ບລັອກຂໍ້ມູນ automaton ບໍ່ຖືກຕ້ອງ ຫຼືໃຊ້ຮູບແບບທີ່ບໍ່ຮອງຮັບ.</target>
+</trans-unit>
+<trans-unit id="s93ef8405b9b83023">
+  <source>State diagram</source>
+  <target>ແຜນວາດຂອງລັດ automaton</target>
+</trans-unit>
+<trans-unit id="s3a2084e9089a7fca">
+  <source>No states yet</source>
+  <target>automaton ຍັງບໍ່ທັນມີລັດ</target>
+</trans-unit>
+<trans-unit id="s7df224ba56fb8e1e">
+  <source>Mode Switch</source>
+  <target>ສະຫຼັບໂໝດ</target>
+</trans-unit>
+<trans-unit id="s4b10acae683d2978">
+  <source>Fullscreen</source>
+  <target>ເຕັມຈໍ</target>
+</trans-unit>
+<trans-unit id="sd2223afb7d6b100d">
+  <source>Type</source>
+  <target>ປະເພດ</target>
+</trans-unit>
+<trans-unit id="s352719d86112de9a">
+  <source>Help</source>
+  <target>ຊ່ວຍເຫຼືອ</target>
+</trans-unit>
+<trans-unit id="sc725a41694d85bb0">
+  <source>Test Cases</source>
+  <target>ກໍລະນີທົດສອບ</target>
+</trans-unit>
+<trans-unit id="s521208df9ea3e694">
+  <source>Click or drag + to add a node</source>
+  <target>ຄລິກ ຫຼືລາກ + ເພື່ອເພີ່ມ node</target>
+</trans-unit>
+<trans-unit id="s9f4a96e81b296478">
+  <source>Add Transition by drag and drop</source>
+  <target>ເພີ່ມການຫັນປ່ຽນໂດຍການລາກແລະວາງ</target>
+</trans-unit>
+<trans-unit id="s7b72a2e6d7ff3291">
+  <source>Move the elements by drag and drop</source>
+  <target>ຍ້າຍອົງປະກອບໂດຍການລາກແລະວາງ</target>
+</trans-unit>
+<trans-unit id="sc0bffa27613488fe">
+  <source>Select a node or transition to edit it</source>
+  <target>ເລືອກ node ຫຼື transition ເພື່ອແກ້ໄຂມັນ</target>
+</trans-unit>
+<trans-unit id="s71813a5a8d63ac81">
+  <source>Input word</source>
+  <target>ໃສ່ຄຳສັບ</target>
+</trans-unit>
+<trans-unit id="sa82cf626cfa888ac">
+  <source>Simulation Controls</source>
+  <target>ການຄວບຄຸມການຈໍາລອງ</target>
+</trans-unit>
+<trans-unit id="s9274cd474969c49c">
+  <source>Switch mode (Ctrl+M)</source>
+  <target>ສະຫຼັບລະຫວ່າງໂໝດການແກ້ໄຂ ແລະ ການຈຳລອງ (Ctrl+M)</target>
+</trans-unit>
+<trans-unit id="s8a7f6fa052132a14">
+  <source>Warnings</source>
+  <target>ຄຳເຕືອນ</target>
+</trans-unit>
+<trans-unit id="h2e7f32ac617924d0">
+  <source>Missing transition for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
+  <target>ຂາດການຫັນປ່ຽນສຳລັບສັນຍາລັກ <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></target>
+</trans-unit>
+<trans-unit id="h5130af20b6d54f05">
+  <source>Multiple transitions for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
+  <target>ການຫັນປ່ຽນຫຼາຍອັນສຳລັບສັນຍາລັກ <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></target>
+</trans-unit>
+<trans-unit id="s2ea31ea953b32ee5">
+  <source>Transition with empty symbol</source>
+  <target>ການຫັນປ່ຽນດ້ວຍສັນຍາລັກເປົ່າ</target>
+</trans-unit>
+<trans-unit id="s335050fdf97d8f6e">
+  <source>No initial state defined</source>
+  <target>ບໍ່ໄດ້ກໍານົດສະຖານະເບື້ອງຕົ້ນ</target>
+</trans-unit>
+<trans-unit id="s74a96f52fd23c3e8">
+  <source>Multiple initial states defined</source>
+  <target>ຫຼາຍລັດເບື້ອງຕົ້ນທີ່ກຳນົດໄວ້</target>
+</trans-unit>
+<trans-unit id="s5787e20cab57b383">
+  <source>Unknown error</source>
+  <target>ຄວາມຜິດພາດທີ່ບໍ່ຮູ້ຈັກ</target>
+</trans-unit>
+</body>
+</file>
+</xliff>

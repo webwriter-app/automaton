@@ -19,9 +19,9 @@
 <unit id="label"><segment><source>NFA (complex)</source><target>NFA (сложный)</target></segment></unit>
 </file>
 <file id="./snippets/pda-simple" original="./snippets/pda-simple">
-<unit id="label"><segment><source>PDA (simple)</source><target>КПК (простой)</target></segment></unit>
+<unit id="label"><segment><source>PDA (simple)</source><target>PDA (простой)</target></segment></unit>
 </file>
 <file id="./snippets/pda-complex" original="./snippets/pda-complex">
-<unit id="label"><segment><source>PDA (complex)</source><target>КПК (сложный)</target></segment></unit>
+<unit id="label"><segment><source>PDA (complex)</source><target>PDA (сложный)</target></segment></unit>
 </file>
 </xliff>
