@@ -234,6 +234,11 @@ export class Graph {
             node => this._a.addNode(node),
         );
         this._n.selectNodes([node.id]);
+        this.commitEdit();
+    }
+
+    public commitEdit() {
+        this._ac.commitGraphEdit();
         this._requestUpdate();
     }
 
@@ -426,7 +431,7 @@ export class Graph {
             this._a.getNode(from) && this._a.getNode(to)) {
             this._tm.insertTransition({ from, to }, transition => this._a.addTransition(transition));
             this._n.selectNodes([to]);
-            this._requestUpdate();
+            this.commitEdit();
         } else {
             this._n.redraw();
         }
@@ -541,13 +546,14 @@ export class Graph {
             const current = this.editableSelection;
             return current?.type === selection.type && current.data.id === selection.data.id ? current : undefined;
         };
-        return this.editingBar.render(selection, (getPatch, permission = 'change') => {
+        return this.editingBar.render(selection, (getPatch, permission = 'change', commit = true) => {
             const current = currentSelection();
             if (!current || !this._ac.settings.permissions[current.type][permission]) return;
             const patch = getPatch(current);
             if (current.type === 'node') this._a.updateNode(current.data.id, patch as Partial<Node>);
             else this._a.updateTransition(current.data.id, patch as Partial<Transition>);
-            this._requestUpdate();
+            if (commit) this.commitEdit();
+            else this._requestUpdate();
         }, () => {
             const current = currentSelection();
             if (current) this.deleteSelected(current);
@@ -559,7 +565,7 @@ export class Graph {
         this._n.unselectAll();
         if (selection.type === 'node') this._a.removeNode(selection.data.id);
         else this._a.removeTransition(selection.data.id);
-        this._requestUpdate();
+        this.commitEdit();
         if (this._tm.mode === 'addEdge') this.network.addEdgeMode();
     }
 
@@ -595,8 +601,13 @@ export class Graph {
             if (nodes.length) this.updateGhostNodePosition();
         });
         this._n.on('dragStart', () => this.hideNodeWarning());
-        this._n.on('dragEnd', () => {
-            this._n.storePositions();
+        this._n.on('dragEnd', ({ nodes }: { nodes: number[] }) => {
+            const moved = nodes.filter(id => id !== Graph.initialGhostNode.id && this._a.getNode(id));
+            if (moved.length) {
+                const positions = this._n.getPositions(moved);
+                this._a.nodes.update(moved.map(id => ({ id, ...positions[id] })));
+                this.commitEdit();
+            }
             this._lastPosition = this._n.getViewPosition();
         });
         let scaleBeforeResize: number | undefined;
@@ -627,9 +638,10 @@ export class Graph {
 
             if (!this._interactive) return;
 
-            const insideEditingBar = e.composedPath().some(target =>
-                target instanceof HTMLElement && target.classList.contains('editing-bar'));
-            if (insideEditingBar) return;
+            const insideControls = e.composedPath().some(target =>
+                target instanceof HTMLElement &&
+                (target.classList.contains('editing-bar') || target.localName === 'stack-extension'));
+            if (insideControls) return;
 
             const selected = this.editableSelection;
             if ((e.key === 'Delete' || e.key === 'Backspace') && selected) {
@@ -674,7 +686,7 @@ export class Graph {
                     e.preventDefault();
                     const { id, x = 0, y = 0 } = selected.data;
                     this._a.updateNode(id, { x: x + dx, y: y + dy });
-                    this._requestUpdate();
+                    this.commitEdit();
                 }
             }
         });

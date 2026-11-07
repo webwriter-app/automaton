@@ -312,9 +312,7 @@ export class TopMenu extends LitElementWw {
                         ` : types.map(type => html`
                             <sl-button size="small" @click=${() => {
                                 this._choices = undefined;
-                                if (this._component.mode === 'edit' && this._component.allowedTypes.includes(type)) {
-                                    this._component.type = type;
-                                }
+                                void this._component.switchType(type);
                             }}>${typeLabel(type)}</sl-button>
                         `)}
                     </div>

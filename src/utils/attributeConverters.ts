@@ -44,9 +44,21 @@ export const ATTRIBUTE_CONVERTERS = {
 		},
 	},
 
+	stackArray: {
+		fromAttribute(value: string | null): string[] {
+			try {
+				const stack: unknown = JSON.parse(value ?? "[]");
+				return Array.isArray(stack) && stack.every(symbol => typeof symbol === "string") ? stack : [];
+			} catch {
+				return [];
+			}
+		},
+		toAttribute: (value: string[] | null) => value?.length ? JSON.stringify(value) : null,
+	},
+
 	nodeArray: {
 		fromAttribute: (value: string | null): Node[] => {
-			if (value === null) return [];
+			if (!value) return [];
 
 			return value
 				.split(";")
@@ -117,7 +129,7 @@ export const ATTRIBUTE_CONVERTERS = {
 						nodeString += node.id.toString();
 
 						// Encode label
-						if (node.label && node.label !== "q" + node.id) {
+						if (node.label !== undefined && node.label !== "q" + node.id) {
 							const escapedLabel = encodeURIComponent(node.label);
 							nodeString += `[${escapedLabel}]`;
 						}
@@ -140,13 +152,14 @@ export const ATTRIBUTE_CONVERTERS = {
 
 	transitionArray: {
 		fromAttribute: (value: string | null): Transition[] => {
-			if (value === null) return [];
+			if (!value) return [];
 
 			return value
 				.split(";")
 				.map((transitionString, id) => {
 					const transition: Partial<Transition> = {
 						id: id,
+						symbols: [],
 					};
 					let remaining = transitionString.trim();
 
@@ -271,6 +284,8 @@ export const ATTRIBUTE_CONVERTERS = {
 		},
 		toAttribute: (value: Transition[] | null): string | null => {
 			if (value === null) return null;
+			// A literal tilde is the separator for the optional edge bend.
+			const encodeSymbol = (symbol: string) => encodeURIComponent(symbol).replace(/~/g, "%7E");
 
 			return value
 				.map((transition) => {
@@ -287,7 +302,7 @@ export const ATTRIBUTE_CONVERTERS = {
 							i < transition.stackOperations.length;
 							i++
 						) {
-							const symbol = encodeURIComponent(
+							const symbol = encodeSymbol(
 								transition.symbols[i]
 							);
 							const op = transition.stackOperations[i];
@@ -300,9 +315,9 @@ export const ATTRIBUTE_CONVERTERS = {
 
 							transitionString += `${symbol}{${abbreviateStackOperation(
 								op.operation
-							)}|${encodeURIComponent(
+							)}|${encodeSymbol(
 								op.symbol
-							)}|${encodeURIComponent(op.condition)}}`;
+							)}|${encodeSymbol(op.condition)}}`;
 						}
 						transitionString += "]";
 					} else if (
@@ -310,7 +325,7 @@ export const ATTRIBUTE_CONVERTERS = {
 						transition.symbols.length > 0
 					) {
 						transitionString += `[${transition.symbols
-							.map(encodeURIComponent)
+							.map(encodeSymbol)
 							.join(",")}]`;
 					}
 

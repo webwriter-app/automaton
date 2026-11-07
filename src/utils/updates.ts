@@ -135,9 +135,8 @@ export function hasTransitionChanged(newData: Transition, oldData: Transition) {
  * @returns A boolean indicating whether the symbols have changed.
  */
 function didSymbolsChange(newSymbols: string[], oldSymbols: string[]) {
-    newSymbols = [...newSymbols];
-    oldSymbols = [...oldSymbols];
-    return newSymbols.sort().join(',') !== oldSymbols.sort().join(',');
+    return newSymbols.length !== oldSymbols.length ||
+        newSymbols.some((symbol, index) => symbol !== oldSymbols[index]);
 }
 
 /**

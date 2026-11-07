@@ -21,6 +21,7 @@ export class PDA extends Automaton {
     public type: AutomatonType = 'pda';
 
     public extension = document.createElement('stack-extension') as StackExtension;
+    public startingStack: readonly string[] = [];
 
     constructor(nodes: Node[], transitions: Transition[]) {
         super(nodes, transitions);
@@ -75,9 +76,14 @@ export class PDA extends Automaton {
         return transition.symbols.join(', ');
     }
 
-    public displayStack(stack: string[]): void {
+    public setStartingStack(stack: readonly string[]): void {
+        this.startingStack = [...stack];
         this.extension.setStack(stack);
-        this.extension.requestUpdate();
+    }
+
+    public displayStack(stack: readonly string[]): void {
+        if (this.extension.contentEditable === 'true') return;
+        this.extension.setStack(stack);
     }
 }
 
@@ -88,8 +94,7 @@ class PDASimulator extends ManualAutoSimulator {
     constructor(protected _a: PDA) {
         super(_a);
         this._currentNode = this._a.getInitialNode();
-        this._initialStack = this._a.extension.getStack();
-        this._currentStack = [...this._initialStack];
+        this.init();
         this._previousTransitions = {
             accepted: this._currentNode?.final ?? false,
             path: {
@@ -101,8 +106,9 @@ class PDASimulator extends ManualAutoSimulator {
     }
 
     public init(): void {
-        this._initialStack = this._a.extension.getStack();
+        this._initialStack = [...this._a.startingStack];
         this._currentStack = [...this._initialStack];
+        this._a.displayStack(this._currentStack);
     }
 
     protected getPath(): SimulationResult {
@@ -297,8 +303,7 @@ class PDASimulator extends ManualAutoSimulator {
     public reset(): void {
         super.reset();
         this._a.redrawNodes();
-        this._currentStack = [...this._initialStack];
-        this._a.displayStack(this._initialStack);
+        this.init();
         this._previousTransitions = {
             accepted: this._currentNode?.final ?? false,
             path: {
@@ -537,7 +542,9 @@ export class StackExtension extends LitElementWw {
         return this._stack.get().map((s) => s.symbol).reverse();
     }
 
-    public setStack(stack: string[]): void {
+    public setStack(stack: readonly string[]): void {
+        const current = this.getStack();
+        if (stack.length === current.length && stack.every((symbol, index) => symbol === current[index])) return;
         Logger.log('Setting stack:', stack);
         this._stack.clear();
         this._stack.add([...stack].reverse().map((s, i) => ({ id: i, symbol: s })));
@@ -587,20 +594,29 @@ export class StackExtension extends LitElementWw {
                 circle
                 ?disabled=${!this.add}
                 @click=${() => {
+                    if (!this.isEditable() || !this.add) return;
                     this.pushItemToStack('a');
-                    this.requestUpdate();
+                    this.notifyStackEdit();
                 }}
                 @dragover=${(e: DragEvent) => {
+                    if (!canRemove || !this._draggingElement) return;
                     e.preventDefault();
-                    if (!this.delete) return;
                     this.clearDropMarkers();
                     this._stackButton.classList.add('dragover');
                     this._draggingElement.classList.add('deleteable');
                 }}
                 @dragleave=${(e: DragEvent) => {
-                    e.preventDefault();
+                    if (!this._draggingElement) return;
                     this._stackButton.classList.remove('dragover');
                     this._draggingElement.classList.remove('deleteable');
+                }}
+                @drop=${(e: DragEvent) => {
+                    const item = this._draggingElement;
+                    if (!canRemove || !item) return;
+                    e.preventDefault();
+                    const index = Number(item.dataset.index);
+                    this.finishStackDrag();
+                    this.deleteStackSymbol(index);
                 }}
                 >${this._dragging && this.delete ? biTrash : '+'}</sl-button
             >
@@ -609,6 +625,7 @@ export class StackExtension extends LitElementWw {
                 class="pda__stack-items"
                 id="pda__stack-items"
                 @dragover=${(e: DragEvent) => {
+                    if (!this._draggingElement || !this.isEditable() || !this.change) return;
                     e.preventDefault();
                     const afterObject = this.getDragPosition(this._stackItems, e.clientY) as {
                         element: HTMLElement;
@@ -623,36 +640,28 @@ export class StackExtension extends LitElementWw {
                         this.afterElement.classList.add('drop-after');
                     }
                 }}
+                @drop=${(e: DragEvent) => {
+                    const item = this._draggingElement;
+                    if (!item || !this.isEditable() || !this.change) return;
+                    e.preventDefault();
+                    const index = Number(item.dataset.index);
+                    const next = this.afterElement ? Number(this.afterElement.dataset.index) : this._stack.length;
+                    this.finishStackDrag();
+                    this.reorderStack(index, next);
+                }}
             >
                 ${this.stack.map(
                     (s, i) => html`
                         <div
                             class="pda__stack-item"
                             @dragstart=${(e: DragEvent) => {
+                                if (!this.isEditable() || !this.change) return;
                                 (e.target as HTMLElement).classList.add('dragging');
                                 e.dataTransfer?.setData('index', i.toString());
                                 e.dataTransfer?.setDragImage(document.createElement('div'), 0, 0);
                                 this._dragging = true;
                             }}
-                            @dragend=${() => {
-                                Logger.log(this._draggingElement);
-                                if (this._draggingElement.classList.contains('deleteable')) {
-                                    this.deleteStackSymbol(i);
-                                } else {
-                                    this.reorderStack(
-                                        i,
-                                        this.afterElement
-                                            ? parseInt(this.afterElement.dataset.index!)
-                                            : this._stack.length
-                                    );
-                                }
-                                this._draggingElement.classList.remove('dragging');
-                                this._dragging = false;
-                                this.clearDropMarkers();
-                            }}
-                            @dragover=${(e: DragEvent) => {
-                                e.preventDefault();
-                            }}
+                            @dragend=${this.finishStackDrag}
                             draggable=${this.isEditable() && this.change ? 'true' : 'false'}
                             data-index=${i}
                         >
@@ -704,9 +713,10 @@ export class StackExtension extends LitElementWw {
     }
 
     private changeStackSymbol(index: number, symbol: string): void {
+        if (!this.isEditable() || !this.change || !this._stack.get(index)) return;
         Logger.log('changeStackSymbol', index, symbol);
         this._stack.update({ id: index, symbol });
-        this.requestUpdate();
+        this.notifyStackEdit();
     }
 
     private deleteStackSymbol(index: number): void {
@@ -717,24 +727,34 @@ export class StackExtension extends LitElementWw {
         this._stack.clear();
         this._stack.add(symbols.map((s, i) => ({ id: i, symbol: s })));
 
-        this.requestUpdate();
+        this.notifyStackEdit();
+    }
+
+    private notifyStackEdit() {
+        this.dispatchEvent(new Event('starting-stack-change', { bubbles: true }));
+    }
+
+    private finishStackDrag() {
+        this._draggingElement?.classList.remove('dragging', 'deleteable');
+        this._dragging = false;
+        this.afterElement = null;
+        this.clearDropMarkers();
     }
 
     private clearDropMarkers(): void {
-        const elements = [...this._stackItems.querySelectorAll('.pda__stack-item')];
+        const elements = [...(this._stackItems?.querySelectorAll('.pda__stack-item') ?? [])];
         elements.forEach((e) => {
             e.classList.remove('drop-after');
             e.classList.remove('drop-before');
             if (e !== this._draggingElement) e.classList.remove('deleteable');
         });
-        this._stackItems.classList.remove('drop-before');
-        this._stackButton.classList.remove('dragover');
+        this._stackItems?.classList.remove('drop-before');
+        this._stackButton?.classList.remove('dragover');
     }
 
     private reorderStack(oldIndex: number, newIndex: number): void {
-        if (oldIndex === newIndex) return;
-
         if (oldIndex < newIndex) newIndex--;
+        if (oldIndex === newIndex || !this._stack.get(oldIndex)) return;
 
         Logger.log('reorderStack', oldIndex, newIndex);
 
@@ -743,7 +763,7 @@ export class StackExtension extends LitElementWw {
         symbols.splice(newIndex, 0, item[0]);
         this._stack.clear();
         this._stack.add(symbols.map((s, i) => ({ id: i, symbol: s })));
-        this.requestUpdate();
+        this.notifyStackEdit();
     }
 
     private getDragPosition(container: HTMLElement, y: number) {

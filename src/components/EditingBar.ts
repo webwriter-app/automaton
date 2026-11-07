@@ -10,7 +10,7 @@ export type EditableSelection =
     | { type: 'edge'; data: Transition };
 
 export type EditPermission = 'add' | 'change' | 'delete';
-type UpdateEdge = (patch: (edge: Transition) => Partial<Transition>, permission?: EditPermission) => void;
+type UpdateEdge = (patch: (edge: Transition) => Partial<Transition>, permission?: EditPermission, commit?: boolean) => void;
 
 const stackActions = [
     ['push', biDatabaseAdd, () => msg("Push")],
@@ -24,14 +24,14 @@ export class EditingBar {
 
     public render(
         selection: EditableSelection,
-        update: (getPatch: (current: EditableSelection) => Partial<Node> | Partial<Transition>, permission?: EditPermission) => void,
+        update: (getPatch: (current: EditableSelection) => Partial<Node> | Partial<Transition>, permission?: EditPermission, commit?: boolean) => void,
         remove: () => void,
     ) {
         const { type, data } = selection;
         const permissions = this.parentComponent.settings.permissions[type];
         const name = type === 'node' ? msg("Node") : msg("Edge");
-        const updateEdge: UpdateEdge = (getPatch, permission) =>
-            update(current => current.type === 'edge' ? getPatch(current.data) : {}, permission);
+        const updateEdge: UpdateEdge = (getPatch, permission, commit) =>
+            update(current => current.type === 'edge' ? getPatch(current.data) : {}, permission, commit);
         const deleteLabel = type === 'node' ? msg("Delete node") : msg("Delete transition");
         return keyed(`${type}:${data.id}`, html`
             <div class="editing-bar" role="group" aria-label=${name} contenteditable="false">
@@ -39,7 +39,7 @@ export class EditingBar {
                     <sl-input
                         label=${msg("Label")} placeholder=${msg("Label")} size="small"
                         .value=${data.label || ''} ?disabled=${!permissions.change}
-                        @sl-input=${(event: Event) => update(() => ({ label: this.value(event) || undefined }))}
+                        @sl-input=${(event: Event) => update(() => ({ label: this.value(event) }))}
                         autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
                     ></sl-input>
                     <div class="editing-bar__checks">
@@ -106,6 +106,13 @@ export class EditingBar {
         const selfLoop = edge.from === edge.to;
         const smooth = typeof edge.smooth === 'object' ? edge.smooth : undefined;
         const angle = edge.selfReference?.angle ?? Math.PI / 4;
+        const changeCurve = (event: Event) => {
+            const value = Number(this.value(event));
+            update(() => selfLoop
+                ? { selfReference: { angle: ((450 - value) % 360) * (Math.PI / 180) } }
+                : { smooth: { enabled: true, type: value < 0 ? 'curvedCCW' : 'curvedCW', roundness: Math.abs(value / 100) } },
+            'change', event.type === 'change');
+        };
         return html`
             <div class="editing-bar__edge-fields">
                 ${edge.symbols.map((_, index) => {
@@ -155,12 +162,7 @@ export class EditingBar {
                         .value=${String(selfLoop ? (450 - angle * 180 / Math.PI) % 360
                             : (smooth?.roundness ?? 0) * (smooth?.type === 'curvedCCW' ? -100 : 100))}
                         ?disabled=${!change}
-                        @input=${(event: Event) => {
-                            const value = Number(this.value(event));
-                            update(() => selfLoop
-                                ? { selfReference: { angle: ((450 - value) % 360) * (Math.PI / 180) } }
-                                : { smooth: { enabled: true, type: value < 0 ? 'curvedCCW' : 'curvedCW', roundness: Math.abs(value / 100) } });
-                        }}>
+                        @input=${changeCurve} @change=${changeCurve}>
                 </label>
             </div>
         `;

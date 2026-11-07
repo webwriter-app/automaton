@@ -165,7 +165,7 @@ export class ToolMenu extends LitElementWw {
             this._graph.network.addNodeMode();
         }
         this._graph.network.unselectAll();
-        this._graph.requestUpdate();
+        this._graph.commitEdit();
     }
 
     public planTransition(edgeData: Pick<Transition, 'from' | 'to'> & Partial<Transition>) {
@@ -221,7 +221,7 @@ export class ToolMenu extends LitElementWw {
         }
         this._graph.network.unselectAll();
         this._graph.network.redraw();
-        this._graph.requestUpdate();
+        this._graph.commitEdit();
     }
 
     public addNode() {

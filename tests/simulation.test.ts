@@ -496,8 +496,6 @@ describe("Simulation Tests", () => {
 			assert.equal(widget.automaton.getNode(1)?.label, "middle");
 			assert.isTrue(widget.automaton.getNode(1)?.final);
 			assert.equal(widget.automaton.getInitialNode().id, 1);
-			const waitForAttributes = () => new Promise(resolve => setTimeout(resolve, 250));
-			await waitForAttributes();
 			assert.include(widget.getAttribute("nodes"), "middle");
 			assert.strictEqual(bar()!.querySelector("sl-input"), label, "Editing preserves the focused field");
 
@@ -512,14 +510,14 @@ describe("Simulation Tests", () => {
 			assert.isNull(bar()!.querySelector("details"));
 			assert.isAbove(fields.scrollWidth, fields.clientWidth, "Long rows scroll within the compact bar");
 			assert.closeTo(centerY(fields.querySelector("input[type=range]")!), centerY(symbol), 2);
-			await waitForAttributes();
 			assert.include(widget.getAttribute("transitions"), "0-1[b{p|");
 			edit(fields.querySelector("sl-input[placeholder=If]")!, "value", "X", "sl-input");
-			await waitForAttributes();
 			assert.include(widget.getAttribute("transitions"), "0-1[b{p|%24|X}]");
 			bar()!.querySelector<HTMLElement>(".editing-bar__delete")!.click();
 			await widget.updateComplete;
 			assert.isNull(widget.automaton.getTransition(0));
+			assert.equal(widget.automaton.getTransition(widget.transitions[0].id)?.from, widget.transitions[0].from,
+				"Remaining transition IDs still identify the live edges");
 			assert.isNull(bar());
 			widget.style.width = "900px";
 			await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
@@ -533,6 +531,70 @@ describe("Simulation Tests", () => {
 			widget.mode = "simulate";
 			await widget.updateComplete;
 			assert.isNull(bar());
+		});
+
+		it("commits a bend on release and restores its default when the authored bend is undone", async () => {
+			const widget = await createConfiguredDFA();
+			await widget.updateComplete;
+			const { network } = (widget as unknown as { graph: Graph }).graph;
+			const original = widget.getAttribute("transitions")!;
+			network.selectEdges([0]);
+			widget.requestUpdate();
+			await widget.updateComplete;
+			const range = widget.shadowRoot!.querySelector<HTMLInputElement>(".editing-bar__range input")!;
+			range.value = "40";
+			range.dispatchEvent(new Event("input"));
+			assert.equal(widget.getAttribute("transitions"), original, "Dragging previews the curve");
+			range.dispatchEvent(new Event("change"));
+			const bent = widget.getAttribute("transitions")!;
+			assert.include(bent, "0-1[a]~0.4");
+			widget.setAttribute("transitions", original);
+			await widget.updateComplete;
+			assert.isUndefined(widget.automaton.getTransition(0)?.smooth);
+			assert.equal(widget.getAttribute("transitions"), original);
+			widget.setAttribute("transitions", bent);
+			await widget.updateComplete;
+			assert.deepInclude(widget.automaton.getTransition(0)?.smooth as object, { roundness: 0.4 });
+		});
+
+		it("saves the authored PDA starting stack and reopens without the simulation stack", async () => {
+			const widget = document.createElement("webwriter-automaton") as AutomatonComponent;
+			widget.setAttribute("type", "pda");
+			widget.setAttribute("nodes", "#0(0|0);%1(150|0)");
+			widget.setAttribute("transitions", "0-1[a{p|X|}]");
+			widget.setAttribute("startingstack", '["Z"]');
+			document.body.append(widget);
+			await widget.updateComplete;
+			const stack = widget.shadowRoot!.querySelector<StackExtension>("stack-extension")!;
+			await stack.updateComplete;
+			assert.deepEqual(stack.getStack(), ["Z"]);
+			stack.shadowRoot!.querySelector<HTMLElement>(".pda__stack-button")!.click();
+			assert.equal(widget.getAttribute("startingstack"), '["Z","a"]');
+			widget.mode = "simulate";
+			await widget.updateComplete;
+			const simulator = widget.automaton.simulator;
+			simulator.word = "a";
+			simulator.simulate();
+			assert.deepEqual(stack.getStack(), ["Z", "a", "X"]);
+			assert.equal(widget.getAttribute("startingstack"), '["Z","a"]');
+			simulator.init();
+			simulator.simulate();
+			assert.deepEqual(stack.getStack(), ["Z", "a", "X"], "Another run starts from the same authored stack");
+
+			const saved = widget.outerHTML;
+			const container = document.createElement("div");
+			container.innerHTML = saved;
+			const reopened = container.firstElementChild as AutomatonComponent;
+			document.body.append(reopened);
+			await reopened.updateComplete;
+			const reopenedStack = reopened.shadowRoot!.querySelector<StackExtension>("stack-extension")!;
+			assert.deepEqual(reopenedStack.getStack(), ["Z", "a"]);
+			widget.setAttribute("startingstack", '["Z"]');
+			await widget.updateComplete;
+			assert.deepEqual(stack.getStack(), ["Z"], "An authored undo replaces the simulation display");
+			widget.setAttribute("startingstack", '["Z","a"]');
+			await widget.updateComplete;
+			assert.deepEqual(stack.getStack(), ["Z", "a"]);
 		});
 
 		it("moves the initial arrow clear of a nearby node or transition", async () => {
