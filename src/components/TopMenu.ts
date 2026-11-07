@@ -391,19 +391,25 @@ export class TopMenu extends LitElementWw {
         const groups = nodes.filter(node => outgoing.get(node.id)!.some(edge => edge.symbols.length));
         return html`
             <h3 class="definition-transitions-title"><code>δ</code> · ${msg("Transitions")}</h3>
-            ${groups.length ? groups.map(node => html`
-                <section class="definition-transitions">
-                    <h4><code>${node.label}</code></h4>
-                    <ul role="list">
-                        ${outgoing.get(node.id)!.map(edge => edge.symbols.map((symbol, index) => html`
-                            <li>
-                                <code>${symbol || 'ε'} → ${labels.get(edge.to)}</code>
-                                ${edge.stackOperations?.[index] ? this.renderStackOperation(edge.stackOperations[index]) : nothing}
-                            </li>
-                        `))}
-                    </ul>
-                </section>
-            `) : html`<p class="definition-empty">${msg("No transitions yet")}</p>`}
+            ${groups.length ? groups.map(node => {
+                const rules = outgoing.get(node.id)!.flatMap(edge => edge.symbols.map((symbol, index) => ({
+                    symbol, to: edge.to, operation: edge.stackOperations?.[index],
+                })));
+                rules.sort((left, right) => left.symbol.localeCompare(right.symbol));
+                return html`
+                    <section class="definition-transitions">
+                        <h4><code>${node.label}</code></h4>
+                        <ul role="list">
+                            ${rules.map(({ symbol, to, operation }) => html`
+                                <li>
+                                    <code>${symbol || 'ε'} → ${labels.get(to)}</code>
+                                    ${operation ? this.renderStackOperation(operation) : nothing}
+                                </li>
+                            `)}
+                        </ul>
+                    </section>
+                `;
+            }) : html`<p class="definition-empty">${msg("No transitions yet")}</p>`}
         `;
     }
 

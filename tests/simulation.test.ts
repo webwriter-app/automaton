@@ -810,7 +810,8 @@ describe("Simulation Tests", () => {
 			widget.style.width = "300px";
 			widget.style.height = "300px";
 			widget.setAttribute("startingstack", '["Z","X"]');
-			widget.setAttribute("transitions", "0-1[{p|A|X},a{n||Z}];1-2[b{o|A|}];2-3[{e||}]");
+			const transitions = "0-2[b{o|X|},a{n||Z}];0-1[{p|A|X}];1-2[b{o|A|}];2-3[{e||}]";
+			widget.setAttribute("transitions", transitions);
 			const layout = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 			await layout();
 
@@ -832,9 +833,10 @@ describe("Simulation Tests", () => {
 			assert.deepEqual(summary, ["{ q0, q1, q2, q3 }", "{ a, b }", "q0", "{ q3 }", "{ A, X, Z }", "[Z, X]"]);
 			const groups = [...pane.querySelectorAll(".definition-transitions")];
 			assert.deepEqual(groups.map(group => group.querySelector("h4")!.textContent), ["q0", "q1", "q2"]);
-			assert.deepEqual([...groups[0].querySelectorAll("li > code")].map(row => row.textContent), ["ε → q1", "a → q1"]);
+			assert.deepEqual([...groups[0].querySelectorAll("li > code")].map(row => row.textContent), ["ε → q1", "a → q2", "b → q2"]);
 			const operations = [...pane.querySelectorAll(".definition-stack-operation")].map(row => row.textContent!.trim());
-			assert.deepEqual(operations, ["Push A · Top is X", "Leave stack unchanged · Top is Z", "Pop A", "Require an empty stack"]);
+			assert.deepEqual(operations, ["Push A · Top is X", "Leave stack unchanged · Top is Z", "Pop X", "Pop A", "Require an empty stack"]);
+			assert.equal(widget.getAttribute("transitions"), transitions, "Sorting the list preserves authored transitions");
 			const firstGroup = groups[0];
 			const firstRule = firstGroup.querySelector("li > code")!.getBoundingClientRect();
 			assert.closeTo(firstGroup.querySelector("h4 > code")!.getBoundingClientRect().top, firstRule.top, 1);
