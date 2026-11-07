@@ -7,6 +7,7 @@ export const stackStyles = css`
         flex-direction: column;
         box-sizing: border-box;
         width: 100%;
+        max-inline-size: 100%;
         max-height: 100%;
         border: 1px solid lightgray;
         border-radius: 5px;
@@ -123,10 +124,38 @@ export const stackStyles = css`
         min-width: 0;
     }
 
-    .pda__stack-item:has(.pda__stack-remove) sl-input::part(input) {
+    .pda__stack-item:has(.pda__stack-remove, .pda__stack-grip) sl-input::part(input) {
         padding-inline: 4px;
     }
 
+    @supports (field-sizing: content) {
+        .pda__stack-item__tooltip {
+            display: contents;
+        }
+
+        .pda__stack-item sl-input {
+            flex: 0 1 auto;
+            min-inline-size: 36px;
+            max-inline-size: 100%;
+        }
+
+        .pda__stack-item sl-input::part(base) {
+            inline-size: auto;
+            min-inline-size: 100%;
+            max-inline-size: 100%;
+        }
+
+        .pda__stack-item sl-input::part(input) {
+            field-sizing: content;
+            min-inline-size: 1ch;
+        }
+
+        .pda__stack-remove {
+            margin-inline-start: auto;
+        }
+    }
+
+    .pda__stack-grip,
     .pda__stack-remove {
         flex: 0 0 20px;
         height: 28px;
@@ -137,6 +166,24 @@ export const stackStyles = css`
         color: var(--sl-color-neutral-700);
         font: 16px var(--sl-font-sans, sans-serif);
         cursor: pointer;
+    }
+
+    .pda__stack-grip {
+        flex-basis: 24px;
+        height: 32px;
+        cursor: grab;
+        touch-action: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+    }
+
+    .pda__stack-grip:hover,
+    .pda__stack-item.dragging .pda__stack-grip {
+        background: var(--sl-color-primary-100);
+    }
+
+    .pda__stack-item.dragging .pda__stack-grip {
+        cursor: grabbing;
     }
 
     .pda__stack-remove:hover {
@@ -170,14 +217,14 @@ export const stackStyles = css`
     }
 
     .drop-before {
-        border-bottom: 5px solid var(--sl-color-primary-600);
+        box-shadow: inset 0 3px var(--sl-color-primary-600);
     }
 
     .drop-after {
-        border-top: 5px solid var(--sl-color-primary-600);
+        box-shadow: inset 0 -3px var(--sl-color-primary-600);
     }
 
-    .deleteable sl-input::part(base) {
+    .drag-to-trash sl-input::part(base) {
         background-color: var(--sl-color-danger-50) !important;
         color: var(--sl-color-danger-700) !important;
         border-color: var(--sl-color-danger-300) !important;

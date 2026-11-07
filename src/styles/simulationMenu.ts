@@ -57,6 +57,25 @@ export const simulationMenuStyles = css`
         --sl-input-font-size-medium: var(--sl-font-size-small);
     }
 
+    @supports (field-sizing: content) {
+        .simulator__input {
+            justify-self: end;
+            inline-size: fit-content;
+            min-inline-size: min(100%, 6rem);
+            max-inline-size: 100%;
+        }
+
+        .simulator__input::part(base) {
+            inline-size: auto;
+            min-inline-size: 100%;
+            max-inline-size: 100%;
+        }
+
+        .simulator__input::part(input) {
+            field-sizing: content;
+        }
+    }
+
     .simulator__input.danger::part(base) {
         border-color: var(--sl-color-danger-600);
         background-color: var(--sl-color-danger-50);

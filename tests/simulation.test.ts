@@ -1185,6 +1185,58 @@ describe("Simulation Tests", () => {
 			assert.equal(getComputedStyle(widget).outlineStyle, "none");
 		});
 
+		it("persists stack handle drops and discards cancelled gestures", async () => {
+			const widget = await createConfiguredPDA();
+			widget.style.width = "600px";
+			setMachine(widget, { startingStack: ["A", "B", "C"] });
+			await widget.updateComplete;
+			const stack = widget.shadowRoot!.querySelector<StackExtension>("stack-extension")!;
+			await stack.updateComplete;
+			const root = stack.shadowRoot!;
+			const grip = root.querySelector<HTMLButtonElement>(".pda__stack-grip")!;
+			const trash = root.querySelector<HTMLElement>(".pda__stack-button")!;
+			const last = root.querySelector<HTMLElement>('[data-index="2"]')!;
+			// Synthetic events have no active browser pointer to capture.
+			grip.setPointerCapture = () => {};
+			const point = (element: HTMLElement, fraction = 0.5) => {
+				const { left, top, width, height } = element.getBoundingClientRect();
+				return { clientX: left + width / 2, clientY: top + height * fraction };
+			};
+			const pointer = (type: string, position: ReturnType<typeof point>) => {
+				grip.dispatchEvent(new PointerEvent(type, {
+					...position, bubbles: true, isPrimary: true, pointerId: 1, pointerType: "touch",
+				}));
+			};
+			let changes = 0;
+			stack.addEventListener("starting-stack-change", () => changes++);
+
+			pointer("pointerdown", point(grip));
+			pointer("pointermove", point(last, 0.9));
+			await stack.updateComplete;
+			assert.isTrue(last.classList.contains("drop-after"));
+			pointer("pointercancel", point(last, 0.9));
+			await stack.updateComplete;
+			assert.isFalse(last.classList.contains("drop-after"));
+			assert.equal(changes, 0);
+
+			pointer("pointerdown", point(grip));
+			pointer("pointermove", point(last, 0.9));
+			pointer("pointerup", point(last, 0.9));
+			await stack.updateComplete;
+			assert.deepEqual(machineData(widget).startingStack, ["C", "A", "B"]);
+			assert.equal(changes, 1);
+
+			pointer("pointerdown", point(grip));
+			pointer("pointermove", point(trash));
+			await stack.updateComplete;
+			assert.isTrue(trash.classList.contains("dragover"));
+			pointer("pointerup", point(trash));
+			await stack.updateComplete;
+			assert.deepEqual(machineData(widget).startingStack, ["C", "A"]);
+			assert.equal(changes, 2);
+			assert.isFalse(trash.classList.contains("dragover"));
+		});
+
 		it("shows stack removal and help within the widget at compact and wide widths", async () => {
 			const widget = await createConfiguredPDA();
 			widget.style.width = "300px";
@@ -1212,6 +1264,18 @@ describe("Simulation Tests", () => {
 			const field = removeButtons()[1].parentElement!.querySelector("sl-input")!;
 			assertInside(field);
 			assert.isAtMost(field.getBoundingClientRect().right, removeButtons()[1].getBoundingClientRect().left);
+			if (CSS.supports("field-sizing", "content")) {
+				const shortWidth = field.getBoundingClientRect().width;
+				assert.isAtLeast(shortWidth, 36);
+				stack.setStack(["A", "BBBBBBBB", "C"]);
+				await layout();
+				assert.isAbove(field.getBoundingClientRect().width, shortWidth);
+				const fieldBounds = field.shadowRoot!.querySelector('[part="base"]')!.getBoundingClientRect();
+				assert.closeTo(fieldBounds.width, field.getBoundingClientRect().width, 1);
+				assert.isAtMost(fieldBounds.right, removeButtons()[1].getBoundingClientRect().left);
+				stack.setStack(["A", "B", "C"]);
+				await layout();
+			}
 			removeButtons()[1].click();
 			await stack.updateComplete;
 			assert.deepEqual(stack.getStack(), ["A", "C"]);

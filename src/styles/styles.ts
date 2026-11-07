@@ -154,10 +154,8 @@ const baseStyles = css`
         --simulator-feedback-end: calc(var(--stack-width) + 6px);
     }
 
-    @container automaton (width < 800px) {
-        .workspace[data-mode="edit"]:has(> stack-extension[delete]) {
-            --stack-width: 88px;
-        }
+    .workspace[data-mode="edit"]:has(> stack-extension:is([change], [delete])) {
+        --stack-width: 120px;
     }
 
     @container automaton (width >= 800px) {

@@ -156,6 +156,34 @@ export const editingBarStyles = css`
         width: 50px;
     }
 
+    @supports (field-sizing: content) {
+        .editing-bar sl-input::part(base) {
+            inline-size: auto;
+            min-inline-size: 100%;
+            max-inline-size: 100%;
+        }
+
+        .editing-bar sl-input::part(input) {
+            field-sizing: content;
+        }
+
+        .editing-bar > sl-input {
+            flex-basis: auto;
+            min-inline-size: 3.5rem;
+            max-inline-size: 12rem;
+        }
+
+        .editing-bar__symbol sl-input {
+            inline-size: auto;
+            min-inline-size: 2.75rem;
+            max-inline-size: 8rem;
+        }
+
+        .editing-bar__symbol sl-input[maxlength="1"] {
+            max-inline-size: 4rem;
+        }
+    }
+
     .editing-bar__range {
         white-space: nowrap;
     }
