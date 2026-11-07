@@ -31,7 +31,11 @@ export class Settings {
     }
 
     set selectedPermissions(values: string[] | null) {
-        const selected = new Set(values || []);
+        if (values === null) {
+            this.parentComponent.removeAttribute('permissions');
+            return;
+        }
+        const selected = new Set(values);
         const encoded = permissionTargets.map(target =>
             permissionActions.reduce((bits, { id, mask }) =>
                 selected.has(`${target}-${id}`) ? bits | mask : bits, 0)

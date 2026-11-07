@@ -74,6 +74,9 @@ Put the authored machine in a direct JSON data block.
 The JSON block is the authored machine saved with the document. Earlier graph attributes are ignored.
 
 ## Settings
+
+Omitted settings use the defaults below. Removing an attribute restores its default. An empty allowed list is an explicit override.
+
 | Name (Attribute Name) | Type | Description | Default | Reflects |
 | :-------------------: | :--: | :---------: | :-----: | :------: |
 | `mode` (`mode`) | `"edit" \| "simulate"` | The current mode. Can be `'edit'`, or `'simulate'`. | `"edit"` | ✓ |

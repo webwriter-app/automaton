@@ -303,6 +303,83 @@ describe("Simulation Tests", () => {
 	});
 
 	describe("Widget options", () => {
+		it("uses defaults for omitted settings and restores them when overrides are cleared", async () => {
+			const widget = await createConfiguredDFA();
+			const overrides = {
+				mode: "simulate",
+				testlanguage: "a+",
+				testwords: '["a"]',
+				permissions: "000",
+				showhelp: "false",
+				showformaldefinition: "false",
+				showtransitionstable: "false",
+				allowedtypes: "",
+				allowedmodes: "simulate",
+				allowedtransformations: "",
+			};
+			const assertDefaults = () => {
+				for (const name of Object.keys(overrides)) assert.isFalse(widget.hasAttribute(name), name);
+				assert.equal(widget.mode, "edit");
+				assert.equal(widget.testLanguage, "");
+				assert.deepEqual(widget.testWords, []);
+				assert.lengthOf(widget.selectedPermissions, 9);
+				assert.isTrue(widget.helpEnabled);
+				assert.isTrue(widget.automaton.showErrors);
+				assert.isTrue(widget.formalDefinitionEnabled);
+				assert.isTrue(widget.transitionsTableEnabled);
+				assert.deepEqual(widget.allowedTypeOptions, ["dfa", "nfa", "pda"]);
+				assert.deepEqual(widget.allowedModeOptions, ["edit", "simulate"]);
+				assert.isTrue(widget.sinkStateEnabled);
+			};
+			assertDefaults();
+			for (const [name, value] of Object.entries(overrides)) widget.setAttribute(name, value);
+			await widget.updateComplete;
+			assert.isEmpty(widget.allowedTypeOptions, "An explicit empty list is preserved");
+			assert.isFalse(widget.sinkStateEnabled);
+			assert.isFalse(widget.automaton.showErrors);
+			assert.isEmpty(widget.selectedPermissions);
+
+			let refreshes = 0;
+			widget.addEventListener("optionschange", () => { refreshes++; });
+			for (const name of Object.keys(overrides)) widget.removeAttribute(name);
+			await widget.updateComplete;
+			assertDefaults();
+			assert.isAbove(refreshes, 0);
+		});
+
+		it("treats null option values as resets while preserving explicit overrides", async () => {
+			const widget = await createConfiguredDFA();
+			widget.selectedPermissions = [];
+			widget.allowedTypeOptions = [];
+			widget.allowedModeOptions = ["edit"];
+			widget.sinkStateEnabled = false;
+			widget.helpEnabled = false;
+			widget.formalDefinitionEnabled = false;
+			widget.transitionsTableEnabled = false;
+			widget.testWordsInput = "a";
+			assert.equal(widget.getAttribute("permissions"), "000");
+			assert.equal(widget.getAttribute("allowedtypes"), "");
+			assert.equal(widget.getAttribute("showhelp"), "false");
+
+			widget.selectedPermissions = null;
+			widget.allowedTypeOptions = null;
+			widget.allowedModeOptions = null;
+			widget.sinkStateEnabled = null;
+			widget.helpEnabled = null;
+			widget.formalDefinitionEnabled = null;
+			widget.transitionsTableEnabled = null;
+			widget.testWordsInput = null;
+			await widget.updateComplete;
+			assert.lengthOf(widget.selectedPermissions, 9);
+			assert.deepEqual(widget.allowedTypeOptions, ["dfa", "nfa", "pda"]);
+			assert.deepEqual(widget.allowedModeOptions, ["edit", "simulate"]);
+			assert.isTrue(widget.sinkStateEnabled);
+			assert.isTrue(widget.helpEnabled);
+			assert.isTrue(widget.formalDefinitionEnabled);
+			assert.isTrue(widget.transitionsTableEnabled);
+			assert.equal(widget.testWordsInput, "");
+		});
+
 		it("reads existing settings and keeps controls outside the widget in both modes", async () => {
 			const widget = await createConfiguredDFA();
 			widget.setAttribute("permissions", "251");

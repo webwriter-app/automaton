@@ -102,7 +102,7 @@ export class AutomatonComponent extends LitElementWw {
 	public get forcedAlphabet(): readonly string[] { return this._machine.requiredAlphabet; }
 
 	/** The current mode. Can be `'edit'`, or `'simulate'`. */
-	@property({ type: String, attribute: true, reflect: true })
+	@property({ type: String, attribute: true, reflect: true, useDefault: true })
 	public accessor mode: "edit" | "simulate" = "edit";
 
 	/** A regular expression to check the language of the automaton against. */
@@ -110,7 +110,7 @@ export class AutomatonComponent extends LitElementWw {
 	public accessor testLanguage: string = "";
 
 	/** Words used for automatically testing the automaton as a string separated by spaces. */
-	@property({ type: Array, attribute: true, reflect: true })
+	@property({ type: Array, attribute: true, reflect: true, useDefault: true })
 	public accessor testWords: string[] = [];
 
 	private _verbose: boolean = false;
@@ -126,19 +126,19 @@ export class AutomatonComponent extends LitElementWw {
 	}
 
 	/** The encoded permissions for the editor. */
-	@property({ type: String, attribute: true, reflect: true })
+	@property({ type: String, attribute: true, reflect: true, useDefault: true })
 	public accessor permissions: string = "777";
 
 	/** If true, the widget displays automaton error messages. */
-	@property({ type: String, attribute: true, reflect: true })
+	@property({ type: String, attribute: true, reflect: true, useDefault: true })
 	public accessor showHelp: string = "true";
 
 	/** If true, the widget allows viewing the automaton's formal definition. */
-	@property({ type: String, attribute: true, reflect: true })
+	@property({ type: String, attribute: true, reflect: true, useDefault: true })
 	public accessor showFormalDefinition: string = "true";
 
 	/** If true, the widget allows viewing the automaton's transition table. */
-	@property({ type: String, attribute: true, reflect: true })
+	@property({ type: String, attribute: true, reflect: true, useDefault: true })
 	public accessor showTransitionsTable: string = "true";
 
 	/** The types of automata that are allowed in the editor. */
@@ -146,6 +146,7 @@ export class AutomatonComponent extends LitElementWw {
 		type: Array,
 		attribute: true,
 		reflect: true,
+		useDefault: true,
 		converter: ATTRIBUTE_CONVERTERS.stringArray,
 	})
 	public accessor allowedTypes: string[] = ["dfa", "nfa", "pda"];
@@ -155,6 +156,7 @@ export class AutomatonComponent extends LitElementWw {
 		type: Array,
 		attribute: true,
 		reflect: true,
+		useDefault: true,
 		converter: ATTRIBUTE_CONVERTERS.stringArray,
 	})
 	public accessor allowedModes: string[] = ["edit", "simulate"];
@@ -164,6 +166,7 @@ export class AutomatonComponent extends LitElementWw {
 		type: Array,
 		attribute: true,
 		reflect: true,
+		useDefault: true,
 		converter: ATTRIBUTE_CONVERTERS.stringArray,
 	})
 	public accessor allowedTransformations: string[] = ["sink"];
@@ -193,40 +196,50 @@ export class AutomatonComponent extends LitElementWw {
 	/** @internal */
 	get allowedTypeOptions() { return this.allowedTypes; }
 	set allowedTypeOptions(value: string[] | null) {
-		this.setAttribute("allowedtypes", ATTRIBUTE_CONVERTERS.stringArray.toAttribute(value) ?? "");
+		this.writeSetting("allowedtypes", ATTRIBUTE_CONVERTERS.stringArray.toAttribute(value));
 	}
 
 	/** @internal */
 	get sinkStateEnabled() { return this.allowedTransformations.includes("sink"); }
-	set sinkStateEnabled(value: boolean) {
-		if (this.sinkStateEnabled === (value === true)) return;
+	set sinkStateEnabled(value: boolean | null) {
 		const transformations = this.allowedTransformations.filter(transformation => transformation !== "sink");
-		if (value === true) transformations.push("sink");
-		this.setAttribute("allowedtransformations", ATTRIBUTE_CONVERTERS.stringArray.toAttribute(transformations) ?? "");
+		if (value === null && !transformations.length) {
+			this.removeAttribute("allowedtransformations");
+			return;
+		}
+		const enabled = value ?? true;
+		if (this.sinkStateEnabled === enabled) return;
+		if (enabled) transformations.push("sink");
+		this.writeSetting("allowedtransformations", ATTRIBUTE_CONVERTERS.stringArray.toAttribute(transformations));
 	}
 
 	/** @internal */
 	get allowedModeOptions() { return this.allowedModes; }
 	set allowedModeOptions(value: string[] | null) {
-		this.setAttribute("allowedmodes", ATTRIBUTE_CONVERTERS.stringArray.toAttribute(value) ?? "");
+		this.writeSetting("allowedmodes", ATTRIBUTE_CONVERTERS.stringArray.toAttribute(value));
 	}
 
 	/** @internal */
 	get helpEnabled() { return this.showHelp === "true"; }
-	set helpEnabled(value: boolean) { this.setAttribute("showhelp", String(value === true)); }
+	set helpEnabled(value: boolean | null) { this.writeSetting("showhelp", value === null ? null : String(value)); }
 
 	/** @internal */
 	get formalDefinitionEnabled() { return this.showFormalDefinition === "true"; }
-	set formalDefinitionEnabled(value: boolean) { this.setAttribute("showformaldefinition", String(value === true)); }
+	set formalDefinitionEnabled(value: boolean | null) { this.writeSetting("showformaldefinition", value === null ? null : String(value)); }
 
 	/** @internal */
 	get transitionsTableEnabled() { return this.showTransitionsTable === "true"; }
-	set transitionsTableEnabled(value: boolean) { this.setAttribute("showtransitionstable", String(value === true)); }
+	set transitionsTableEnabled(value: boolean | null) { this.writeSetting("showtransitionstable", value === null ? null : String(value)); }
 
 	/** @internal */
 	get testWordsInput() { return (this.testWords ?? []).join(","); }
 	set testWordsInput(value: string | null) {
-		this.setAttribute("testwords", JSON.stringify(value ? value.split(",") : []));
+		this.writeSetting("testwords", value === null ? null : JSON.stringify(value ? value.split(",") : []));
+	}
+
+	private writeSetting(attribute: string, value: string | null) {
+		if (value === null) this.removeAttribute(attribute);
+		else this.setAttribute(attribute, value);
 	}
 
 	/** @internal */
@@ -417,7 +430,8 @@ export class AutomatonComponent extends LitElementWw {
 		if (changedProperties.has("permissions") || changedProperties.has("mode")) {
 			this._graph?.network.redraw();
 		}
-		if (["_machine", "_invalidMachineData", "mode", "allowedTypes", "allowedTransformations"]
+		if (["_machine", "_invalidMachineData", "mode", "permissions", "allowedTypes", "allowedModes",
+			"allowedTransformations", "showHelp", "showFormalDefinition", "showTransitionsTable", "testLanguage", "testWords"]
 			.some(property => changedProperties.has(property as keyof this))) {
 			this.dispatchEvent(new Event("optionschange", { bubbles: true }));
 		}
