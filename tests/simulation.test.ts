@@ -763,10 +763,11 @@ describe("Simulation Tests", () => {
 				assert.include(help.textContent, "Add sink state");
 				assert.equal(help.scrollWidth, help.clientWidth, "German help text wraps");
 				panel.querySelector<HTMLElement>("sl-button:has(.bi-question-lg)")!.click();
-				const definition = panel.querySelector("sl-popup:has(.bi-code-slash)")!;
-				definition.querySelector<HTMLElement>("sl-button")!.click();
+				panel.querySelector<SlButton>(".definition-trigger")!.click();
 				await layout();
-				assertInside(definition.querySelector(".topmenu__popup")!);
+				assertInside(menu.querySelector(".definition-pane")!);
+				menu.querySelector<HTMLButtonElement>(".definition-pane__close")!.click();
+				await layout();
 				menu.querySelector<HTMLElement>(".topmenu--hamburger > sl-button")!.click();
 				await layout();
 
@@ -802,6 +803,86 @@ describe("Simulation Tests", () => {
 				widget.remove();
 				await LOCALIZE.setLocale("en");
 			}
+		});
+
+		it("shows PDA definitions and the transition table in a scrollable bottom sheet", async () => {
+			const widget = await createConfiguredPDA();
+			widget.style.width = "300px";
+			widget.style.height = "300px";
+			widget.setAttribute("startingstack", '["Z","X"]');
+			widget.setAttribute("transitions", "0-1[{p|A|X},a{n||Z}];1-2[b{o|A|}];2-3[{e||}]");
+			const layout = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+			await layout();
+
+			const menu = widget.shadowRoot!.querySelector("#topMenu")!.shadowRoot!;
+			menu.querySelector<SlButton>(".topmenu--hamburger > sl-button")!.click();
+			await layout();
+			menu.querySelector<SlButton>(".definition-trigger")!.click();
+			await layout();
+			const pane = menu.querySelector<HTMLElement>(".definition-pane")!;
+			const bounds = widget.getBoundingClientRect();
+			const sheet = pane.getBoundingClientRect();
+			assert.closeTo(sheet.left, bounds.left + 8, 1);
+			assert.closeTo(sheet.right, bounds.right - 8, 1);
+			assert.closeTo(sheet.bottom, bounds.bottom - 8, 1);
+			assert.isAbove(sheet.top, bounds.top + 50, "The toolbar remains visible");
+			assert.isNull(menu.querySelector(".topmenu__collapsed_panel"));
+
+			const summary = [...pane.querySelectorAll("dd")].map(value => value.textContent!.trim());
+			assert.deepEqual(summary, ["{ q0, q1, q2, q3 }", "{ a, b }", "q0", "{ q3 }", "{ A, X, Z }", "[Z, X]"]);
+			const groups = [...pane.querySelectorAll(".definition-transitions")];
+			assert.deepEqual(groups.map(group => group.querySelector("h4")!.textContent), ["q0", "q1", "q2"]);
+			assert.deepEqual([...groups[0].querySelectorAll("li > code")].map(row => row.textContent), ["ε → q1", "a → q1"]);
+			const operations = [...pane.querySelectorAll(".definition-stack-operation")].map(row => row.textContent!.trim());
+			assert.deepEqual(operations, ["Push A · Top is X", "Leave stack unchanged · Top is Z", "Pop A", "Require an empty stack"]);
+
+			const tabs = pane.querySelector("sl-tab-group")!;
+			const viewport = tabs.shadowRoot!.querySelector<HTMLElement>('[part="body"]')!;
+			const header = tabs.shadowRoot!.querySelector('[part="nav"]')!;
+			const headerTop = header.getBoundingClientRect().top;
+			assert.isAbove(viewport.scrollHeight, viewport.clientHeight);
+			assert.equal(viewport.scrollWidth, viewport.clientWidth, "The definition wraps within the sheet");
+			viewport.scrollTop = viewport.scrollHeight;
+			assert.isAbove(viewport.scrollTop, 0);
+			assert.equal(header.getBoundingClientRect().top, headerTop, "Scrolling keeps the tabs in place");
+
+			pane.querySelector<HTMLElement>('sl-tab[panel="table"]')!.click();
+			await layout();
+			assert.exists(pane.querySelector('sl-tab-panel[name="table"][active]'));
+			assert.equal(header.getBoundingClientRect().top, headerTop, "Switching tabs keeps the sheet in place");
+			assert.deepEqual([...pane.querySelectorAll("thead th")].map(th => th.textContent), ["State", "a", "b", "ε"]);
+			assert.equal(pane.querySelector("tbody tr td:last-child")!.textContent!.trim(), "q1");
+
+			widget.style.width = "640px";
+			await layout();
+			assert.equal(menu.querySelector(".definition-pane"), pane, "Resizing keeps the open pane");
+			assert.exists(pane.querySelector('sl-tab-panel[name="table"][active]'));
+			assert.closeTo(pane.getBoundingClientRect().top, bounds.top + 58, 1);
+
+			widget.transitionsTableEnabled = false;
+			await layout();
+			assert.exists(pane.querySelector('sl-tab-panel[name="def"][active]'));
+			assert.exists(pane.querySelector('sl-tab[panel="table"][disabled]'));
+			widget.setAttribute("startingstack", '["Y"]');
+			await layout();
+			assert.equal(pane.querySelector(".definition-summary > div:last-child dd")?.textContent, "[Y]");
+			const { network } = (widget as unknown as { graph: Graph }).graph;
+			network.selectNodes([0]);
+			pane.dispatchEvent(new KeyboardEvent("keydown", { key: "Delete", bubbles: true, composed: true }));
+			assert.exists(widget.automaton.getNode(0), "Reading the pane does not trigger canvas editing shortcuts");
+			pane.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true, composed: true }));
+			await layout();
+			assert.isNull(menu.querySelector(".definition-pane"));
+			assert.equal(menu.activeElement, menu.querySelector(".definition-trigger"));
+			widget.formalDefinitionEnabled = false;
+			await layout();
+			assert.isTrue(menu.querySelector<SlButton>(".definition-trigger")!.disabled);
+			widget.transitionsTableEnabled = true;
+			await layout();
+			menu.querySelector<SlButton>(".definition-trigger")!.click();
+			await layout();
+			assert.exists(menu.querySelector('sl-tab-panel[name="table"][active]'));
+			assert.isNull(menu.querySelector(".definition-summary"));
 		});
 
 		it("enforces embedded size limits and defaults to 500 pixels tall", async () => {

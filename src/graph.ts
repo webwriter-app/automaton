@@ -640,7 +640,8 @@ export class Graph {
 
             const insideControls = e.composedPath().some(target =>
                 target instanceof HTMLElement &&
-                (target.classList.contains('editing-bar') || target.localName === 'stack-extension'));
+                (target.classList.contains('editing-bar') || target.classList.contains('definition-pane') ||
+                    target.localName === 'stack-extension'));
             if (insideControls) return;
 
             const selected = this.editableSelection;

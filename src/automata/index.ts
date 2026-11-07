@@ -102,7 +102,7 @@ export abstract class Automaton {
         return this.transitions.get();
     }
 
-    protected getAlphabet(): string[] {
+    public getAlphabet(): string[] {
         return [
             ...new Set(
                 this.transitions
