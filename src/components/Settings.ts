@@ -61,7 +61,7 @@ export function drawerActions(widget: AutomatonComponent) {
         const losesStackOperations = !hidden && !disabled && automaton.type === 'pda' && type !== 'pda' &&
             automaton.transitions.get().some(edge => edge.stackOperations?.some(op => op.operation !== 'none' || op.condition));
         return {
-            label: { _: label }, group: 'editing', hidden, disabled,
+            label: { _: label }, group: 'editing', buttonGroup: 'automaton-type', hidden, disabled,
             disabledReason: disabled ? { _: msg('Switch to Edit mode to change the automaton type.') } : undefined,
             confirm: losesStackOperations ? { _: msg('Switching away from PDA removes its stack operations. Continue?') } : undefined,
         };

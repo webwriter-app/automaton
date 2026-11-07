@@ -259,6 +259,9 @@ describe("Simulation Tests", () => {
 		it("declares confirmation only for allowed type switches that discard PDA stack operations", async () => {
 			const widget = await createConfiguredPDA();
 			await widget.updateComplete;
+			const switches = [widget.actions.switchToDfa, widget.actions.switchToNfa, widget.actions.switchToPda];
+			assert.deepEqual(switches.map(action => action.buttonGroup), Array(3).fill("automaton-type"));
+			assert.notProperty(widget.actions.completeDfaWithSink, "buttonGroup");
 			assert.exists(widget.actions.switchToDfa.confirm);
 			assert.exists(widget.actions.switchToNfa.confirm);
 			assert.isTrue(widget.actions.switchToPda.hidden);
