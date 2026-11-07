@@ -7,21 +7,21 @@
 <unit id="label"><segment><source>Automaton</source><target>Avtomat</target></segment></unit>
 </file>
 <file id="./snippets/dfa-simple" original="./snippets/dfa-simple">
-<unit id="label"><segment><source>DFA simple</source><target>Enostavno DFA</target></segment></unit>
+<unit id="label"><segment><source>DFA (simple)</source><target>DFA (enostaven)</target></segment></unit>
 </file>
 <file id="./snippets/dfa-complex" original="./snippets/dfa-complex">
-<unit id="label"><segment><source>DFA complex</source><target>Kompleks DFA</target></segment></unit>
+<unit id="label"><segment><source>DFA (complex)</source><target>DFA (kompleksen)</target></segment></unit>
 </file>
 <file id="./snippets/nfa-simple" original="./snippets/nfa-simple">
-<unit id="label"><segment><source>NFA simple</source><target>NFA enostavno</target></segment></unit>
+<unit id="label"><segment><source>NFA (simple)</source><target>NFA (enostaven)</target></segment></unit>
 </file>
 <file id="./snippets/nfa-complex" original="./snippets/nfa-complex">
-<unit id="label"><segment><source>NFA complex</source><target>Kompleks NFA</target></segment></unit>
+<unit id="label"><segment><source>NFA (complex)</source><target>NFA (kompleksen)</target></segment></unit>
 </file>
 <file id="./snippets/pda-simple" original="./snippets/pda-simple">
-<unit id="label"><segment><source>PDA simple</source><target>PDA enostavno</target></segment></unit>
+<unit id="label"><segment><source>PDA (simple)</source><target>PDA (enostaven)</target></segment></unit>
 </file>
 <file id="./snippets/pda-complex" original="./snippets/pda-complex">
-<unit id="label"><segment><source>PDA complex</source><target>Kompleks PDA</target></segment></unit>
+<unit id="label"><segment><source>PDA (complex)</source><target>PDA (kompleksen)</target></segment></unit>
 </file>
 </xliff>

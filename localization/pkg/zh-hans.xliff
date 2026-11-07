@@ -7,21 +7,21 @@
 <unit id="label"><segment><source>Automaton</source><target>自动机</target></segment></unit>
 </file>
 <file id="./snippets/dfa-simple" original="./snippets/dfa-simple">
-<unit id="label"><segment><source>DFA simple</source><target>DFA 简单</target></segment></unit>
+<unit id="label"><segment><source>DFA (simple)</source><target>DFA (简单)</target></segment></unit>
 </file>
 <file id="./snippets/dfa-complex" original="./snippets/dfa-complex">
-<unit id="label"><segment><source>DFA complex</source><target>DFA 复合物</target></segment></unit>
+<unit id="label"><segment><source>DFA (complex)</source><target>DFA (复杂)</target></segment></unit>
 </file>
 <file id="./snippets/nfa-simple" original="./snippets/nfa-simple">
-<unit id="label"><segment><source>NFA simple</source><target>NFA 简单</target></segment></unit>
+<unit id="label"><segment><source>NFA (simple)</source><target>NFA (简单)</target></segment></unit>
 </file>
 <file id="./snippets/nfa-complex" original="./snippets/nfa-complex">
-<unit id="label"><segment><source>NFA complex</source><target>NFA 建筑群</target></segment></unit>
+<unit id="label"><segment><source>NFA (complex)</source><target>NFA (复杂)</target></segment></unit>
 </file>
 <file id="./snippets/pda-simple" original="./snippets/pda-simple">
-<unit id="label"><segment><source>PDA simple</source><target>简单的 PDA</target></segment></unit>
+<unit id="label"><segment><source>PDA (simple)</source><target>PDA (简单)</target></segment></unit>
 </file>
 <file id="./snippets/pda-complex" original="./snippets/pda-complex">
-<unit id="label"><segment><source>PDA complex</source><target>PDA 建筑群</target></segment></unit>
+<unit id="label"><segment><source>PDA (complex)</source><target>PDA (复杂)</target></segment></unit>
 </file>
 </xliff>

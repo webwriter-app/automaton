@@ -8,12 +8,12 @@ Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).
 
 | Name | Import Path |
 | :--: | :---------: |
-| Dfa Simple | `@webwriter/automaton/snippets/dfa-simple.html` |
-| Dfa Complex | `@webwriter/automaton/snippets/dfa-complex.html` |
-| Nfa Simple | `@webwriter/automaton/snippets/nfa-simple.html` |
-| Nfa Complex | `@webwriter/automaton/snippets/nfa-complex.html` |
-| Pda Simple | `@webwriter/automaton/snippets/pda-simple.html` |
-| Pda Complex | `@webwriter/automaton/snippets/pda-complex.html` |
+| DFA (simple) | `@webwriter/automaton/snippets/dfa-simple.html` |
+| DFA (complex) | `@webwriter/automaton/snippets/dfa-complex.html` |
+| NFA (simple) | `@webwriter/automaton/snippets/nfa-simple.html` |
+| NFA (complex) | `@webwriter/automaton/snippets/nfa-complex.html` |
+| PDA (simple) | `@webwriter/automaton/snippets/pda-simple.html` |
+| PDA (complex) | `@webwriter/automaton/snippets/pda-complex.html` |
 
 
 

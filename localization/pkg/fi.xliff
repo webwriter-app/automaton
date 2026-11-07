@@ -7,21 +7,21 @@
 <unit id="label"><segment><source>Automaton</source><target>Automaatti</target></segment></unit>
 </file>
 <file id="./snippets/dfa-simple" original="./snippets/dfa-simple">
-<unit id="label"><segment><source>DFA simple</source><target>DFA yksinkertainen</target></segment></unit>
+<unit id="label"><segment><source>DFA (simple)</source><target>DFA (yksinkertainen)</target></segment></unit>
 </file>
 <file id="./snippets/dfa-complex" original="./snippets/dfa-complex">
-<unit id="label"><segment><source>DFA complex</source><target>DFA-kompleksi</target></segment></unit>
+<unit id="label"><segment><source>DFA (complex)</source><target>DFA (monimutkainen)</target></segment></unit>
 </file>
 <file id="./snippets/nfa-simple" original="./snippets/nfa-simple">
-<unit id="label"><segment><source>NFA simple</source><target>NFA yksinkertainen</target></segment></unit>
+<unit id="label"><segment><source>NFA (simple)</source><target>NFA (yksinkertainen)</target></segment></unit>
 </file>
 <file id="./snippets/nfa-complex" original="./snippets/nfa-complex">
-<unit id="label"><segment><source>NFA complex</source><target>NFA-kompleksi</target></segment></unit>
+<unit id="label"><segment><source>NFA (complex)</source><target>NFA (monimutkainen)</target></segment></unit>
 </file>
 <file id="./snippets/pda-simple" original="./snippets/pda-simple">
-<unit id="label"><segment><source>PDA simple</source><target>PDA yksinkertainen</target></segment></unit>
+<unit id="label"><segment><source>PDA (simple)</source><target>PDA (yksinkertainen)</target></segment></unit>
 </file>
 <file id="./snippets/pda-complex" original="./snippets/pda-complex">
-<unit id="label"><segment><source>PDA complex</source><target>PDA-kompleksi</target></segment></unit>
+<unit id="label"><segment><source>PDA (complex)</source><target>PDA (monimutkainen)</target></segment></unit>
 </file>
 </xliff>

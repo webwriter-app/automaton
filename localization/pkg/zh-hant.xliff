@@ -7,21 +7,21 @@
 <unit id="label"><segment><source>Automaton</source><target>自動化</target></segment></unit>
 </file>
 <file id="./snippets/dfa-simple" original="./snippets/dfa-simple">
-<unit id="label"><segment><source>DFA simple</source><target>簡單的 DFA</target></segment></unit>
+<unit id="label"><segment><source>DFA (simple)</source><target>DFA (簡單)</target></segment></unit>
 </file>
 <file id="./snippets/dfa-complex" original="./snippets/dfa-complex">
-<unit id="label"><segment><source>DFA complex</source><target>DFA 複合</target></segment></unit>
+<unit id="label"><segment><source>DFA (complex)</source><target>DFA (複雜)</target></segment></unit>
 </file>
 <file id="./snippets/nfa-simple" original="./snippets/nfa-simple">
-<unit id="label"><segment><source>NFA simple</source><target>NFA 簡單</target></segment></unit>
+<unit id="label"><segment><source>NFA (simple)</source><target>NFA (簡單)</target></segment></unit>
 </file>
 <file id="./snippets/nfa-complex" original="./snippets/nfa-complex">
-<unit id="label"><segment><source>NFA complex</source><target>NFA 複合體</target></segment></unit>
+<unit id="label"><segment><source>NFA (complex)</source><target>NFA (複雜)</target></segment></unit>
 </file>
 <file id="./snippets/pda-simple" original="./snippets/pda-simple">
-<unit id="label"><segment><source>PDA simple</source><target>簡易 PDA</target></segment></unit>
+<unit id="label"><segment><source>PDA (simple)</source><target>PDA (簡單)</target></segment></unit>
 </file>
 <file id="./snippets/pda-complex" original="./snippets/pda-complex">
-<unit id="label"><segment><source>PDA complex</source><target>PDA 複合體</target></segment></unit>
+<unit id="label"><segment><source>PDA (complex)</source><target>PDA (複雜)</target></segment></unit>
 </file>
 </xliff>
