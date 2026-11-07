@@ -2,6 +2,7 @@ import { css } from 'lit';
 
 export const stackStyles = css`
     .pda__stack {
+        position: relative;
         display: flex;
         flex-direction: column;
         box-sizing: border-box;
@@ -12,6 +13,24 @@ export const stackStyles = css`
         background-color: white;
         pointer-events: auto;
         z-index: 1400;
+    }
+
+    .pda__stack--help {
+        z-index: 2000;
+        pointer-events: none;
+    }
+
+    .pda__stack-help {
+        position: absolute;
+        right: calc(100% + 8px);
+        bottom: 0;
+        width: max-content;
+        max-width: min(220px, 26cqw);
+        padding: 4px 8px;
+        border-radius: 4px;
+        background: var(--sl-color-neutral-0, white);
+        font: var(--sl-font-size-small) var(--sl-font-sans, sans-serif);
+        overflow-wrap: anywhere;
     }
 
     .pda__stack-toggle {
@@ -83,6 +102,9 @@ export const stackStyles = css`
     }
 
     .pda__stack-item {
+        display: flex;
+        align-items: center;
+        gap: 2px;
         width: 100%;
         margin: 0;
 
@@ -90,6 +112,33 @@ export const stackStyles = css`
         box-sizing: border-box;
 
         border-top: 1px solid lightgray;
+    }
+
+    .pda__stack-item__tooltip {
+        display: block;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .pda__stack-item:has(.pda__stack-remove) sl-input::part(input) {
+        padding-inline: 4px;
+    }
+
+    .pda__stack-remove {
+        flex: 0 0 20px;
+        height: 28px;
+        padding: 0;
+        border: 0;
+        border-radius: var(--sl-border-radius-small);
+        background: transparent;
+        color: var(--sl-color-neutral-700);
+        font: 16px var(--sl-font-sans, sans-serif);
+        cursor: pointer;
+    }
+
+    .pda__stack-remove:hover {
+        color: var(--sl-color-danger-700);
+        background: var(--sl-color-danger-50);
     }
 
     .pda__stack-item.dragging sl-input::part(base) {
@@ -101,6 +150,7 @@ export const stackStyles = css`
     }
 
     .pda__stack-item--empty {
+        justify-content: center;
         font-size: var(--sl-font-size-small);
         color: var(--sl-color-neutral-500);
         text-align: center;

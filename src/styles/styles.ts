@@ -55,6 +55,7 @@ const baseStyles = css`
     }
 
     .workspace {
+        --stack-width: 62px;
         position: relative;
         display: flex;
         flex: 1;
@@ -133,35 +134,31 @@ const baseStyles = css`
         inset: 60px 10px 10px auto;
         display: flex;
         align-items: flex-end;
-        width: 62px;
+        width: var(--stack-width);
         pointer-events: none;
     }
 
+    .workspace[data-mode="simulate"] > stack-extension {
+        bottom: calc(20px + var(--sl-input-height-large));
+    }
+
+    .workspace:has(.editing-bar) > stack-extension {
+        bottom: 66px;
+    }
+
+    .workspace:has(> stack-extension) #simulatorMenu {
+        --simulator-feedback-end: calc(var(--stack-width) + 6px);
+    }
+
     @container automaton (width < 800px) {
-        .workspace[data-mode="simulate"] > stack-extension {
-            bottom: calc(20px + var(--sl-input-height-large));
-        }
-
-        .workspace:has(.editing-bar) > stack-extension {
-            bottom: 66px;
-        }
-
-        .workspace:has(> stack-extension) #simulatorMenu {
-            --simulator-feedback-end: 68px;
+        .workspace[data-mode="edit"]:has(> stack-extension[delete]) {
+            --stack-width: 88px;
         }
     }
 
     @container automaton (width >= 800px) {
-        .workspace > stack-extension {
-            position: static;
-            align-items: flex-start;
-            flex: 0 0 120px;
-            box-sizing: border-box;
-            padding: 10px;
-        }
-
-        .workspace:has(.editing-bar) > stack-extension {
-            margin-bottom: 56px;
+        .workspace {
+            --stack-width: 100px;
         }
     }
 
@@ -283,6 +280,33 @@ const baseStyles = css`
     .help-overlay .line {
         border-bottom: 2px solid white;
         border-right: 2px solid white;
+    }
+
+    .help-overlay__fullscreen {
+        top: 228px;
+        right: 10px;
+    }
+
+    .edit-help__transition {
+        bottom: 128px;
+        left: 80px;
+    }
+
+    @container automaton (width >= 500px) {
+        .workspace:has(> stack-extension) .help-overlay__fullscreen {
+            top: 54px;
+            right: calc(var(--stack-width) + 18px);
+        }
+
+        .workspace:has(> stack-extension) .edit-help {
+            width: calc(100% - var(--stack-width));
+        }
+    }
+
+    @container automaton (500px <= width < 800px) {
+        .workspace:has(> stack-extension) .edit-help__transition {
+            bottom: 151px;
+        }
     }
 
     .simulator-help {

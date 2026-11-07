@@ -481,7 +481,7 @@ describe("Simulation Tests", () => {
 			await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 			await select("node", 1);
 			assert.closeTo(bar()!.getBoundingClientRect().right, widget.getBoundingClientRect().right - 10, 1,
-				"The bar remains aligned with the widget's edge when the PDA stack is docked");
+				"The bar remains aligned with the widget's edge on a wide PDA");
 			widget.permissions = "077";
 			await widget.updateComplete;
 			assert.isNull(bar()!.querySelector(".editing-bar__delete"));
@@ -654,6 +654,68 @@ describe("Simulation Tests", () => {
 			assert.equal(getComputedStyle(widget).outlineStyle, "none");
 		});
 
+		it("shows stack removal and help within the widget at compact and wide widths", async () => {
+			const widget = await createConfiguredPDA();
+			widget.style.width = "300px";
+			widget.style.height = "300px";
+			const layout = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+			await layout();
+			const root = widget.shadowRoot!;
+			const stack = root.querySelector<StackExtension>("stack-extension")!;
+			const stackRoot = stack.shadowRoot!;
+			const removeButtons = () => stackRoot.querySelectorAll<HTMLButtonElement>(".pda__stack-remove");
+			const assertInside = (element: Element) => {
+				const rect = element.getBoundingClientRect();
+				const widgetRect = widget.getBoundingClientRect();
+				assert.isAbove(rect.width, 0);
+				assert.isAtLeast(rect.left, widgetRect.left);
+				assert.isAtMost(rect.right, widgetRect.right);
+				assert.isAtLeast(rect.top, widgetRect.top);
+				assert.isAtMost(rect.bottom, widgetRect.bottom);
+			};
+			stack.setStack(["A", "B", "C"]);
+			stackRoot.querySelector<HTMLButtonElement>(".pda__stack-toggle")!.click();
+			await layout();
+			assert.lengthOf(removeButtons(), 3);
+			assertInside(removeButtons()[1]);
+			const field = removeButtons()[1].parentElement!.querySelector("sl-input")!;
+			assertInside(field);
+			assert.isAtMost(field.getBoundingClientRect().right, removeButtons()[1].getBoundingClientRect().left);
+			removeButtons()[1].click();
+			await stack.updateComplete;
+			assert.deepEqual(stack.getStack(), ["A", "C"]);
+
+			const menu = root.querySelector("#topMenu")!.shadowRoot!;
+			menu.querySelector<HTMLElement>(".topmenu--hamburger > sl-button")!.click();
+			await layout();
+			menu.querySelector<HTMLElement>("sl-button:has(.bi-question-lg)")!.click();
+			await layout();
+			const compactHelp = root.querySelector(".compact-help")!;
+			const stackHelp = [...compactHelp.children].find(item => item.textContent?.includes("Click × to remove an item"))!;
+			assertInside(compactHelp);
+			assert.isAtMost(stackHelp.getBoundingClientRect().bottom, compactHelp.getBoundingClientRect().bottom);
+			for (const width of [500, 800]) {
+				widget.style.width = `${width}px`;
+				await layout();
+				const help = stackRoot.querySelector(".pda__stack-help")!;
+				assert.include(help.textContent, "Click × to remove an item");
+				assertInside(help);
+			}
+			widget.permissions = "775";
+			await widget.updateComplete;
+			await stack.updateComplete;
+			assert.lengthOf(removeButtons(), 0);
+			widget.permissions = "777";
+			await widget.updateComplete;
+			await stack.updateComplete;
+			assert.lengthOf(removeButtons(), 2);
+			widget.mode = "simulate";
+			await widget.updateComplete;
+			await stack.updateComplete;
+			assert.lengthOf(removeButtons(), 0);
+			assert.equal(stackRoot.querySelector(".pda__stack-help")!.textContent?.trim(), "Stack");
+		});
+
 		it("adapts the menus, graph and PDA stack to the widget width", async () => {
 			const widget = await createConfiguredPDA();
 			widget.style.height = "300px";
@@ -698,10 +760,10 @@ describe("Simulation Tests", () => {
 				assert.closeTo(graph.querySelector("canvas")!.getBoundingClientRect().width, canvas.width, 1);
 				assert.isBelow(input.top, canvas.bottom, `${width}px simulator overlays the canvas`);
 				assert.isAtMost(input.bottom, canvas.bottom);
-				if (width < 800) {
-					assert.isAtMost(stackPanel.bottom, input.top, `${width}px stack clears the simulator bar`);
-				}
-				assert.equal(stackPanel.left >= canvas.right, width >= 800, `${width}px stack docking`);
+				assert.isAtMost(stackPanel.bottom, input.top, `${width}px stack clears the simulator bar`);
+				assert.isBelow(stackPanel.left, canvas.right, `${width}px stack overlays the canvas`);
+				assert.isAtMost(stackPanel.right, canvas.right);
+				assert.closeTo(canvas.width, widget.getBoundingClientRect().width, 1, `${width}px canvas fills the widget`);
 				assert.equal(getComputedStyle(toggle).display !== "none", compact, `${width}px stack toggle`);
 				assert.equal(getComputedStyle(items()).display === "none", compact, `${width}px stack visibility`);
 			}

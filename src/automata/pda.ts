@@ -497,6 +497,9 @@ export class StackExtension extends LitElementWw {
     @property({ type: Boolean, attribute: true, reflect: true })
     public accessor change: boolean = true;
 
+    @property({ attribute: false })
+    public accessor showHelp = false;
+
     static get styles() {
         return stackStyles;
     }
@@ -561,8 +564,13 @@ export class StackExtension extends LitElementWw {
 
     public render(): TemplateResult {
         const label = msg("Stack");
-        return html`<div class="pda__stack">
+        const canRemove = this.isEditable() && this.delete;
+        return html`<div class=${this.showHelp ? 'pda__stack pda__stack--help' : 'pda__stack'}>
             <div class="pda__stack-title">${label}</div>
+            ${this.showHelp ? html`<div class="pda__stack-help">
+                <strong>${label}</strong>
+                ${canRemove ? html`<br>${msg("Click × to remove an item")}` : ''}
+            </div>` : ''}
             <button
                 type="button"
                 class="pda__stack-toggle"
@@ -660,6 +668,12 @@ export class StackExtension extends LitElementWw {
                                     spellcheck="false"
                                 ></sl-input>
                             </sl-tooltip>
+                            ${canRemove ? html`
+                                <button type="button" class="pda__stack-remove"
+                                    aria-label=${msg("Remove stack item")}
+                                    title=${msg("Remove stack item")}
+                                    @click=${() => this.deleteStackSymbol(i)}>×</button>
+                            ` : ''}
                         </div>
                     `
                 )}
@@ -695,6 +709,7 @@ export class StackExtension extends LitElementWw {
     }
 
     private deleteStackSymbol(index: number): void {
+        if (!this.isEditable() || !this.delete || !this._stack.get(index)) return;
         Logger.log('deleteStackSymbol', index, this._stack.get());
         this._stack.remove(index);
         const symbols = this._stack.get().map((s) => s.symbol);

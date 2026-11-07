@@ -440,6 +440,7 @@ export class AutomatonComponent extends LitElementWw {
 			stack.add = permissions.add;
 			stack.delete = permissions.delete;
 			stack.change = permissions.change;
+			stack.showHelp = this._helpOverlay && !this._topMenuCollapsed;
 		}
 
 		if (_changedProperties.has("showHelp") || _changedProperties.has("type")) {
@@ -520,7 +521,7 @@ export class AutomatonComponent extends LitElementWw {
 					>${msg("Mode Switch")}</sl-tag
 				>
 
-				<sl-tag size="small" style="top: 228px;right:10px"
+				<sl-tag size="small" class="help-overlay__fullscreen"
 					>${msg("Fullscreen")}</sl-tag
 				>
 				<div
@@ -567,7 +568,7 @@ export class AutomatonComponent extends LitElementWw {
 			</div>
 
 			<div
-				class="help-overlay"
+				class="help-overlay edit-help"
 				style=${styleMap({
 					display: this.mode === "edit" ? "block" : "none",
 				})}
@@ -575,7 +576,7 @@ export class AutomatonComponent extends LitElementWw {
 				<sl-tag size="small" style="bottom: 26px;left: 70px;"
 					>${msg("Click or drag + to add a node")}</sl-tag
 				>
-				<sl-tag size="small" style="bottom: 128px;left: 80px;"
+				<sl-tag size="small" class="edit-help__transition"
 					>${msg("Add Transition by drag and drop")}</sl-tag
 				>
 
@@ -602,6 +603,12 @@ export class AutomatonComponent extends LitElementWw {
 			<div class="compact-help" role="region" aria-label=${msg("Help")} tabindex="0">
 				<span>${msg("Mode Switch")}</span>
 				<span>${msg("Menu")}</span>
+				${this.automaton instanceof PDA ? html`
+					<span><strong>${msg("Stack")}</strong>
+						${this.mode === "edit" && this.settings.permissions.stack.delete
+							? html`<br>${msg("Click × to remove an item")}` : ""}
+					</span>
+				` : ""}
 				${this.mode === "edit" ? html`
 					<span>${msg("Click or drag + to add a node")}</span>
 					<span>${msg("Add Transition by drag and drop")}</span>
