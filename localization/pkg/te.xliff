@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.1" srcLang="en" trgLang="te">
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.1" srcLang="en-US" trgLang="te">
 <file id="." original=".">
 <unit id="description"><segment><source>Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).</source><target>పరిమిత ఆటోమేటా (DFA, NFA) మరియు పుష్‌డౌన్ ఆటోమేటా (PDA)తో సృష్టించండి, దృశ్యమానం చేయండి మరియు ప్రయోగాలు చేయండి.</target></segment></unit>
 </file>

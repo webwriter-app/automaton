@@ -984,12 +984,24 @@ describe("Simulation Tests", () => {
 				} finally {
 					parent.remove();
 				}
-				await LOCALIZE.setLocale("PT-br");
-				assert.equal(LOCALIZE.getLocale(), "pt");
-				await LOCALIZE.setLocale("zh-Hant");
-				assert.equal(LOCALIZE.getLocale(), "zh");
-				await LOCALIZE.setLocale("en-US");
-				assert.equal(LOCALIZE.getLocale(), sourceLocale);
+			for (const [tag, expected] of [
+				["PT-br", "pt-BR"],
+				["pt", "pt-PT"],
+				["de", "de-DE"],
+				["zh-TW", "zh-Hant"],
+				["zh-CN", "zh-Hans"],
+				["pa-PK", "pa-Arab"],
+				["pa-Aran-PK", "pa-Arab"],
+				["pa-IN", "pa-Guru"],
+				["sr-ME", "sr-Latn"],
+				["cnr", "cnr"],
+				["en-GB", "en-GB"],
+				["en", "en-US"],
+				["", sourceLocale],
+			]) {
+				await LOCALIZE.setLocale(tag);
+				assert.equal(LOCALIZE.getLocale(), expected, tag);
+			}
 			} finally {
 				await LOCALIZE.setLocale(sourceLocale);
 			}
