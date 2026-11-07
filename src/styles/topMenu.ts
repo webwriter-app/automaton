@@ -149,7 +149,7 @@ export const topMenuStyles = css`
     }
 
     .definition-pane sl-tab-group {
-        --track-width: 0px;
+        --track-color: transparent;
         display: flex;
         flex: 1;
         flex-direction: column;
@@ -170,10 +170,6 @@ export const topMenuStyles = css`
     .definition-pane sl-tab-group::part(body) {
         min-block-size: 0;
         overscroll-behavior: contain;
-    }
-
-    .definition-pane sl-tab[active]::part(base) {
-        box-shadow: inset 0 -2px var(--sl-color-primary-600);
     }
 
     .definition-pane sl-tab-panel {
@@ -230,7 +226,6 @@ export const topMenuStyles = css`
     .definition-transitions h4 {
         display: inline;
         margin: 0;
-        margin-inline-end: 8px;
         font-size: inherit;
     }
 
@@ -249,9 +244,6 @@ export const topMenuStyles = css`
         display: inline-block;
         box-sizing: border-box;
         max-inline-size: 100%;
-    }
-
-    .definition-transitions li + li > code {
         border-inline-start: 1px solid var(--sl-panel-border-color);
         padding-inline-start: 6px;
     }
