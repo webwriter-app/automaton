@@ -220,7 +220,7 @@ export const topMenuStyles = css`
 
     .definition-transitions {
         border-block-start: 1px solid var(--sl-panel-border-color);
-        padding: 8px 0;
+        padding: 5px 0;
     }
 
     .definition-transitions:last-child {
@@ -228,23 +228,32 @@ export const topMenuStyles = css`
     }
 
     .definition-transitions h4 {
-        margin: 0 0 4px;
+        display: inline;
+        margin: 0;
+        margin-inline-end: 8px;
         font-size: inherit;
     }
 
     .definition-transitions ul {
-        display: grid;
-        gap: 4px;
+        display: inline;
         margin: 0;
-        padding-inline-start: 12px;
+        padding: 0;
         list-style: none;
     }
 
     .definition-transitions li {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: baseline;
-        column-gap: 8px;
+        display: inline;
+    }
+
+    .definition-transitions li > code {
+        display: inline-block;
+        box-sizing: border-box;
+        max-inline-size: 100%;
+    }
+
+    .definition-transitions li + li > code {
+        border-inline-start: 1px solid var(--sl-panel-border-color);
+        padding-inline-start: 6px;
     }
 
     .definition-stack-operation, .definition-empty {

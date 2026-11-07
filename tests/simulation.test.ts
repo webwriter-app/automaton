@@ -835,6 +835,10 @@ describe("Simulation Tests", () => {
 			assert.deepEqual([...groups[0].querySelectorAll("li > code")].map(row => row.textContent), ["ε → q1", "a → q1"]);
 			const operations = [...pane.querySelectorAll(".definition-stack-operation")].map(row => row.textContent!.trim());
 			assert.deepEqual(operations, ["Push A · Top is X", "Leave stack unchanged · Top is Z", "Pop A", "Require an empty stack"]);
+			const firstGroup = groups[0];
+			const firstRule = firstGroup.querySelector("li > code")!.getBoundingClientRect();
+			assert.closeTo(firstGroup.querySelector("h4 > code")!.getBoundingClientRect().top, firstRule.top, 1);
+			assert.isAbove(firstGroup.querySelector("li .definition-stack-operation")!.getBoundingClientRect().left, firstRule.right);
 
 			const tabs = pane.querySelector("sl-tab-group")!;
 			const viewport = tabs.shadowRoot!.querySelector<HTMLElement>('[part="body"]')!;

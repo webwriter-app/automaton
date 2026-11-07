@@ -394,7 +394,7 @@ export class TopMenu extends LitElementWw {
             ${groups.length ? groups.map(node => html`
                 <section class="definition-transitions">
                     <h4><code>${node.label}</code></h4>
-                    <ul>
+                    <ul role="list">
                         ${outgoing.get(node.id)!.map(edge => edge.symbols.map((symbol, index) => html`
                             <li>
                                 <code>${symbol || 'ε'} → ${labels.get(edge.to)}</code>
