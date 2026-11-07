@@ -1,1 +1,20 @@
-<webwriter-automaton nodes="#0(-160|0);1(0|0);%2(160|0)" transitions="0-1[{n||}];1-2[{e||}];1-1[a{o|a|},b{o|b|}]@0;0-0[a{p|a|},b{p|b|}]@0" type="pda"></webwriter-automaton>
+<webwriter-automaton>
+  <script type="application/json" slot="data">
+    {
+      "format": "webwriter-automaton",
+      "version": 1,
+      "type": "pda",
+      "states": [
+        {"id": 0, "label": "q0", "x": -160, "y": 0, "initial": true},
+        {"id": 1, "label": "q1", "x": 0, "y": 0},
+        {"id": 2, "label": "q2", "x": 160, "y": 0, "final": true}
+      ],
+      "transitions": [
+        {"id": 0, "from": 0, "to": 1, "rules": [{"read": "", "stack": {"op": "none"}}]},
+        {"id": 1, "from": 1, "to": 2, "rules": [{"read": "", "stack": {"op": "empty"}}]},
+        {"id": 2, "from": 1, "to": 1, "rules": [{"read": "a", "stack": {"op": "pop", "symbol": "a"}}, {"read": "b", "stack": {"op": "pop", "symbol": "b"}}], "loopAngle": 0},
+        {"id": 3, "from": 0, "to": 0, "rules": [{"read": "a", "stack": {"op": "push", "symbol": "a"}}, {"read": "b", "stack": {"op": "push", "symbol": "b"}}], "loopAngle": 0}
+      ]
+    }
+  </script>
+</webwriter-automaton>

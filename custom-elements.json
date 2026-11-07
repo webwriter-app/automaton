@@ -61,37 +61,31 @@
               "kind": "field",
               "name": "nodes",
               "type": {
-                "text": "Node[]"
+                "text": "readonly Node[]"
               },
               "privacy": "public",
-              "default": "[]",
-              "description": "Each automaton state is encoded as a string using the following format:<br>`[#][%]<id>[<label>](<x>|<y>)`<br><br>Regex:<br>`^(#)?(%)?(\\d+)(?:\\[([^\\]]*(?:\\\\.[^\\]]*)*)\\])?\\((-?\\d+)\\|(-?\\d+)\\)$`<br><br>Explanation:<br>`#`: Optional - marks the initial state.<br>`%`: Optional - marks the final (accepting) state.<br>`<id>`: Required non-negative integer - unique state ID.<br>`[<label>]`: Optional - URI-encoded label. Defaults to `q<id>` if omitted.<br>`(<x>|<y>)`: Required coordinates - signed integers representing the node's position.<br><br>Multiple nodes are separated by semicolons (`;`). Example:<br>`#0(-150|0);%1[accept](0|0);2[sink](150|0)`<br><br>Requirements:<br>Coordinates are mandatory, and there must be at least 150 units of distance between any two nodes.<br>In the case of DFAs, the automaton MUST be complete, i.e. every node MUST have EXACTLY one transition for every input symbol. Correspondingly, a sink should be non-final and have self-loops on all inputs. Implicit sinks are NOT allowed.",
-              "attribute": "nodes",
-              "reflects": true
+              "description": "The authored states from the JSON data block.",
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "transitions",
               "type": {
-                "text": "Transition[]"
+                "text": "readonly Transition[]"
               },
               "privacy": "public",
-              "default": "[]",
-              "description": "Each automaton transition is encoded as:<br>`<from>-<to>[<symbolsOrStackOps>][~<roundness>][@<angle>]`<br>Multiple transitions are separated by semicolons (`;`).<br><br>Regex:<br>`^(?:;\\d+-\\d+(?:\\[(?:[^,\\{\\]\\|]+(?:,[^,\\{\\]\\|]+)*|[^,\\{\\]\\|]*\\{(?:p|o|e|n)\\|[^,\\{\\]\\|]*\\|[^,\\{\\]\\|]*\\}(?:,[^,\\{\\]\\|]*\\{(?:p|o|e|n)\\|[^,\\{\\]\\|]*\\|[^,\\{\\]\\|]*\\})*)\\])?(?:~(-?)(\\d+(?:\\.\\d+)?))?(?:@(-?\\d+))?)*$`<br><br>Explanation:<br>`<from>-<to>`: Required - origin and destination state IDs (non-negative integers).<br>`[<symbolsOrStackOps>]`: Required - DFA or NFA -> Symbols only: one or more URI-encoded symbols, separated by commas. PDA -> Stack operations: <symbol>{<op>|<stackSymbol>|<condition>}, with <op> one of: p (push), o (pop), e (empty check), or n (no-op); <stackSymbol> being the optional symbol to push or pop, and <condition> being an optional symbol the stack must have on top.<br>`~<roundness>`: Optional - curvature of the arc, negative sign means counter-clockwise. 0.2 is recommended if there is a circle between two states.<br>`@<angle>`: Optional - integer degrees for self-loop placement. Defaults to 45°.<br><br>Multiple transitions must be separated by semicolons, no trailing `;`.<br><br>Examples:<br>`0-1[a]`<br>`1-2[a,b]~0.5`<br>`2-2[a{p|X|},b{o||}]@45;0-1[c]~1.2`",
-              "attribute": "transitions",
-              "reflects": true
+              "description": "The authored transitions from the JSON data block.",
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "startingStack",
               "type": {
-                "text": "string[]"
+                "text": "readonly string[]"
               },
               "privacy": "public",
-              "default": "[]",
-              "description": "The authored PDA starting stack, stored as a JSON array from bottom to top.",
-              "attribute": "startingstack",
-              "reflects": true
+              "description": "The authored PDA starting stack, ordered from bottom to top.",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -100,10 +94,8 @@
                 "text": "AutomatonType"
               },
               "privacy": "public",
-              "default": "\"dfa\"",
-              "description": "The type of the automaton. Can be `'dfa'`, `'nfa'`, or `'pda'`.",
-              "attribute": "type",
-              "reflects": true
+              "description": "The authored automaton type.",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -133,13 +125,11 @@
               "kind": "field",
               "name": "forcedAlphabet",
               "type": {
-                "text": "string[]"
+                "text": "readonly string[]"
               },
               "privacy": "public",
-              "default": "[]",
-              "description": "The alphabet that the automaton is forced to use as characters separated by spaces.",
-              "attribute": "forcedAlphabet",
-              "reflects": true
+              "description": "The explicitly configured alphabet from the JSON data block.",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -376,42 +366,6 @@
           ],
           "attributes": [
             {
-              "name": "nodes",
-              "type": {
-                "text": "Node[]"
-              },
-              "default": "[]",
-              "description": "Each automaton state is encoded as a string using the following format:<br>`[#][%]<id>[<label>](<x>|<y>)`<br><br>Regex:<br>`^(#)?(%)?(\\d+)(?:\\[([^\\]]*(?:\\\\.[^\\]]*)*)\\])?\\((-?\\d+)\\|(-?\\d+)\\)$`<br><br>Explanation:<br>`#`: Optional - marks the initial state.<br>`%`: Optional - marks the final (accepting) state.<br>`<id>`: Required non-negative integer - unique state ID.<br>`[<label>]`: Optional - URI-encoded label. Defaults to `q<id>` if omitted.<br>`(<x>|<y>)`: Required coordinates - signed integers representing the node's position.<br><br>Multiple nodes are separated by semicolons (`;`). Example:<br>`#0(-150|0);%1[accept](0|0);2[sink](150|0)`<br><br>Requirements:<br>Coordinates are mandatory, and there must be at least 150 units of distance between any two nodes.<br>In the case of DFAs, the automaton MUST be complete, i.e. every node MUST have EXACTLY one transition for every input symbol. Correspondingly, a sink should be non-final and have self-loops on all inputs. Implicit sinks are NOT allowed.",
-              "fieldName": "nodes"
-            },
-            {
-              "name": "transitions",
-              "type": {
-                "text": "Transition[]"
-              },
-              "default": "[]",
-              "description": "Each automaton transition is encoded as:<br>`<from>-<to>[<symbolsOrStackOps>][~<roundness>][@<angle>]`<br>Multiple transitions are separated by semicolons (`;`).<br><br>Regex:<br>`^(?:;\\d+-\\d+(?:\\[(?:[^,\\{\\]\\|]+(?:,[^,\\{\\]\\|]+)*|[^,\\{\\]\\|]*\\{(?:p|o|e|n)\\|[^,\\{\\]\\|]*\\|[^,\\{\\]\\|]*\\}(?:,[^,\\{\\]\\|]*\\{(?:p|o|e|n)\\|[^,\\{\\]\\|]*\\|[^,\\{\\]\\|]*\\})*)\\])?(?:~(-?)(\\d+(?:\\.\\d+)?))?(?:@(-?\\d+))?)*$`<br><br>Explanation:<br>`<from>-<to>`: Required - origin and destination state IDs (non-negative integers).<br>`[<symbolsOrStackOps>]`: Required - DFA or NFA -> Symbols only: one or more URI-encoded symbols, separated by commas. PDA -> Stack operations: <symbol>{<op>|<stackSymbol>|<condition>}, with <op> one of: p (push), o (pop), e (empty check), or n (no-op); <stackSymbol> being the optional symbol to push or pop, and <condition> being an optional symbol the stack must have on top.<br>`~<roundness>`: Optional - curvature of the arc, negative sign means counter-clockwise. 0.2 is recommended if there is a circle between two states.<br>`@<angle>`: Optional - integer degrees for self-loop placement. Defaults to 45°.<br><br>Multiple transitions must be separated by semicolons, no trailing `;`.<br><br>Examples:<br>`0-1[a]`<br>`1-2[a,b]~0.5`<br>`2-2[a{p|X|},b{o||}]@45;0-1[c]~1.2`",
-              "fieldName": "transitions"
-            },
-            {
-              "name": "startingstack",
-              "type": {
-                "text": "string[]"
-              },
-              "default": "[]",
-              "description": "The authored PDA starting stack, stored as a JSON array from bottom to top.",
-              "fieldName": "startingStack"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "AutomatonType"
-              },
-              "default": "\"dfa\"",
-              "description": "The type of the automaton. Can be `'dfa'`, `'nfa'`, or `'pda'`.",
-              "fieldName": "type"
-            },
-            {
               "name": "mode",
               "type": {
                 "text": "\"edit\" | \"simulate\""
@@ -428,15 +382,6 @@
               "default": "\"\"",
               "description": "A regular expression to check the language of the automaton against.",
               "fieldName": "testLanguage"
-            },
-            {
-              "name": "forcedAlphabet",
-              "type": {
-                "text": "string[]"
-              },
-              "default": "[]",
-              "description": "The alphabet that the automaton is forced to use as characters separated by spaces.",
-              "fieldName": "forcedAlphabet"
             },
             {
               "name": "testWords",

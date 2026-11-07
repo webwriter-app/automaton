@@ -47,12 +47,8 @@ import { biBoxes, biExclamationTriangle, biPencil } from "./styles/icons";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { guard } from "lit/directives/guard.js";
-import {
-	checkIfNodesUpdated,
-	checkIfTransitionsUpdated,
-	stripNode,
-	stripTransition,
-} from "./utils/updates";
+import { stripNode, stripTransition } from "./utils/updates";
+import { emptyMachine, machineBlockSelector, readMachine, writeMachine, type Machine } from "./utils/machineData";
 import { NFA } from "./automata/nfa";
 import { PDA, StackExtension } from "./automata/pda";
 
@@ -79,45 +75,31 @@ export class AutomatonComponent extends LitElementWw {
 
 	protected localize = LOCALIZE;
 
-	/**
-     * Each automaton state is encoded as a string using the following format:<br>`[#][%]<id>[<label>](<x>|<y>)`<br><br>Regex:<br>`^(#)?(%)?(\d+)(?:\[([^\]]*(?:\\.[^\]]*)*)\])?\((-?\d+)\|(-?\d+)\)$`<br><br>Explanation:<br>`#`: Optional - marks the initial state.<br>`%`: Optional - marks the final (accepting) state.<br>`<id>`: Required non-negative integer - unique state ID.<br>`[<label>]`: Optional - URI-encoded label. Defaults to `q<id>` if omitted.<br>`(<x>|<y>)`: Required coordinates - signed integers representing the node's position.<br><br>Multiple nodes are separated by semicolons (`;`). Example:<br>`#0(-150|0);%1[accept](0|0);2[sink](150|0)`<br><br>Requirements:<br>Coordinates are mandatory, and there must be at least 150 units of distance between any two nodes.<br>In the case of DFAs, the automaton MUST be complete, i.e. every node MUST have EXACTLY one transition for every input symbol. Correspondingly, a sink should be non-final and have self-loops on all inputs. Implicit sinks are NOT allowed.
-     */
-	@property({
-		type: Array,
-		attribute: true,
-		reflect: true,
-		converter: ATTRIBUTE_CONVERTERS.nodeArray,
-		hasChanged: checkIfNodesUpdated,
-	})
-	public accessor nodes: Node[] = [];
+	static override readonly dataType = "application/json";
 
-	private _transitions: Transition[] = [];
+	@state()
+	private accessor _machine: Machine = emptyMachine();
 
-	/**
-	 * Each automaton transition is encoded as:<br>`<from>-<to>[<symbolsOrStackOps>][~<roundness>][@<angle>]`<br>Multiple transitions are separated by semicolons (`;`).<br><br>Regex:<br>`^(?:;\d+-\d+(?:\[(?:[^,\{\]\|]+(?:,[^,\{\]\|]+)*|[^,\{\]\|]*\{(?:p|o|e|n)\|[^,\{\]\|]*\|[^,\{\]\|]*\}(?:,[^,\{\]\|]*\{(?:p|o|e|n)\|[^,\{\]\|]*\|[^,\{\]\|]*\})*)\])?(?:~(-?)(\d+(?:\.\d+)?))?(?:@(-?\d+))?)*$`<br><br>Explanation:<br>`<from>-<to>`: Required - origin and destination state IDs (non-negative integers).<br>`[<symbolsOrStackOps>]`: Required - DFA or NFA -> Symbols only: one or more URI-encoded symbols, separated by commas. PDA -> Stack operations: <symbol>{<op>|<stackSymbol>|<condition>}, with <op> one of: p (push), o (pop), e (empty check), or n (no-op); <stackSymbol> being the optional symbol to push or pop, and <condition> being an optional symbol the stack must have on top.<br>`~<roundness>`: Optional - curvature of the arc, negative sign means counter-clockwise. 0.2 is recommended if there is a circle between two states.<br>`@<angle>`: Optional - integer degrees for self-loop placement. Defaults to 45°.<br><br>Multiple transitions must be separated by semicolons, no trailing `;`.<br><br>Examples:<br>`0-1[a]`<br>`1-2[a,b]~0.5`<br>`2-2[a{p|X|},b{o||}]@45;0-1[c]~1.2`
-	 */
-	@property({
-		type: Array,
-		attribute: true,
-		reflect: true,
-		converter: ATTRIBUTE_CONVERTERS.transitionArray,
-		hasChanged: checkIfTransitionsUpdated,
-	})
-	public set transitions(value: Transition[]) { this._transitions = value; }
-	public get transitions() { return this._transitions; }
+	@state()
+	private accessor _invalidMachineData = false;
 
-	/** The authored PDA starting stack, stored as a JSON array from bottom to top. */
-	@property({
-		attribute: "startingstack",
-		reflect: true,
-		useDefault: true,
-		converter: ATTRIBUTE_CONVERTERS.stackArray,
-	})
-	public accessor startingStack: string[] = [];
+	private machineText: string | null = null;
+	private machineReadPending = false;
 
-	/** The type of the automaton. Can be `'dfa'`, `'nfa'`, or `'pda'`. */
-	@property({ type: String, attribute: true, reflect: true })
-	public accessor type: AutomatonType = "dfa";
+	/** The authored states from the JSON data block. */
+	public get nodes(): readonly Node[] { return this._machine.nodes; }
+
+	/** The authored transitions from the JSON data block. */
+	public get transitions(): readonly Transition[] { return this._machine.transitions; }
+
+	/** The authored PDA starting stack, ordered from bottom to top. */
+	public get startingStack(): readonly string[] { return this._machine.startingStack; }
+
+	/** The authored automaton type. */
+	public get type(): AutomatonType { return this._machine.type; }
+
+	/** The explicitly configured alphabet from the JSON data block. */
+	public get forcedAlphabet(): readonly string[] { return this._machine.requiredAlphabet; }
 
 	/** The current mode. Can be `'edit'`, or `'simulate'`. */
 	@property({ type: String, attribute: true, reflect: true })
@@ -126,10 +108,6 @@ export class AutomatonComponent extends LitElementWw {
 	/** A regular expression to check the language of the automaton against. */
 	@property({ type: String, attribute: true, reflect: true, useDefault: true })
 	public accessor testLanguage: string = "";
-
-	/** The alphabet that the automaton is forced to use as characters separated by spaces. */
-	@property({ type: Array, attribute: true, reflect: true })
-	public accessor forcedAlphabet: string[] = [];
 
 	/** Words used for automatically testing the automaton as a string separated by spaces. */
 	@property({ type: Array, attribute: true, reflect: true })
@@ -255,7 +233,7 @@ export class AutomatonComponent extends LitElementWw {
 	get forcedAlphabetInput() { return (this.forcedAlphabet ?? []).join(","); }
 	set forcedAlphabetInput(value: string | null) {
 		const symbols = value?.split(",").filter(symbol => symbol.length === 1) ?? [];
-		this.setAttribute("forcedalphabet", JSON.stringify([...new Set(symbols)]));
+		if (this.canWriteMachine()) this.saveMachine({ ...this._machine, requiredAlphabet: [...new Set(symbols)] });
 	}
 
 	/** @internal */
@@ -277,12 +255,10 @@ export class AutomatonComponent extends LitElementWw {
 		this._helpOverlay = h;
 	}
 
-	private writtenNodes?: Node[];
-	private writtenTransitions?: Transition[];
 
 	private replaceAutomaton(a: Automaton) {
 		if (this._graph) this.automaton.simulator.reset();
-		if (a instanceof DFA) a.requiredAlphabet = this.forcedAlphabet ?? [];
+		if (a instanceof DFA) a.requiredAlphabet = this._machine.requiredAlphabet;
 		a.showErrors = this.showHelp === "true";
 		this._automaton = a;
 		this._graph?.setAutomaton(this._automaton);
@@ -358,7 +334,7 @@ export class AutomatonComponent extends LitElementWw {
 		};
 		this.simulatorMenu.automaton = this.automaton;
 		this.simulatorMenu.graph = this._graph;
-		this._graph.setInteractive(this.mode === "edit");
+		this._graph.setInteractive(this.mode === "edit" && !this._invalidMachineData);
 		if (this.mode === "simulate") this.simulatorMenu.init();
 
 		Logger.log("first updated");
@@ -374,37 +350,27 @@ export class AutomatonComponent extends LitElementWw {
 	): void {
 		super.willUpdate(_changedProperties);
 
-		const type = this.type === "dfa" || this.type === "nfa" || this.type === "pda"
-			? this.type : this.automaton.type;
-		const replace = _changedProperties.has("type") &&
-			(!this._graph || type !== this.automaton.type);
-		// A local edit has already been applied to the graph. Undo, redo and remote
-		// edits instead replace the graph from the complete authored snapshot.
-		const readGraph = (_changedProperties.has("nodes") && this.nodes !== this.writtenNodes) ||
-			(_changedProperties.has("transitions") && this.transitions !== this.writtenTransitions);
-		this.writtenNodes = undefined;
-		this.writtenTransitions = undefined;
-		const readTransitions = () => {
-			const nodeIds = new Set(this.nodes.map(node => node.id));
-			return this.transitionsForType(
-				this.transitions.filter(edge => nodeIds.has(edge.from) && nodeIds.has(edge.to)), type);
-		};
+		this.syncMachine();
+		const { type, nodes, transitions, startingStack, requiredAlphabet } = this._machine;
+		const previous = _changedProperties.get("_machine") as Machine | undefined;
+		const machineChanged = _changedProperties.has("_machine");
+		const alphabetChanged = machineChanged && previous?.requiredAlphabet !== requiredAlphabet;
+		const readGraph = this.machineReadPending;
+		this.machineReadPending = false;
+		const replace = type !== this.automaton.type;
 		if (replace) {
 			const AutomatonClass = { dfa: DFA, nfa: NFA, pda: PDA }[type];
-			this.replaceAutomaton(new AutomatonClass(this.nodes, readTransitions()));
+			this.replaceAutomaton(new AutomatonClass(nodes, transitions));
 		} else if (readGraph) {
 			this._graph?.cancelConnection();
 			this._graph?.network.unselectAll();
-			this.automaton.loadAutomaton({
-				nodes: this.nodes,
-				transitions: readTransitions(),
-			});
+			this.automaton.loadAutomaton({ nodes, transitions });
 		}
-		if (!replace && _changedProperties.has("forcedAlphabet") && this.automaton instanceof DFA) {
-			this.automaton.requiredAlphabet = this.forcedAlphabet ?? [];
+		if (!replace && alphabetChanged && this.automaton instanceof DFA) {
+			this.automaton.requiredAlphabet = requiredAlphabet;
 		}
 		if (_changedProperties.has("showHelp")) this.automaton.showErrors = this.showHelp === "true";
-		if (!replace && (readGraph || _changedProperties.has("forcedAlphabet") || _changedProperties.has("showHelp"))) {
+		if (!replace && (readGraph || alphabetChanged || _changedProperties.has("showHelp"))) {
 			this._graph?.requestUpdate();
 		}
 
@@ -418,17 +384,17 @@ export class AutomatonComponent extends LitElementWw {
 		}
 
 		const modeChanged = _changedProperties.has("mode");
-		const stackChanged = _changedProperties.has("startingStack");
+		const stackChanged = machineChanged && previous?.startingStack !== startingStack;
 		if (this.automaton instanceof PDA) {
 			const stack = this.automaton.extension;
 			const permissions = this.settings.permissions.stack;
-			const editable = String(this.mode === "edit");
+			const editable = String(this.mode === "edit" && !this._invalidMachineData);
 			if (stack.contentEditable !== editable) stack.contentEditable = editable;
 			stack.add = permissions.add;
 			stack.delete = permissions.delete;
 			stack.change = permissions.change;
 			stack.showHelp = this._helpOverlay && !this._topMenuCollapsed;
-			if (replace || stackChanged || modeChanged) this.automaton.setStartingStack(this.startingStack);
+			if (replace || stackChanged || modeChanged || readGraph) this.automaton.setStartingStack(startingStack);
 		}
 
 		if (modeChanged || replace || readGraph || (stackChanged && this.mode === "simulate")) {
@@ -437,7 +403,7 @@ export class AutomatonComponent extends LitElementWw {
 				this.automaton.clearHighlights();
 				this.simulatorMenu?.reset();
 				if (this.mode === "simulate") this.simulatorMenu?.init();
-				this._graph?.setInteractive(this.mode === "edit");
+				this._graph?.setInteractive(this.mode === "edit" && !this._invalidMachineData);
 			} else if (modeChanged && this.allowedModes.length > 0) {
 				this.mode = this.allowedModes[0] as "edit" | "simulate";
 			}
@@ -451,7 +417,7 @@ export class AutomatonComponent extends LitElementWw {
 		if (changedProperties.has("permissions") || changedProperties.has("mode")) {
 			this._graph?.network.redraw();
 		}
-		if (["type", "mode", "allowedTypes", "allowedTransformations", "forcedAlphabet", "nodes", "transitions"]
+		if (["_machine", "_invalidMachineData", "mode", "allowedTypes", "allowedTransformations"]
 			.some(property => changedProperties.has(property as keyof this))) {
 			this.dispatchEvent(new Event("optionschange", { bubbles: true }));
 		}
@@ -495,7 +461,7 @@ export class AutomatonComponent extends LitElementWw {
 						></webwriter-automaton-toolmenu>
 						<webwriter-automaton-simulatormenu
 							id="simulatorMenu"
-							?hidden=${this.mode !== "simulate" || this._graph?.errors.length !== 0}
+							?hidden=${this.mode !== "simulate" || this._invalidMachineData || this._graph?.errors.length !== 0}
 						></webwriter-automaton-simulatormenu>
 					</div>
 					${guard([this.automaton], () => this.automaton.extension)}
@@ -656,6 +622,11 @@ export class AutomatonComponent extends LitElementWw {
 	}
 
 	private renderWarnings() {
+		if (this._invalidMachineData) return html`
+			<sl-alert class="warning-panel" variant="warning" open>
+				${msg("The automaton data block is invalid or uses an unsupported format.")}
+			</sl-alert>
+		`;
 		if (this.showHelp !== "true" || !this._graph?.errors.length) return;
 		const { errors, nodeWarnings } = this._graph;
 		return html`
@@ -677,7 +648,7 @@ export class AutomatonComponent extends LitElementWw {
 	/** @internal */
 	public async completeDfaWithSink() {
 		const { automaton } = this;
-		if (!(automaton instanceof DFA) || this.settings.sinkDisabledReason || !AddSinkstateToDFA(automaton)) return;
+		if (!this.canWriteMachine() || !(automaton instanceof DFA) || this.settings.sinkDisabledReason || !AddSinkstateToDFA(automaton)) return;
 		this.commitGraphEdit();
 		this._graph?.requestUpdate();
 		await this.updateComplete;
@@ -692,14 +663,16 @@ export class AutomatonComponent extends LitElementWw {
 
 	/** @internal */
 	public async switchType(type: AutomatonType) {
-		if (this.mode !== "edit" || !this.allowedTypes.includes(type) || this.type === type) return;
-		this.writeGraphAttributes(this.authoredNodes(), this.transitionsForType(this.authoredTransitions(), type));
-		this.setAttribute("type", type);
+		if (this.mode !== "edit" || !this.allowedTypes.includes(type) || this.type === type || !this.canWriteMachine()) return;
+		this.saveMachine({
+			...this._machine, type, nodes: this.authoredNodes(),
+			transitions: this.transitionsForType(this.authoredTransitions(), type),
+		});
 		await this.updateComplete;
 	}
 
 	private canSimulate() {
-		return this.allowedModes.includes("simulate") && this._graph?.errors.length === 0;
+		return !this._invalidMachineData && this.allowedModes.includes("simulate") && this._graph?.errors.length === 0;
 	}
 
 	private toggleMode() {
@@ -728,34 +701,60 @@ export class AutomatonComponent extends LitElementWw {
 		return a.transitions.get().filter(edge => edge.from !== Graph.initialGhostNode.id).map(stripTransition);
 	}
 
-	/** @internal */
-	public commitGraphEdit() {
-		this.writeGraphAttributes(this.authoredNodes(), this.authoredTransitions());
+	private get machineBlock() {
+		return this.querySelector<HTMLScriptElement>(machineBlockSelector);
 	}
 
-	private writeGraphAttributes(nodes: Node[], transitions: Transition[]) {
-		const { nodeArray, transitionArray } = ATTRIBUTE_CONVERTERS;
-		const encodedNodes = nodeArray.toAttribute(nodes);
-		const encodedTransitions = transitionArray.toAttribute(transitions);
-		if (encodedNodes !== nodeArray.toAttribute(this.nodes)) {
-			this.setAttribute("nodes", encodedNodes ?? "");
-			this.writtenNodes = this.nodes;
+	protected override dataChanged() {
+		this.syncMachine();
+	}
+
+	private syncMachine() {
+		const text = this.machineBlock?.textContent ?? null;
+		if (text === this.machineText) return;
+		this.machineText = text;
+		this.machineReadPending = true;
+		try {
+			this._machine = readMachine(text);
+			this._invalidMachineData = false;
+		} catch {
+			this._invalidMachineData = true;
 		}
-		if (encodedTransitions !== transitionArray.toAttribute(this.transitions)) {
-			this.setAttribute("transitions", encodedTransitions ?? "");
-			// The HTML format omits edge IDs. Keep the live IDs after our own write
-			// so a selection still refers to the same edge after deleting a neighbor.
-			this._transitions = transitions;
-			this.writtenTransitions = transitions;
+		this.requestUpdate();
+	}
+
+	private canWriteMachine() {
+		// The authored DOM may have changed before its mutation observer runs.
+		this.syncMachine();
+		return this.isConnected && !this.machineReadPending && !this._invalidMachineData;
+	}
+
+	/** @internal */
+	public commitGraphEdit() {
+		if (this.canWriteMachine()) {
+			this.saveMachine({ ...this._machine, nodes: this.authoredNodes(), transitions: this.authoredTransitions() });
 		}
+	}
+
+	private saveMachine(machine: Machine) {
+		const text = writeMachine(machine);
+		if (text === writeMachine(this._machine)) return;
+
+		const existing = this.machineBlock;
+		const block = existing ?? this.ownerDocument.createElement("script");
+		if (!existing) {
+			block.type = AutomatonComponent.dataType;
+			block.slot = "data";
+		}
+		block.textContent = text;
+		if (!existing) this.append(block);
+		this.machineText = text;
+		this._machine = machine;
 	}
 
 	private saveStartingStack(event: Event) {
-		if (this.mode !== "edit" || !(this.automaton instanceof PDA) || event.target !== this.automaton.extension) return;
-		const stack = this.automaton.extension.getStack();
-		const encoded = JSON.stringify(stack);
-		if (encoded === JSON.stringify(this.startingStack)) return;
-		if (stack.length) this.setAttribute("startingstack", encoded);
-		else this.removeAttribute("startingstack");
+		if (this.mode !== "edit" || !(this.automaton instanceof PDA) ||
+			event.target !== this.automaton.extension || !this.canWriteMachine()) return;
+		this.saveMachine({ ...this._machine, startingStack: this.automaton.extension.getStack() });
 	}
 }
