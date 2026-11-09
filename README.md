@@ -1,5 +1,5 @@
-# Automaton (`@webwriter/automaton@3.0.2`)
-[License: MIT](LICENSE) | Version: 3.0.2
+# Automaton (`@webwriter/automaton@4.0.0`)
+[License: MIT](LICENSE) | Version: 4.0.0
 
 Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).
 
@@ -8,12 +8,12 @@ Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).
 
 | Name | Import Path |
 | :--: | :---------: |
-| Dfa Simple | `@webwriter/automaton/snippets/dfa-simple.html` |
-| Dfa Complex | `@webwriter/automaton/snippets/dfa-complex.html` |
-| Nfa Simple | `@webwriter/automaton/snippets/nfa-simple.html` |
-| Nfa Complex | `@webwriter/automaton/snippets/nfa-complex.html` |
-| Pda Simple | `@webwriter/automaton/snippets/pda-simple.html` |
-| Pda Complex | `@webwriter/automaton/snippets/pda-complex.html` |
+| DFA (simple) | `@webwriter/automaton/snippets/dfa-simple.html` |
+| DFA (complex) | `@webwriter/automaton/snippets/dfa-complex.html` |
+| NFA (simple) | `@webwriter/automaton/snippets/nfa-simple.html` |
+| NFA (complex) | `@webwriter/automaton/snippets/nfa-complex.html` |
+| PDA (simple) | `@webwriter/automaton/snippets/pda-simple.html` |
+| PDA (complex) | `@webwriter/automaton/snippets/pda-complex.html` |
 
 
 
@@ -42,15 +42,49 @@ npm install @webwriter/automaton
 <webwriter-automaton></webwriter-automaton>
 ```
 
-## Fields
+### Machine data
+
+Put the authored machine in a direct JSON data block.
+
+```html
+<webwriter-automaton>
+  <script type="application/json" slot="data">
+    {
+      "format": "webwriter-automaton",
+      "version": 1,
+      "type": "nfa",
+      "states": [
+        { "id": 0, "label": "q0", "x": 0, "y": 0, "initial": true },
+        { "id": 1, "label": "q1", "x": 180, "y": 0, "final": true }
+      ],
+      "transitions": [
+        { "id": 0, "from": 0, "to": 1, "rules": [{ "read": "" }, { "read": "a" }] }
+      ]
+    }
+  </script>
+</webwriter-automaton>
+```
+
+- `type` is `dfa`, `nfa`, or `pda`. An empty widget starts as a DFA.
+- State and transition IDs are unique non-negative integers within their respective lists. Transition endpoints refer to state IDs. State flags default to false.
+- Each transition describes one edge. Each rule has a `read` string, with `""` for ε. Optional `bend` is signed curvature. Optional `loopAngle` is measured clockwise from the top in degrees.
+- PDA rules can include `stack` with `op` set to `push`, `pop`, `empty`, or `none`, plus a `symbol` and `ifTop` condition where applicable. An omitted stack operation leaves the stack unchanged. Optional `startingStack` lists symbols from bottom to top. The live simulation stack stays in memory.
+- Optional `requiredAlphabet` lists the DFA's predefined input symbols.
+
+The JSON block is the authored machine saved with the document. Earlier graph attributes are ignored.
+
+### Printing
+
+Print the document from WebWriter or the browser to get a fitted state diagram and, for a PDA, its authored starting stack.
+
+## Settings
+
+Omitted settings use the defaults below. Removing an attribute restores its default. An empty allowed list is an explicit override.
+
 | Name (Attribute Name) | Type | Description | Default | Reflects |
 | :-------------------: | :--: | :---------: | :-----: | :------: |
-| `nodes` (`nodes`) | `Node[]` | Each automaton state is encoded as a string using the following format:<br>`[#][%]<id>[<label>](<x>\|<y>)`<br><br>Regex:<br>`^(#)?(%)?(\d+)(?:\[([^\]]*(?:\\.[^\]]*)*)\])?\((-?\d+)\\|(-?\d+)\)$`<br><br>Explanation:<br>`#`: Optional - marks the initial state.<br>`%`: Optional - marks the final (accepting) state.<br>`<id>`: Required non-negative integer - unique state ID.<br>`[<label>]`: Optional - URI-encoded label. Defaults to `q<id>` if omitted.<br>`(<x>\|<y>)`: Required coordinates - signed integers representing the node's position.<br><br>Multiple nodes are separated by semicolons (`;`). Example:<br>`#0(-150\|0);%1[accept](0\|0);2[sink](150\|0)`<br><br>Requirements:<br>Coordinates are mandatory, and there must be at least 150 units of distance between any two nodes.<br>In the case of DFAs, the automaton MUST be complete, i.e. every node MUST have EXACTLY one transition for every input symbol. Correspondingly, a sink should be non-final and have self-loops on all inputs. Implicit sinks are NOT allowed. | `[]` | ✓ |
-| `transitions` (`transitions`) | `Transition[]` | Each automaton transition is encoded as:<br>`<from>-<to>[<symbolsOrStackOps>][~<roundness>][@<angle>]`<br>Multiple transitions are separated by semicolons (`;`).<br><br>Regex:<br>`^(?:;\d+-\d+(?:\[(?:[^,\{\]\\|]+(?:,[^,\{\]\\|]+)*\|[^,\{\]\\|]*\{(?:p\|o\|e\|n)\\|[^,\{\]\\|]*\\|[^,\{\]\\|]*\}(?:,[^,\{\]\\|]*\{(?:p\|o\|e\|n)\\|[^,\{\]\\|]*\\|[^,\{\]\\|]*\})*)\])?(?:~(-?)(\d+(?:\.\d+)?))?(?:@(-?\d+))?)*$`<br><br>Explanation:<br>`<from>-<to>`: Required - origin and destination state IDs (non-negative integers).<br>`[<symbolsOrStackOps>]`: Required - DFA or NFA -> Symbols only: one or more URI-encoded symbols, separated by commas. PDA -> Stack operations: <symbol>{<op>\|<stackSymbol>\|<condition>}, with <op> one of: p (push), o (pop), e (empty check), or n (no-op); <stackSymbol> being the optional symbol to push or pop, and <condition> being an optional symbol the stack must have on top.<br>`~<roundness>`: Optional - curvature of the arc, negative sign means counter-clockwise. 0.2 is recommended if there is a circle between two states.<br>`@<angle>`: Optional - integer degrees for self-loop placement. Defaults to 45°.<br><br>Multiple transitions must be separated by semicolons, no trailing `;`.<br><br>Examples:<br>`0-1[a]`<br>`1-2[a,b]~0.5`<br>`2-2[a{p\|X\|},b{o\|\|}]@45;0-1[c]~1.2` | `[]` | ✓ |
-| `type` (`type`) | `AutomatonType` | The type of the automaton. Can be `'dfa'`, `'nfa'`, or `'pda'`. | `"dfa"` | ✓ |
 | `mode` (`mode`) | `"edit" \| "simulate"` | The current mode. Can be `'edit'`, or `'simulate'`. | `"edit"` | ✓ |
 | `testLanguage` (`testLanguage`) | `string` | A regular expression to check the language of the automaton against. | `""` | ✓ |
-| `forcedAlphabet` (`forcedAlphabet`) | `string[]` | The alphabet that the automaton is forced to use as characters separated by spaces. | `[]` | ✓ |
 | `testWords` (`testWords`) | `string[]` | Words used for automatically testing the automaton as a string separated by spaces. | `[]` | ✓ |
 | `verbose` (`verbose`) | `boolean` | Enables logging of numerous events to the console. | - | ✓ |
 | `permissions` (`permissions`) | `string` | The encoded permissions for the editor. | `"777"` | ✓ |

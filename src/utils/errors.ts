@@ -1,4 +1,4 @@
-import { msg } from "@lit/localize";
+import type { MsgFn } from "@lit/localize";
 import { Node, Transition } from "automata";
 import { html, TemplateResult } from "lit";
 
@@ -22,7 +22,7 @@ export class AutomatonError {
         this.letter = letter;
     }
 
-    public get message(): TemplateResult<1> {
+    public message(msg: MsgFn): TemplateResult<1> {
         switch (this.type) {
             case 'missing-transition':
                 return html`${msg(html`Missing transition for <b>${this.letter}</b>`)}`;

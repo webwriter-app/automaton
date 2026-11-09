@@ -1,25 +1,18 @@
-import { PropertyValueMap, html } from 'lit';
+import { PropertyValueMap, html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
-import { biLock, biNodePlus, biPlus, biShare, biUnlock } from '../styles/icons';
+import { biPlus, sinkStateIcon } from '../styles/icons';
 
 import '@shoelace-style/shoelace/dist/themes/light.css';
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button.component.js';
-import SlBadge from '@shoelace-style/shoelace/dist/components/badge/badge.component.js';
-import SlTooltip from '@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js';
 import { Graph } from '../graph';
+import type { Node, Transition } from '../automata';
+import type { Position } from 'vis-network';
 import { toolMenuStyles } from '../styles/toolMenu';
 import { LitElementWw } from '@webwriter/lit';
-import { localized, msg } from '@lit/localize';
 
 @customElement('webwriter-automaton-toolmenu')
-@localized()
 export class ToolMenu extends LitElementWw {
-    @property({ type: Boolean, attribute: false })
-    private accessor _visible = false;
-    public set visible(visible: boolean) {
-        this._visible = visible;
-    }
+    private nodeDrag?: { pointerId: number; start: Position; moved: boolean };
 
     @property({ type: String, attribute: false })
     private accessor _mode: 'idle' | 'addNode' | 'addEdge' = 'idle';
@@ -31,8 +24,8 @@ export class ToolMenu extends LitElementWw {
     }
 
     @property({ type: Object, attribute: false })
-    private accessor _graph!: Graph;
-    public set graph(graph: Graph) {
+    private accessor _graph: Graph | undefined;
+    public set graph(graph: Graph | undefined) {
         this._graph = graph;
     }
 
@@ -61,12 +54,14 @@ export class ToolMenu extends LitElementWw {
     public static get scopedElements() {
         return {
             'sl-button': SlButton,
-            'sl-badge': SlBadge,
-            'sl-tooltip': SlTooltip,
         };
     }
 
-    protected updated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
+    protected updated(changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
+        if (!this._graph) return;
+        if (this.nodeDrag && !this._graph.canAddNode) this.cancelNodeDrag();
+        if (!changedProperties.has('_mode')) return;
+
         if (this._mode === 'addNode') {
             this._graph.network.addNodeMode();
         }
@@ -74,73 +69,107 @@ export class ToolMenu extends LitElementWw {
         if (this._mode === 'idle') {
             this._graph.network.disableEditMode();
         }
+
+        this._graph.network.redraw();
     }
 
     render() {
-        return html` <div
-            class="toolmenu"
-            style=${styleMap({
-                display:
-                    this._graph.component.settings.permissions.node.add ||
-                    this._graph.component.settings.permissions.edge.add
-                        ? 'flex'
-                        : 'none',
-            })}
-        >
-            <sl-button class="toolmenu__button" @click=${this.toggleToolbar} circle size="large">${biPlus}</sl-button>
-            <div class="toolmenu__buttons" style=${styleMap({ display: this._visible ? 'flex' : 'none' })}>
-                <sl-tooltip content=${msg("Add node (Ctrl+Q)")} placement="right">
-                    <sl-button
-                        class="toolmenu__button"
-                        @click=${this.addNode}
-                        variant=${this._mode === 'addNode' ? 'primary' : 'default'}
-                        circle
-                        style=${styleMap({
-                            display: this._graph.component.settings.permissions.node.add ? 'block' : 'none',
-                        })}
-                        >${biNodePlus}
-                        <sl-button
-                            size="small"
-                            variant=${this._lockNodeAdd ? 'primary' : 'default'}
-                            circle
-                            @click=${(e: any) => {
-                                e.stopPropagation();
-                                this._lockNodeAdd = !this._lockNodeAdd;
-                            }}
-                            >${this._lockNodeAdd ? biLock : biUnlock}</sl-button
-                        >
-                    </sl-button>
-                </sl-tooltip>
-                <sl-tooltip content=${msg("Add edge (Ctrl+E)")} placement="right">
-                    <sl-button
-                        class="toolmenu__button"
-                        @click=${this.addEdge}
-                        variant=${this._mode === 'addEdge' ? 'primary' : 'default'}
-                        circle
-                        style=${styleMap({
-                            display: this._graph.component.settings.permissions.edge.add ? 'block' : 'none',
-                        })}
-                        >${biShare}
-                        <sl-button
-                            size="small"
-                            variant=${this._lockEdgeAdd ? 'primary' : 'default'}
-                            circle
-                            @click=${(e: any) => {
-                                e.stopPropagation();
-                                this._lockEdgeAdd = !this._lockEdgeAdd;
-                            }}
-                            >${this._lockEdgeAdd ? biLock : biUnlock}</sl-button
-                        >
-                    </sl-button>
-                </sl-tooltip>
+        const component = this._graph?.component;
+        if (!component) return nothing;
+        const { msg } = component;
+        const canAddNode = component.settings.permissions.node.add;
+        const showSink = component.automaton.type === 'dfa' && component.sinkStateEnabled;
+        if (!canAddNode && !showSink) return nothing;
+
+        const label = msg("Add node");
+        const sinkLabel = msg("Add sink state");
+        const sinkReason = showSink ? component.settings.sinkDisabledReason : undefined;
+        return html`
+            <div class="toolmenu" contenteditable="false">
+                ${showSink ? html`
+                    <sl-button class="toolmenu__sink" circle size="small"
+                        aria-label=${sinkLabel} title=${sinkReason ?? sinkLabel}
+                        ?disabled=${sinkReason !== undefined}
+                        @click=${() => void component.completeDfaWithSink()}>${sinkStateIcon}</sl-button>
+                ` : nothing}
+                ${canAddNode ? html`<sl-button class="toolmenu__node" circle size="large" title=${label}
+                    @pointerdown=${this.startNodeDrag}
+                    @pointermove=${this.moveNodeDrag}
+                    @pointerup=${this.finishNodeDrag}
+                    @pointercancel=${this.interruptNodeDrag}
+                    @lostpointercapture=${this.interruptNodeDrag}
+                    @click=${(event: MouseEvent) => {
+                        // Pointer activation is handled on release. Keyboard activation still clicks the button.
+                        if (event.detail === 0) this._graph?.insertNodeFromButton();
+                    }}>${biPlus}</sl-button>` : nothing}
             </div>
-        </div>`;
+        `;
     }
 
-    public handleNodeAdd(nodeData: any, callback: any) {
-        nodeData.id = this._graph.automaton.getNewNodeId();
-        nodeData.label = this._graph.automaton.getNewNodeLabel();
-        callback(nodeData);
+    disconnectedCallback() {
+        this.cancelNodeDrag();
+        super.disconnectedCallback();
+    }
+
+    private startNodeDrag(event: PointerEvent) {
+        if (event.button !== 0 || !event.isPrimary || !this._graph?.canAddNode) return;
+        this.nodeDrag = {
+            pointerId: event.pointerId,
+            start: { x: event.clientX, y: event.clientY },
+            moved: false,
+        };
+        (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
+    }
+
+    private moveNodeDrag(event: PointerEvent) {
+        const drag = this.nodeDrag;
+        if (drag?.pointerId !== event.pointerId) return;
+        drag.moved ||= Math.hypot(event.clientX - drag.start.x, event.clientY - drag.start.y) >= 5;
+        if (drag.moved) this._graph?.previewNodeDrop(this.dropPoint(event));
+    }
+
+    private finishNodeDrag(event: PointerEvent) {
+        const drag = this.nodeDrag;
+        if (drag?.pointerId !== event.pointerId) return;
+        const point = this.dropPoint(event);
+        this.cancelNodeDrag();
+        if (drag.moved && point) this._graph?.insertNodeFromButton(point);
+        if (!drag.moved && !point) this._graph?.insertNodeFromButton();
+    }
+
+    private dropPoint(event: PointerEvent): Position | undefined {
+        const { left, right, top, bottom } = (event.currentTarget as HTMLElement).getBoundingClientRect();
+        const { clientX: x, clientY: y } = event;
+        if (x < left || x >= right || y < top || y >= bottom) return { x, y };
+        return undefined;
+    }
+
+    private interruptNodeDrag(event: PointerEvent) {
+        if (this.nodeDrag?.pointerId === event.pointerId) this.cancelNodeDrag();
+    }
+
+    public cancelNodeDrag() {
+        if (!this.nodeDrag) return;
+        this.nodeDrag = undefined;
+        this._graph?.previewNodeDrop();
+    }
+
+    public insertNode(position: Position, add: (node: Node) => void) {
+        const { automaton } = this._graph!;
+        const node = {
+            ...position,
+            id: automaton.getNewNodeId(),
+            label: automaton.getNewNodeLabel(),
+            initial: automaton.nodes.getIds().every(id => id === Graph.initialGhostNode.id),
+            final: false,
+        };
+        add(node);
+        return node;
+    }
+
+    public handleNodeAdd(nodeData: Position, callback: (node: Node) => void) {
+        if (!this._graph) return;
+        this.insertNode(nodeData, callback);
         if (!this._lockNodeAdd) {
             this._mode = 'idle';
             this._graph.network.disableEditMode();
@@ -148,62 +177,60 @@ export class ToolMenu extends LitElementWw {
             this._graph.network.addNodeMode();
         }
         this._graph.network.unselectAll();
-        this._graph.requestUpdate();
+        this._graph.commitEdit();
     }
 
-    public handleTransitionAdd(edgeData: any, callback: any) {
-        if (edgeData.to === Graph.initialGhostNode.id || edgeData.from === Graph.initialGhostNode.id) return;
+    public planTransition(edgeData: Pick<Transition, 'from' | 'to'> & Partial<Transition>): {
+        transition: Transition;
+        existing: Transition | undefined;
+        reverse: Transition | undefined;
+        smooth: { enabled: boolean; type: string; roundness: number } | undefined;
+    } {
+        const { automaton, component } = this._graph!;
+        const transitions = automaton.transitions.get();
+        const existing = transitions.find(edge => edge.from === edgeData.from && edge.to === edgeData.to);
+        const reverse = edgeData.from === edgeData.to ? undefined
+            : transitions.find(edge => edge.from === edgeData.to && edge.to === edgeData.from);
+        const smooth = reverse ? { enabled: true, type: 'curvedCW', roundness: 0.2 } : undefined;
+        const symbol = component.forcedAlphabet[0] || 'a';
 
-        const edge = this._graph.automaton.transitions.get().find((t) => {
-            return t.from === edgeData.from && t.to === edgeData.to;
-        });
-
-        const reflection = this._graph.automaton.transitions.get().find((t) => {
-            return t.from === edgeData.to && t.to === edgeData.from;
-        });
-
-        if (reflection) {
-            this._graph.automaton.transitions.update({
-                ...reflection,
-                smooth: { type: 'curvedCW', roundness: 0.2 },
-            });
-            if (edge) {
-                this._graph.automaton.transitions.update({
-                    ...edge,
-                    smooth: { type: 'curvedCW', roundness: 0.2 },
-                });
-            } else {
-                edgeData.smooth = { type: 'curvedCW', roundness: 0.2 };
-            }
+        const transition: Transition = {
+            ...edgeData,
+            ...existing,
+            ...(smooth ? { smooth } : {}),
+            id: existing?.id ?? automaton.getNewTransitionId(),
+            label: '',
+            symbols: [...(existing?.symbols ?? []), symbol],
+        };
+        if (automaton.type === 'pda') {
+            const operations = existing?.symbols.map((symbol, index) =>
+                existing.stackOperations?.[index] ?? { operation: 'none' as const, symbol, condition: '' }
+            ) ?? [];
+            transition.stackOperations = [...operations, { operation: 'none', symbol, condition: '' }];
         }
+        transition.label = automaton.getTransitionLabel(transition);
+        return { transition, existing, reverse, smooth };
+    }
 
-        const newSymbol = this._graph.component.forcedAlphabet[0] || 'a';
-        if (edge) {
-            if (this._graph.automaton.type === 'pda') {
-                this._graph.automaton.transitions.update({
-                    ...edge,
-                    symbols: [...edge.symbols, newSymbol],
-                    stackOperations: [
-                        ...edge.stackOperations!,
-                        { operation: 'none', symbol: newSymbol, condition: '' },
-                    ],
-                });
-            } else {
-                this._graph.automaton.transitions.update({
-                    ...edge,
-                    symbols: [...edge.symbols, newSymbol],
-                });
-            }
-        } else {
-            edgeData.id = this._graph.automaton.getNewTransitionId();
-            edgeData.symbols = [newSymbol];
+    public insertTransition(
+        edgeData: Pick<Transition, 'from' | 'to'> & Partial<Transition>,
+        add: (transition: Transition) => void,
+    ) {
+        if (!this._graph || edgeData.to === Graph.initialGhostNode.id || edgeData.from === Graph.initialGhostNode.id) return;
 
-            if (this._graph.automaton.type === 'pda') {
-                edgeData.stackOperations = [{ operation: 'none', symbol: newSymbol }];
-            }
-            callback(edgeData);
-        }
+        const { transition, existing, reverse, smooth } = this.planTransition(edgeData);
+        if (reverse) this._graph.automaton.transitions.update({ id: reverse.id, smooth });
+        if (existing) this._graph.automaton.transitions.update(transition);
+        else add(transition);
+    }
 
+    public handleTransitionAdd(
+        edgeData: Pick<Transition, 'from' | 'to'> & Partial<Transition>,
+        callback: (transition: Transition) => void,
+    ) {
+        if (!this._graph || edgeData.from === Graph.initialGhostNode.id || edgeData.to === Graph.initialGhostNode.id) return;
+
+        this.insertTransition(edgeData, callback);
         if (!this._lockEdgeAdd) {
             this._mode = 'idle';
             this._graph.network.disableEditMode();
@@ -212,15 +239,12 @@ export class ToolMenu extends LitElementWw {
         }
         this._graph.network.unselectAll();
         this._graph.network.redraw();
-        this._graph.requestUpdate();
-    }
-
-    private toggleToolbar() {
-        this._visible = !this._visible;
-        this.requestUpdate();
+        this._graph.commitEdit();
     }
 
     public addNode() {
+        if (!this._graph) return;
+        this._graph.cancelConnection();
         if (this._mode === 'addNode') {
             this._mode = 'idle';
             this._graph.network.disableEditMode();
@@ -232,6 +256,8 @@ export class ToolMenu extends LitElementWw {
     }
 
     public addEdge() {
+        if (!this._graph) return;
+        this._graph.cancelConnection();
         if (this._mode === 'addEdge') {
             this._mode = 'idle';
             this._graph.network.disableEditMode();

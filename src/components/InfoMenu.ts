@@ -56,7 +56,7 @@ export class InfoMenu extends LitElement {
                 ${this._graph?.errors.length > 0
                     ? html`<sl-alert variant="danger" open>
                           ${biExclamationOctagon}
-                          ${this._graph?.errors.map((error) => html`${error.message}<br />`)}
+                          ${this._graph?.errors.map((error) => html`${error.message(this._graph.component.msg)}<br />`)}
                       </sl-alert> `
                     : ''}
             </div>

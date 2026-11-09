@@ -11,7 +11,7 @@ export abstract class ManualAutoSimulator extends AutoSimulator {
     constructor(automaton: Automaton) {
         super(automaton);
         this._currentNode = this._a.getInitialNode();
-        this._previousTransitions = { accepted: this._currentNode.final, path: { nodes: [this._currentNode], transitions: [] } };
+        this._previousTransitions = { accepted: this._currentNode?.final ?? false, path: { nodes: this._currentNode ? [this._currentNode] : [], transitions: [] } };
     }
 
     public setManualMode(manual: boolean): void {
@@ -23,7 +23,7 @@ export abstract class ManualAutoSimulator extends AutoSimulator {
         this._manualMode = false;
         this._mode = 'simulation';
         this._currentNode = this._a.getInitialNode();
-        this._previousTransitions = { accepted: this._currentNode.final, path: { nodes: [this._currentNode], transitions: [] } };
+        this._previousTransitions = { accepted: this._currentNode?.final ?? false, path: { nodes: this._currentNode ? [this._currentNode] : [], transitions: [] } };
     }
 
     protected abstract isValidTransition(transition: Transition): boolean;
@@ -50,8 +50,11 @@ export abstract class ManualAutoSimulator extends AutoSimulator {
 
             if (this._graph !== graph) {
                 this._graph = graph;
+                graph.signal.addEventListener('abort', () => {
+                    if (this._graph === graph) this._graph = undefined;
+                }, { once: true });
 
-                this._graph?.network.on('selectEdge', async (e) => {
+                graph.network.on('selectEdge', async (e) => {
                     if (this._mode !== 'stepByStep') return;
 
                     const transition = this._a.getTransition(e.edges[0]);
@@ -60,7 +63,7 @@ export abstract class ManualAutoSimulator extends AutoSimulator {
                     if (!this.isValidTransition(transition)) return;
 
                     const move = await this.getManualMove(transition);
-                    if (!move) return;
+                    if (!move || graph.signal.aborted) return;
 
                     this._previousTransitions.path!.nodes.push(move.to);
                     this._previousTransitions.path!.transitions.push({ transition, symbol: move.symbol });
@@ -84,6 +87,25 @@ export abstract class ManualAutoSimulator extends AutoSimulator {
         } else {
             super.initStepByStep(graph, cb);
         }
+    }
+
+    protected showMoveDialog(dialog: HTMLDialogElement, cancel: () => void) {
+        const graph = this._graph;
+        if (!graph || graph.signal.aborted) {
+            cancel();
+            return;
+        }
+        const dismiss = () => {
+            graph.signal.removeEventListener('abort', dismiss);
+            dialog.removeEventListener('close', dismiss);
+            if (dialog.open) dialog.close();
+            dialog.remove();
+            cancel();
+        };
+        graph.signal.addEventListener('abort', dismiss, { once: true });
+        dialog.addEventListener('close', dismiss, { once: true });
+        graph.component.shadowRoot!.appendChild(dialog);
+        dialog.showModal();
     }
 
     private _sendStepByStepFeedback(nextMovePossible: boolean, cb: (feedback: SimulationFeedback) => void, initial = false): boolean {

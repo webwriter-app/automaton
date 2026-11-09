@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<file target-language="ml" source-language="en-US" original="lit-localize-inputs" datatype="plaintext">
+<body>
+<trans-unit id="s1b00cf75d5f4f616">
+  <source>Choose a move:</source>
+  <target>ഒരു നീക്കം തിരഞ്ഞെടുക്കുക:</target>
+</trans-unit>
+<trans-unit id="s6c80030e2762459d">
+  <source>push</source>
+  <target>സ്റ്റാക്കിലേക്ക് ചേർക്കുക</target>
+</trans-unit>
+<trans-unit id="s779b5819564f2f50">
+  <source>pop</source>
+  <target>സ്റ്റാക്കിൽ നിന്ന് നീക്കം ചെയ്യുക</target>
+</trans-unit>
+<trans-unit id="s904fefb3d01cb2ae">
+  <source>empty</source>
+  <target>ശൂന്യം</target>
+</trans-unit>
+<trans-unit id="s3c0d17bad169557b">
+  <source>none</source>
+  <target>ഒന്നുമില്ല</target>
+</trans-unit>
+<trans-unit id="sae4f7c13b7ec18ff">
+  <source>Stack</source>
+  <target>സ്റ്റാക്ക്</target>
+</trans-unit>
+<trans-unit id="sc5a051b7aba488de">
+  <source>Remove stack items with ×</source>
+  <target>× ഉപയോഗിച്ച് സ്റ്റാക്ക് ഇനങ്ങൾ നീക്കം ചെയ്യുക</target>
+</trans-unit>
+<trans-unit id="sfc513553a0d4ed1c">
+  <source>Remove stack item</source>
+  <target>സ്റ്റാക്ക് ഇനം നീക്കം ചെയ്യുക</target>
+</trans-unit>
+<trans-unit id="s970d041a28d1067d">
+  <source>Push</source>
+  <target>സ്റ്റാക്കിലേക്ക് ചേർക്കുക</target>
+</trans-unit>
+<trans-unit id="s8da37819f40688b0">
+  <source>Pop</source>
+  <target>സ്റ്റാക്കിൽ നിന്ന് നീക്കം ചെയ്യുക</target>
+</trans-unit>
+<trans-unit id="s66da3efd9a45b25a">
+  <source>Empty Check</source>
+  <target>ശൂന്യമായ സ്റ്റാക്ക് പരിശോധിക്കുക</target>
+</trans-unit>
+<trans-unit id="sd60a7dde73859828">
+  <source>Keep</source>
+  <target>സൂക്ഷിക്കുക</target>
+</trans-unit>
+<trans-unit id="s66bd1cc6d2f6b68d">
+  <source>Node</source>
+  <target>നോഡ്</target>
+</trans-unit>
+<trans-unit id="s6503256c2de2745c">
+  <source>Edge</source>
+  <target>എഡ്ജ്</target>
+</trans-unit>
+<trans-unit id="sd9bdfc0f95188eea">
+  <source>Delete node</source>
+  <target>നോഡ് ഇല്ലാതാക്കുക</target>
+</trans-unit>
+<trans-unit id="s666ab5f59c125645">
+  <source>Delete transition</source>
+  <target>സംക്രമണം ഇല്ലാതാക്കുക</target>
+</trans-unit>
+<trans-unit id="s5590dbf7e425789d">
+  <source>Label</source>
+  <target>ലേബൽ</target>
+</trans-unit>
+<trans-unit id="sfb68cae41d749423">
+  <source>Initial</source>
+  <target>പ്രാരംഭം</target>
+</trans-unit>
+<trans-unit id="s8f1034e1a9d93097">
+  <source>Final</source>
+  <target>സ്വീകരിക്കുന്നു</target>
+</trans-unit>
+<trans-unit id="sd083d3aa96af5af1">
+  <source>Symbol</source>
+  <target>ചിഹ്നം</target>
+</trans-unit>
+<trans-unit id="sb158679e0851297f">
+  <source>Remove symbol</source>
+  <target>ചിഹ്നം നീക്കം ചെയ്യുക</target>
+</trans-unit>
+<trans-unit id="s09243007b5b91006">
+  <source>If</source>
+  <target>എങ്കിൽ</target>
+</trans-unit>
+<trans-unit id="s3de7bee91528e5cc">
+  <source>Stack Actions</source>
+  <target>സ്റ്റാക്ക് പ്രവർത്തനങ്ങൾ</target>
+</trans-unit>
+<trans-unit id="sba6693303903d6b8">
+  <source>Add symbol</source>
+  <target>ചിഹ്നം ചേർക്കുക</target>
+</trans-unit>
+<trans-unit id="sc1611c0558728a2a">
+  <source>Position</source>
+  <target>സ്ഥാനം</target>
+</trans-unit>
+<trans-unit id="sa0a141a796a5b36a">
+  <source>Bend</source>
+  <target>വക്രം</target>
+</trans-unit>
+<trans-unit id="s21a771798c563b26">
+  <source>Sink completion is only available for DFAs.</source>
+  <target>ഡിറ്റർമിനിസ്റ്റിക് ഫിനിറ്റ് ഓട്ടോമാറ്റ (ഡിഎഫ്എ) മാത്രമേ ആഗിരണം ചെയ്യപ്പെടുന്ന അവസ്ഥയിൽ പൂർത്തിയാക്കാൻ കഴിയൂ.</target>
+</trans-unit>
+<trans-unit id="s6bcb0cb70a6c9552">
+  <source>Sink state completion is turned off.</source>
+  <target>ആഗിരണം ചെയ്യുന്ന അവസ്ഥയിലുള്ള പൂർത്തീകരണം പ്രവർത്തനരഹിതമാണ്.</target>
+</trans-unit>
+<trans-unit id="s24db1bf1e8c00803">
+  <source>Switch to Edit mode to complete the DFA.</source>
+  <target>ഡിഎഫ്എ പൂർത്തിയാക്കാൻ എഡിറ്റ് മോഡിലേക്ക് മാറുക.</target>
+</trans-unit>
+<trans-unit id="sa509e89708954725">
+  <source>Add a state before completing the DFA.</source>
+  <target>DFA പൂർത്തിയാക്കുന്നതിന് മുമ്പ് ഒരു സംസ്ഥാനം ചേർക്കുക.</target>
+</trans-unit>
+<trans-unit id="sf01fbe6cf8d14047">
+  <source>Define an alphabet before completing the DFA.</source>
+  <target>DFA പൂർത്തിയാക്കുന്നതിന് മുമ്പ് ഒരു അക്ഷരമാല നിർവചിക്കുക.</target>
+</trans-unit>
+<trans-unit id="sfe31787cc1b7e04e">
+  <source>The DFA already has a transition for every symbol at each state.</source>
+  <target>ഓരോ സംസ്ഥാനത്തും ഓരോ ചിഹ്നത്തിനും DFA യ്ക്ക് ഇതിനകം ഒരു പരിവർത്തനമുണ്ട്.</target>
+</trans-unit>
+<trans-unit id="sfac37d2aebc30dcd">
+  <source>Switch to Edit mode to change the automaton type.</source>
+  <target>ഓട്ടോമാറ്റൺ തരം മാറ്റാൻ എഡിറ്റ് മോഡിലേക്ക് മാറുക.</target>
+</trans-unit>
+<trans-unit id="s11d9bfbb22894ce3">
+  <source>Switching away from PDA removes its stack operations. Continue?</source>
+  <target>മറ്റൊരു ഓട്ടോമാറ്റൺ തരത്തിലേക്ക് മാറുന്നത് PDA സ്റ്റാക്ക് പ്രവർത്തനങ്ങൾ നീക്കം ചെയ്യുന്നു. തുടരണോ?</target>
+</trans-unit>
+<trans-unit id="se432909b8e9691c8">
+  <source>Complete DFA with sink</source>
+  <target>ആഗിരണം ചെയ്യുന്ന അവസ്ഥയിൽ DFA പൂർത്തിയാക്കുക</target>
+</trans-unit>
+<trans-unit id="s5ec50a9b8d60c15f">
+  <source>Switch to DFA</source>
+  <target>ഡിഎഫ്എയിലേക്ക് മാറുക</target>
+</trans-unit>
+<trans-unit id="s0818a49b5c45420d">
+  <source>Switch to NFA</source>
+  <target>NFA-യിലേക്ക് മാറുക</target>
+</trans-unit>
+<trans-unit id="sc855ea9bc9a1cc6d">
+  <source>Switch to PDA</source>
+  <target>PDA-യിലേക്ക് മാറുക</target>
+</trans-unit>
+<trans-unit id="s05c44a5db696fcaf">
+  <source>Editing</source>
+  <target>എഡിറ്റിംഗ്</target>
+</trans-unit>
+<trans-unit id="s7f59f507e02a2f38">
+  <source>View</source>
+  <target>കാണുക</target>
+</trans-unit>
+<trans-unit id="s35f1dd3fd023476a">
+  <source>Automation</source>
+  <target>ഓട്ടോമേഷൻ</target>
+</trans-unit>
+<trans-unit id="s8a0ee3d87938f19a">
+  <source>Nodes</source>
+  <target>നോഡുകൾ</target>
+</trans-unit>
+<trans-unit id="sf9aee319a006c9b4">
+  <source>Add</source>
+  <target>ചേർക്കുക</target>
+</trans-unit>
+<trans-unit id="sdc673e73b5c13aea">
+  <source>Delete</source>
+  <target>ഇല്ലാതാക്കുക</target>
+</trans-unit>
+<trans-unit id="s2f64461723d3df5d">
+  <source>Change</source>
+  <target>മാറ്റുക</target>
+</trans-unit>
+<trans-unit id="se8dca0132c66ae03">
+  <source>Permissions</source>
+  <target>അനുമതികൾ</target>
+</trans-unit>
+<trans-unit id="s860b83fc8a41ca5c">
+  <source>Automaton Types</source>
+  <target>ഓട്ടോമാറ്റയുടെ തരങ്ങൾ</target>
+</trans-unit>
+<trans-unit id="s699faf39e76b0a5c">
+  <source>Enable sink state</source>
+  <target>ആഗിരണം ചെയ്യുന്ന അവസ്ഥ പ്രവർത്തനക്ഷമമാക്കുക</target>
+</trans-unit>
+<trans-unit id="s261af1b4598fef3f">
+  <source>Allowed modes</source>
+  <target>അനുവദനീയമായ മോഡുകൾ</target>
+</trans-unit>
+<trans-unit id="s64ef2a6c2dd1d3d1">
+  <source>Edit</source>
+  <target>എഡിറ്റ് ചെയ്യുക</target>
+</trans-unit>
+<trans-unit id="scfcffcf35292bc6f">
+  <source>Simulate</source>
+  <target>സിമുലേഷൻ പ്രവർത്തിപ്പിക്കുക</target>
+</trans-unit>
+<trans-unit id="sb508f35111b54817">
+  <source>Show Help</source>
+  <target>സഹായം കാണിക്കുക</target>
+</trans-unit>
+<trans-unit id="sf62fea3229bf87c8">
+  <source>Show Formal Definition</source>
+  <target>ഔപചാരിക നിർവ്വചനം കാണിക്കുക</target>
+</trans-unit>
+<trans-unit id="s3050764b15c8baf0">
+  <source>Show Transitions Table</source>
+  <target>സംക്രമണ പട്ടിക കാണിക്കുക</target>
+</trans-unit>
+<trans-unit id="s3e141c08e0ace321">
+  <source>Test Language</source>
+  <target>ടെസ്റ്റ് ഭാഷ</target>
+</trans-unit>
+<trans-unit id="scbb4cdb4d52edc80">
+  <source>Test Words</source>
+  <target>പരീക്ഷണ വാക്കുകൾ</target>
+</trans-unit>
+<trans-unit id="s8e3f9c3e183abbda">
+  <source>Predefined Alphabet</source>
+  <target>മുൻകൂട്ടി നിശ്ചയിച്ച അക്ഷരമാല</target>
+</trans-unit>
+<trans-unit id="h56d667fd1fb9d47d">
+  <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</source>
+  <target>സിമുലേഷൻ പ്രവർത്തിപ്പിക്കുന്നതിന് ഇനിപ്പറയുന്ന <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>പിശകുകൾ<x id="1" equiv-text="&lt;/sl-badge&gt;"/> പരിഹരിക്കുക:</target>
+</trans-unit>
+<trans-unit id="h6c2fe3d409d7ba36">
+  <source>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</source>
+  <target>സാധുവായ പാതയൊന്നും കണ്ടെത്തിയില്ല. <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/> എന്ന വാക്ക് ഓട്ടോമാറ്റൺ <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/> നിരസിക്കുന്നു<x id="1" equiv-text="&lt;/sl-badge&gt;"/>.</target>
+</trans-unit>
+<trans-unit id="h25e62c96f8182fcc">
+  <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+  <target><x id="0" equiv-text="&lt;span&gt;"/>ഓട്ടോമാറ്റൺ <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>അംഗീകരിക്കുന്നു<x id="2" equiv-text="&lt;/sl-badge&gt;"/> <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></target>
+</trans-unit>
+<trans-unit id="h28031e78bb7297a9">
+  <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+  <target><x id="0" equiv-text="&lt;span&gt;"/>ഓട്ടോമാറ്റൺ <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/> നിരസിക്കുന്നു<x id="2" equiv-text="&lt;/sl-badge&gt;"/> <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></target>
+</trans-unit>
+<trans-unit id="s4f6476c3d1856c19">
+  <source>No further moves possible. Try a different path.</source>
+  <target>കൂടുതൽ നീക്കങ്ങൾ സാധ്യമല്ല. മറ്റൊരു പാത പരീക്ഷിക്കുക.</target>
+</trans-unit>
+<trans-unit id="sed72ab193dd16a0a">
+  <source>Simulation paused.</source>
+  <target>സിമുലേഷൻ താൽക്കാലികമായി നിർത്തി.</target>
+</trans-unit>
+<trans-unit id="saad05eab0e59411c">
+  <source>Input Word e.g. aaabbb, step;step;stop</source>
+  <target>ഇൻപുട്ട് വാക്ക്, ഉദാഹരണത്തിന് aaabbb അല്ലെങ്കിൽ step;step;stop</target>
+</trans-unit>
+<trans-unit id="s956c5a9fb7ee0b23">
+  <source>Manual</source>
+  <target>മാനുവൽ</target>
+</trans-unit>
+<trans-unit id="s61f0ff0bab2b8310">
+  <source>Animate</source>
+  <target>ആനിമേറ്റ് ചെയ്യുക</target>
+</trans-unit>
+<trans-unit id="s36494e700fe1e5c6">
+  <source>Step by Step</source>
+  <target>ഘട്ടം ഘട്ടമായി</target>
+</trans-unit>
+<trans-unit id="s42cbd8dca939a9c7">
+  <source>Check</source>
+  <target>സ്ഥിരീകരിക്കുക</target>
+</trans-unit>
+<trans-unit id="sc16e00a7a8b2fde2">
+  <source>Back</source>
+  <target>മുമ്പത്തെ</target>
+</trans-unit>
+<trans-unit id="s0fbf6dc6a1966408">
+  <source>Next</source>
+  <target>അടുത്തത്</target>
+</trans-unit>
+<trans-unit id="s255857544a9d5ec0">
+  <source>Reset</source>
+  <target>പുനഃസജ്ജമാക്കുക</target>
+</trans-unit>
+<trans-unit id="s061cc20e3432dead">
+  <source>Pause</source>
+  <target>താൽക്കാലികമായി നിർത്തുക</target>
+</trans-unit>
+<trans-unit id="scd105819b5a10243">
+  <source>Play</source>
+  <target>ഓടുക</target>
+</trans-unit>
+<trans-unit id="sd9ad53251f2330a5">
+  <source>Stop</source>
+  <target>നിർത്തുക</target>
+</trans-unit>
+<trans-unit id="se63c78875f5b2178">
+  <source>Add node</source>
+  <target>നോഡ് ചേർക്കുക</target>
+</trans-unit>
+<trans-unit id="s7815e752b14f6f96">
+  <source>Add sink state</source>
+  <target>ആഗിരണം ചെയ്യുന്ന അവസ്ഥ ചേർക്കുക</target>
+</trans-unit>
+<trans-unit id="s6d8c02aee480af7a">
+  <source>Menu</source>
+  <target>മെനു</target>
+</trans-unit>
+<trans-unit id="s42b6431842b835b3">
+  <source>Language:</source>
+  <target>ഭാഷ:</target>
+</trans-unit>
+<trans-unit id="sa4088b649da557a5">
+  <source>Check Automaton</source>
+  <target>ഓട്ടോമാറ്റൺ പരിശോധിക്കുക</target>
+</trans-unit>
+<trans-unit id="sea4f20ea1ece70a0">
+  <source>Definition</source>
+  <target>നിർവ്വചനം</target>
+</trans-unit>
+<trans-unit id="sb80ac0a010cbc647">
+  <source>Automaton Type</source>
+  <target>ഫിനിറ്റ്-സ്റ്റേറ്റ് ഓട്ടോമാറ്റൻ്റെ തരം</target>
+</trans-unit>
+<trans-unit id="se033711991bc46ea">
+  <source>DFA</source>
+  <target>DFA</target>
+</trans-unit>
+<trans-unit id="s36dfd719c2d7c63c">
+  <source>NFA</source>
+  <target>NFA</target>
+</trans-unit>
+<trans-unit id="s8d5ca919f3cad950">
+  <source>PDA</source>
+  <target>PDA</target>
+</trans-unit>
+<trans-unit id="s59329d2125467032">
+  <source>Automaton definition</source>
+  <target>ഓട്ടോമാറ്റൺ നിർവചനം</target>
+</trans-unit>
+<trans-unit id="s5e8250fb85d64c23">
+  <source>Close</source>
+  <target>അടയ്ക്കുക</target>
+</trans-unit>
+<trans-unit id="s337a1e9022a8d19f">
+  <source>Table</source>
+  <target>മേശ</target>
+</trans-unit>
+<trans-unit id="sad743c81472a217f">
+  <source>States</source>
+  <target>ഓട്ടോമാറ്റൺ സംസ്ഥാനങ്ങൾ</target>
+</trans-unit>
+<trans-unit id="s27689c7297057a5a">
+  <source>Alphabet</source>
+  <target>അക്ഷരമാല</target>
+</trans-unit>
+<trans-unit id="s9952d0dbf104795a">
+  <source>Initial state</source>
+  <target>ഓട്ടോമാറ്റണിൻ്റെ പ്രാരംഭ അവസ്ഥ</target>
+</trans-unit>
+<trans-unit id="s94ede397ea7482ef">
+  <source>Final states</source>
+  <target>ഓട്ടോമാറ്റണിൻ്റെ അവസാന അവസ്ഥകൾ</target>
+</trans-unit>
+<trans-unit id="sb3fa6348186c2022">
+  <source>Stack alphabet</source>
+  <target>സ്റ്റാക്കിൻ്റെ അക്ഷരമാല</target>
+</trans-unit>
+<trans-unit id="se5113f4874d8494d">
+  <source>Starting stack</source>
+  <target>സ്റ്റാക്കിൻ്റെ പ്രാരംഭ ഉള്ളടക്കം</target>
+</trans-unit>
+<trans-unit id="s5798e7f4322a6963">
+  <source>Transitions</source>
+  <target>സംക്രമണങ്ങൾ</target>
+</trans-unit>
+<trans-unit id="sd07c6d5726032834">
+  <source>No transitions yet</source>
+  <target>ഇതുവരെ പരിവർത്തനങ്ങളൊന്നുമില്ല</target>
+</trans-unit>
+<trans-unit id="s1f8d4c03eed89a7b">
+  <source>Push <x id="0" equiv-text="${label}"/></source>
+  <target>സ്റ്റാക്കിൻ്റെ മുകളിൽ <x id="0" equiv-text="${label}"/> ഇടുക</target>
+</trans-unit>
+<trans-unit id="sc6fa8596f1438baa">
+  <source>Pop <x id="0" equiv-text="${label}"/></source>
+  <target>സ്റ്റാക്കിൻ്റെ മുകളിൽ നിന്ന് <x id="0" equiv-text="${label}"/> നീക്കം ചെയ്യുക</target>
+</trans-unit>
+<trans-unit id="s66fd00b9507b3fee">
+  <source>Require an empty stack</source>
+  <target>ഒരു ശൂന്യമായ ശേഖരം ആവശ്യമാണ്</target>
+</trans-unit>
+<trans-unit id="s9027f3efff46b1d1">
+  <source>Leave stack unchanged</source>
+  <target>സ്റ്റാക്ക് മാറ്റമില്ലാതെ വിടുക</target>
+</trans-unit>
+<trans-unit id="sdf60145f119b14de">
+  <source>Top is <x id="0" equiv-text="${condition}"/></source>
+  <target>സ്റ്റാക്കിൻ്റെ മുകൾഭാഗം <x id="0" equiv-text="${condition}"/> ആണ്</target>
+</trans-unit>
+<trans-unit id="sf74f8907aaf4051a">
+  <source>Transition table</source>
+  <target>സംക്രമണ പട്ടിക</target>
+</trans-unit>
+<trans-unit id="sae239213b7c70376">
+  <source>State</source>
+  <target>അവസ്ഥ</target>
+</trans-unit>
+<trans-unit id="sebb13b4e50b16dcc">
+  <source>Connect from top</source>
+  <target>മുകളിൽ നിന്ന് ബന്ധിപ്പിക്കുക</target>
+</trans-unit>
+<trans-unit id="s52a408dd8b7508c0">
+  <source>Connect from left</source>
+  <target>ഇടതുവശത്ത് നിന്ന് ബന്ധിപ്പിക്കുക</target>
+</trans-unit>
+<trans-unit id="s099877714a72ad3a">
+  <source>Connect from bottom</source>
+  <target>താഴെ നിന്ന് ബന്ധിപ്പിക്കുക</target>
+</trans-unit>
+<trans-unit id="s638f1298728a57d5">
+  <source>Connect from right</source>
+  <target>വലതുവശത്ത് നിന്ന് ബന്ധിപ്പിക്കുക</target>
+</trans-unit>
+<trans-unit id="s02232ef4da5e61a7">
+  <source>Double click / long tap to add a node</source>
+  <target>ഒരു നോഡ് ചേർക്കാൻ ഡബിൾ ക്ലിക്ക് / ലോംഗ് ടാപ്പ് ചെയ്യുക</target>
+</trans-unit>
+<trans-unit id="sdb05063db77404d8">
+  <source>The automaton data block is invalid or uses an unsupported format.</source>
+  <target>ഓട്ടോമാറ്റൺ ഡാറ്റ ബ്ലോക്ക് അസാധുവാണ് അല്ലെങ്കിൽ പിന്തുണയ്ക്കാത്ത ഫോർമാറ്റ് ഉപയോഗിക്കുന്നു.</target>
+</trans-unit>
+<trans-unit id="s93ef8405b9b83023">
+  <source>State diagram</source>
+  <target>ഓട്ടോമാറ്റൺ സ്റ്റേറ്റുകളുടെ ഡയഗ്രം</target>
+</trans-unit>
+<trans-unit id="s3a2084e9089a7fca">
+  <source>No states yet</source>
+  <target>ഓട്ടോമാറ്റണിന് ഇതുവരെ സ്റ്റേറ്റുകളൊന്നുമില്ല</target>
+</trans-unit>
+<trans-unit id="s7df224ba56fb8e1e">
+  <source>Mode Switch</source>
+  <target>മോഡ് സ്വിച്ച്</target>
+</trans-unit>
+<trans-unit id="s4b10acae683d2978">
+  <source>Fullscreen</source>
+  <target>പൂർണ്ണസ്ക്രീൻ</target>
+</trans-unit>
+<trans-unit id="sd2223afb7d6b100d">
+  <source>Type</source>
+  <target>ടൈപ്പ് ചെയ്യുക</target>
+</trans-unit>
+<trans-unit id="s352719d86112de9a">
+  <source>Help</source>
+  <target>സഹായിക്കുക</target>
+</trans-unit>
+<trans-unit id="sc725a41694d85bb0">
+  <source>Test Cases</source>
+  <target>ടെസ്റ്റ് കേസുകൾ</target>
+</trans-unit>
+<trans-unit id="s521208df9ea3e694">
+  <source>Click or drag + to add a node</source>
+  <target>ഒരു നോഡ് ചേർക്കാൻ + ക്ലിക്ക് ചെയ്യുക അല്ലെങ്കിൽ വലിച്ചിടുക</target>
+</trans-unit>
+<trans-unit id="s9f4a96e81b296478">
+  <source>Add Transition by drag and drop</source>
+  <target>ഡ്രാഗ് ആൻഡ് ഡ്രോപ്പ് വഴി സംക്രമണം ചേർക്കുക</target>
+</trans-unit>
+<trans-unit id="s7b72a2e6d7ff3291">
+  <source>Move the elements by drag and drop</source>
+  <target>വലിച്ചിടുന്നതിലൂടെ ഘടകങ്ങൾ നീക്കുക</target>
+</trans-unit>
+<trans-unit id="sc0bffa27613488fe">
+  <source>Select a node or transition to edit it</source>
+  <target>അത് എഡിറ്റുചെയ്യാൻ ഒരു നോഡോ സംക്രമണമോ തിരഞ്ഞെടുക്കുക</target>
+</trans-unit>
+<trans-unit id="s71813a5a8d63ac81">
+  <source>Input word</source>
+  <target>ഇൻപുട്ട് വാക്ക്</target>
+</trans-unit>
+<trans-unit id="sa82cf626cfa888ac">
+  <source>Simulation Controls</source>
+  <target>സിമുലേഷൻ നിയന്ത്രണങ്ങൾ</target>
+</trans-unit>
+<trans-unit id="s9274cd474969c49c">
+  <source>Switch mode (Ctrl+M)</source>
+  <target>എഡിറ്റ്, സിമുലേഷൻ മോഡുകൾക്കിടയിൽ മാറുക (Ctrl+M)</target>
+</trans-unit>
+<trans-unit id="s8a7f6fa052132a14">
+  <source>Warnings</source>
+  <target>മുന്നറിയിപ്പുകൾ</target>
+</trans-unit>
+<trans-unit id="h2e7f32ac617924d0">
+  <source>Missing transition for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
+  <target><x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/> എന്ന ചിഹ്നത്തിനായുള്ള സംക്രമണം വിട്ടുപോയിരിക്കുന്നു</target>
+</trans-unit>
+<trans-unit id="h5130af20b6d54f05">
+  <source>Multiple transitions for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
+  <target><x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/> എന്ന ചിഹ്നത്തിനായുള്ള ഒന്നിലധികം സംക്രമണങ്ങൾ</target>
+</trans-unit>
+<trans-unit id="s2ea31ea953b32ee5">
+  <source>Transition with empty symbol</source>
+  <target>ശൂന്യമായ ചിഹ്നത്തോടുകൂടിയ സംക്രമണം</target>
+</trans-unit>
+<trans-unit id="s335050fdf97d8f6e">
+  <source>No initial state defined</source>
+  <target>പ്രാരംഭ നില നിർവചിച്ചിട്ടില്ല</target>
+</trans-unit>
+<trans-unit id="s74a96f52fd23c3e8">
+  <source>Multiple initial states defined</source>
+  <target>ഒന്നിലധികം പ്രാരംഭ അവസ്ഥകൾ നിർവചിച്ചു</target>
+</trans-unit>
+<trans-unit id="s5787e20cab57b383">
+  <source>Unknown error</source>
+  <target>അജ്ഞാത പിശക്</target>
+</trans-unit>
+</body>
+</file>
+</xliff>

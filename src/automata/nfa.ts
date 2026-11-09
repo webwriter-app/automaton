@@ -204,15 +204,13 @@ export class NFASimulator extends ManualAutoSimulator {
                     button.innerHTML = s === '' ? 'ε' : s;
                     button.addEventListener('click', () => {
                         dialog.close();
-                        dialog.remove();
                         resolve({ to, symbol: s });
                     });
                     return button;
                 });
 
                 dialog.append(...buttons);
-                this._graph?.component.shadowRoot?.appendChild(dialog);
-                dialog.showModal();
+                this.showMoveDialog(dialog, () => resolve(null));
             });
         }
 

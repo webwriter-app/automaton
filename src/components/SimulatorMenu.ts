@@ -21,19 +21,19 @@ import {
     biHandIndexThumb,
 } from '../styles/icons';
 import { Automaton, SimulationFeedback, SimulationResult, SimulationStatus } from '../automata';
-import { classMap } from 'lit/directives/class-map.js';
 import { SlChangeEvent } from '@shoelace-style/shoelace';
 import { styleMap } from 'lit/directives/style-map.js';
 import { simulationMenuStyles } from '../styles/simulationMenu';
 import { LitElementWw } from '@webwriter/lit';
 import { Graph } from '../graph';
 import { ManualAutoSimulator } from 'automata/manual-auto';
-import { localized, msg } from '@lit/localize';
 import { Logger } from '@u/logger';
+import { sourceMsg } from '../../localization/localizer';
 
 @customElement('webwriter-automaton-simulatormenu')
-@localized()
 export class SimulatorMenu extends LitElementWw {
+    private get msg() { return this.graph?.component.msg ?? sourceMsg; }
+
     @state()
     private accessor _automaton!: Automaton;
     public set automaton(automaton: Automaton) {
@@ -41,7 +41,7 @@ export class SimulatorMenu extends LitElementWw {
     }
 
     @property({ type: Object, attribute: false })
-    public accessor graph!: Graph;
+    public accessor graph: Graph | undefined;
 
     @state()
     private accessor _result!: {
@@ -83,35 +83,31 @@ export class SimulatorMenu extends LitElementWw {
             'sl-button': SlButton,
             'sl-tooltip': SlTooltip,
             'sl-badge': SlBadge,
-            'sl-input': SlInput,
+            // Shoelace's autocorrect property predates the native HTMLElement property.
+            'sl-input': SlInput as unknown as CustomElementConstructor,
             'sl-button-group': SlButtonGroup,
         };
     }
 
     render() {
-        return html`<div class=${classMap({
-            simulator: true,
-            'simulator--pda': this._automaton.type === 'pda',
-        })}>${this.renderLabel()} ${this.renderInput()} ${this.renderButtonGroup()}</div>`;
+        return html`<div class="simulator">${this.renderLabel()} ${this.renderInput()} ${this.renderButtonGroup()}</div>`;
     }
 
     private renderLabel() {
         if (!this._simulationResult) {
-            return html`<div
-                class="simulator__label">
-            </div>`;
+            return null;
         }
         else if (this._simulationResult.errors && this._simulationResult.errors.length > 0) {
             return html`<div
                 class="simulator__label">
                     <span>
-                        ${msg(html`Please fix the following <sl-badge variant="danger">errors</sl-badge> to run the simulation:`)}
+                        ${this.msg(html`Please fix the following <sl-badge variant="danger">errors</sl-badge> to run the simulation:`)}
                         <br/>
                         <div class="simulator__label__errors">${ this._simulationResult.errors.map(e => {
                             if (e.node) {
-                                return html`${e.node?.label}: ${e.message}<br/>`;
+                                return html`${e.node?.label}: ${e.message(this.msg)}<br/>`;
                             }
-                            return html`${e.message}<br/>`;
+                            return html`${e.message(this.msg)}<br/>`;
                         }) }</div>
                     </span>
             </div>`;
@@ -120,7 +116,7 @@ export class SimulatorMenu extends LitElementWw {
             return html`<div
                 class="simulator__label">
                     <span>
-                        ${msg(html`No valid path found. The automaton <sl-badge variant="danger">rejects</sl-badge> the word <b>${this._automaton.simulator.word}</b>.`)}
+                        ${this.msg(html`No valid path found. The automaton <sl-badge variant="danger">rejects</sl-badge> the word <b>${this._automaton.simulator.word}</b>.`)}
                     </span>
             </div>`;
         }
@@ -152,13 +148,13 @@ export class SimulatorMenu extends LitElementWw {
             return html`<div
                     class="simulator__label">
                         ${!!this._result?.status && this._result.status === SimulationStatus.ACCEPTED
-                            ? msg(html`<span>The automaton <sl-badge variant="success">accepts</sl-badge> the word <b>${this._automaton.simulator.word || "ε"}</b>.</span>`)
+                            ? this.msg(html`<span>The automaton <sl-badge variant="success">accepts</sl-badge> the word <b>${this._automaton.simulator.word || "ε"}</b>.</span>`)
                             : !!this._result?.status && this._result.status === SimulationStatus.REJECTED
-                            ? msg(html`<span>The automaton <sl-badge variant="danger">rejects</sl-badge> the word <b>${this._automaton.simulator.word || "ε"}</b>.</span>`)
+                            ? this.msg(html`<span>The automaton <sl-badge variant="danger">rejects</sl-badge> the word <b>${this._automaton.simulator.word || "ε"}</b>.</span>`)
                             : !!this._result?.status && this._result.status === SimulationStatus.NO_MOVES
-                            ? html`<span>${msg("No further moves possible. Try a different path.")}</span>`
+                            ? html`<span>${this.msg("No further moves possible. Try a different path.")}</span>`
                             : !!this._result?.status && this._result.status === SimulationStatus.PAUSED
-                            ? html`<span>${msg("Simulation paused.")}</span>`
+                            ? html`<span>${this.msg("Simulation paused.")}</span>`
                             : ""}
                         
                         <div class="simulator__label__path">
@@ -181,7 +177,7 @@ export class SimulatorMenu extends LitElementWw {
                 }}
                 value=${this._automaton.simulator.word}
                 id="wordInput"
-                placeholder=${msg("Input Word e.g. aaabbb, step;step;stop")}
+                placeholder=${this.msg("Input Word e.g. aaabbb, step;step;stop")}
                 clearable
                 autocomplete="off"
                 autocorrect="off"
@@ -217,7 +213,7 @@ export class SimulatorMenu extends LitElementWw {
                 })}
             >
                 ${this._automaton.type === 'pda' || this._automaton.type === 'nfa' ? html`
-                <sl-tooltip content=${msg("Manual")} placement="top">
+                <sl-tooltip content=${this.msg("Manual")} placement="top">
                     <sl-button
                         @click=${() => {
                             this.startStepByStep(true);
@@ -226,7 +222,7 @@ export class SimulatorMenu extends LitElementWw {
                     >
                 </sl-tooltip>
                 ` : ''}
-                <sl-tooltip content=${msg("Animate")} placement="top">
+                <sl-tooltip content=${this.msg("Animate")} placement="top">
                     <sl-button
                         @click=${() => {
                             this.startAnimation();
@@ -234,7 +230,7 @@ export class SimulatorMenu extends LitElementWw {
                         >${biPlay}</sl-button
                     >
                 </sl-tooltip>
-                <sl-tooltip content=${msg("Step by Step")} placement="top">
+                <sl-tooltip content=${this.msg("Step by Step")} placement="top">
                     <sl-button
                         @click=${() => {
                             this.startStepByStep();
@@ -242,7 +238,7 @@ export class SimulatorMenu extends LitElementWw {
                         >${biSkipEnd}</sl-button
                     >
                 </sl-tooltip>
-                <sl-tooltip content=${msg("Check")} placement="top">
+                <sl-tooltip content=${this.msg("Check")} placement="top">
                     <sl-button
                         @click=${() => {
                             this.run();
@@ -256,7 +252,7 @@ export class SimulatorMenu extends LitElementWw {
                     display: this._mode === 'step' ? 'flex' : 'none',
                 })}
             >
-                <sl-tooltip content=${msg("Back")} placement="top">
+                <sl-tooltip content=${this.msg("Back")} placement="top">
                     <sl-button
                         id="simulator_back"
                         @click=${() => {
@@ -266,7 +262,7 @@ export class SimulatorMenu extends LitElementWw {
                         >${biSkipStart}</sl-button
                     >
                 </sl-tooltip>
-                <sl-tooltip content=${msg("Next")} placement="top">
+                <sl-tooltip content=${this.msg("Next")} placement="top">
                     <sl-button
                         id="simulator_next"
                         @click=${() => {
@@ -275,7 +271,7 @@ export class SimulatorMenu extends LitElementWw {
                         >${biSkipEnd}</sl-button
                     >
                 </sl-tooltip>
-                <sl-tooltip content=${msg("Reset")} placement="top">
+                <sl-tooltip content=${this.msg("Reset")} placement="top">
                     <sl-button
                         @click=${() => {
                             this.reset();
@@ -289,7 +285,7 @@ export class SimulatorMenu extends LitElementWw {
                     display: this._mode === 'run' ? 'flex' : 'none',
                 })}
             >
-                <sl-tooltip content=${msg("Reset")} placement="top">
+                <sl-tooltip content=${this.msg("Reset")} placement="top">
                     <sl-button
                         @click=${() => {
                             this.reset();
@@ -302,7 +298,7 @@ export class SimulatorMenu extends LitElementWw {
                 class="simulator_buttons"
                 style=${styleMap({ display: this._mode === 'animate' ? 'flex' : 'none' })}
             >
-                <sl-tooltip content=${this._animationRunning ? msg('Pause') : msg('Play')} placement="top">
+                <sl-tooltip content=${this._animationRunning ? this.msg('Pause') : this.msg('Play')} placement="top">
                     <sl-button
                         @click=${() => {
                             this.toggleAnimation();
@@ -311,7 +307,7 @@ export class SimulatorMenu extends LitElementWw {
                         >${this._animationRunning ? biPause : biPlay}</sl-button
                     >
                 </sl-tooltip>
-                <sl-tooltip content=${msg("Stop")} placement="top">
+                <sl-tooltip content=${this.msg("Stop")} placement="top">
                     <sl-button
                         @click=${() => {
                             this.stopAnimation();
@@ -320,7 +316,7 @@ export class SimulatorMenu extends LitElementWw {
                         >${biStop}</sl-button
                     >
                 </sl-tooltip>
-                <sl-tooltip content=${msg("Reset")} placement="top">
+                <sl-tooltip content=${this.msg("Reset")} placement="top">
                     <sl-button
                         @click=${() => {
                             this.reset();
@@ -425,11 +421,12 @@ export class SimulatorMenu extends LitElementWw {
         };
         this._simulationResult = null;
         this._mode = 'idle';
-        this._nextButton.disabled = false;
-        this._backButton.disabled = true;
+        this._animationRunning = false;
+        if (this._nextButton) this._nextButton.disabled = false;
+        if (this._backButton) this._backButton.disabled = true;
 
-        this._toggleButton.disabled = false;
-        this._stopButton.disabled = false;
+        if (this._toggleButton) this._toggleButton.disabled = false;
+        if (this._stopButton) this._stopButton.disabled = false;
 
         this.requestUpdate();
     }
@@ -439,6 +436,7 @@ export class SimulatorMenu extends LitElementWw {
     }
 
     private startStepByStep(manual = false) {
+        if (!this.graph) return;
         this.reset();
         this._mode = 'step';
 

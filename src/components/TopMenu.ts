@@ -1,7 +1,7 @@
-import { PropertyValueMap, html } from 'lit';
+import { html, nothing, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { keyed } from 'lit/directives/keyed.js';
 import {
-    biArrowLeftRight,
     biClipboard,
     biCodeSlash,
     biFullscreen,
@@ -19,22 +19,21 @@ import SlTab from '@shoelace-style/shoelace/dist/components/tab/tab.component.js
 import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group.component.js';
 import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.component.js';
 
-import { AutomatonComponent } from '../index';
+import { AutomatonComponent, type AutomatonType } from '../index';
 import { topMenuStyles } from '../styles/topMenu';
-import { transformations } from '../utils/transformations';
 import { LitElementWw } from '@webwriter/lit';
 import { Graph } from '../graph';
-import { stripNode, stripTransition } from '../utils/updates';
+import type { Node, StackOperation, Transition } from '../automata';
+import { PDA } from '../automata/pda';
 import RandExp from 'randexp';
 import { SimulationStatus } from 'automata';
-import { NFA } from 'automata/nfa';
-import { PDA } from 'automata/pda';
-import { localized, msg } from '@lit/localize';
+import { str } from '@lit/localize';
 import { Logger } from '@u/logger';
 
 @customElement('webwriter-automaton-topmenu')
-@localized()
 export class TopMenu extends LitElementWw {
+    private get msg() { return this.component.msg; }
+
     @property({ type: Object, attribute: false })
     private accessor _component!: AutomatonComponent;
     public set component(component: AutomatonComponent) {
@@ -57,12 +56,15 @@ export class TopMenu extends LitElementWw {
     private accessor _menuOpen: boolean = false;
 
     private _resizeObserver?: ResizeObserver;
+    private fullscreenChanged = () => {
+        this._fullscreen = this._component?.matches(':fullscreen') ?? false;
+    };
 
-    @property({ type: Object, attribute: false })
-    private accessor _graph!: Graph;
-    public set graph(graph: Graph) {
-        this._graph = graph;
-    }
+    @state()
+    private accessor _typeMenuOpen = false;
+
+    @state()
+    private accessor _definitionOpen = false;
 
     @property({ type: Object, attribute: false })
     private accessor _setHelpOverlay!: (visible: boolean) => (void);
@@ -93,6 +95,7 @@ export class TopMenu extends LitElementWw {
 
     connectedCallback(): void {
         super.connectedCallback();
+        this.ownerDocument.addEventListener('fullscreenchange', this.fullscreenChanged);
         const host = (this.getRootNode() as ShadowRoot)?.host ?? this.parentElement;
         if (host) {
             this._resizeObserver = new ResizeObserver((entries) => {
@@ -109,65 +112,58 @@ export class TopMenu extends LitElementWw {
     disconnectedCallback(): void {
         super.disconnectedCallback();
         this._resizeObserver?.disconnect();
+        this.ownerDocument.removeEventListener('fullscreenchange', this.fullscreenChanged);
     }
 
-    protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
-        // Important for when the user exits fullscreen mode by pressing ESC or F11
-        document.addEventListener('fullscreenchange', () => {
-            this._fullscreen = !!document.fullscreenElement;
-        });
+    protected willUpdate(changedProperties: PropertyValues) {
+        super.willUpdate(changedProperties);
+        if (this._definitionOpen && !this._component.formalDefinitionEnabled && !this._component.transitionsTableEnabled) {
+            this._definitionOpen = false;
+        }
     }
 
     render() {
-        if (this._collapsed) {
-            return html`
-                <div class="topmenu topmenu--hamburger" style=${this._helpOverlay ? 'z-index: 2500' : ''}>
-                    <sl-popup placement="bottom-end" distance="8" ?active=${this._menuOpen || this._helpOverlay}>
-                        <sl-button
-                            slot="anchor"
-                            class="topmenu__button"
-                            circle
-                            style=${this._helpOverlay ? 'z-index: 2500' : ''}
-                            @click=${() => { this._menuOpen = !this._menuOpen; }}
-                        >${biList}</sl-button>
-                        <div class="topmenu__collapsed_panel">
+        if (!this._component) return nothing;
+        return html`
+            ${this._collapsed ? html`
+                <div class="topmenu topmenu--hamburger">
+                    <sl-button
+                        class="topmenu__button"
+                        circle
+                        aria-label=${this.msg("Menu")}
+                        aria-expanded=${this._menuOpen || this._helpOverlay}
+                        aria-controls="compact-menu"
+                        @click=${() => {
+                            if (this._definitionOpen) void this.setDefinitionOpen(false);
+                            else this._menuOpen = !this._menuOpen;
+                            this._typeMenuOpen = false;
+                        }}
+                    >${biList}</sl-button>
+                    ${this._menuOpen || this._helpOverlay ? html`
+                        <div class="topmenu__collapsed_panel" id="compact-menu">
                             ${this.renderButtonGroups(true)}
-                        </div>
-                    </sl-popup>
-                </div>`;
-        }
-
-        return html`<div class="topmenu">${this.renderButtonGroups()}</div>`;
+                        </div>` : ''}
+                </div>` : html`<div class="topmenu">${this.renderButtonGroups()}</div>`}
+            ${this._definitionOpen ? this.renderDefinitionPane() : nothing}
+        `;
     }
 
     private renderButtonGroups(collapsed = false) {
-        const formalDefinition = this._component?.automaton?.getFormalDefinition();
-        const tooltipPlacement = collapsed ? 'top' : 'left';
-        const popupPlacement = collapsed ? 'left-end' : 'bottom-end';
+        const buttonSize = collapsed ? 'small' : 'medium';
+        const boundary = collapsed ? this._component : undefined;
 
         return html`
             <div class="topmenu__button_group">
                 <sl-button
                     class="topmenu__button"
-                    @click=${async (e: Event) => {
-                        this._fullscreen = this.ownerDocument.fullscreenElement === this._component;
-                        
-                        const button = (e.target as HTMLElement).closest('sl-button') as SlButton;
-
+                    size=${buttonSize}
+                    @click=${async () => {
                         try {
-                            if (this._fullscreen) await document.exitFullscreen();
+                            if (this._component.matches(':fullscreen')) await this.ownerDocument.exitFullscreen();
                             else await this._component.requestFullscreen();
                         } catch (err) {
                             Logger.error('Error entering/exiting fullscreen:', err);
                         }
-
-                        // Remove and re-append the button to update its hover state
-                        const parent = button.parentElement;
-                        if (parent) {
-                            parent.removeChild(button);
-                            parent.appendChild(button);
-                        }
-                        this._fullscreen = this.ownerDocument.fullscreenElement === this._component;
                     }}
                     circle
                 >
@@ -177,9 +173,11 @@ export class TopMenu extends LitElementWw {
             <div class="topmenu__button_group">
                 <sl-button
                     class="topmenu__button"
+                    size=${buttonSize}
                     variant=${this._helpOverlay ? 'primary' : 'default'}
                     style="z-index: 2500"
                     @click=${() => {
+                        this._definitionOpen = false;
                         this._helpOverlay = !this._helpOverlay;
                         this._setHelpOverlay(this._helpOverlay);
                     }}
@@ -188,11 +186,15 @@ export class TopMenu extends LitElementWw {
                 >
             </div>
             <div class="topmenu__button_group">
-                <sl-popup placement=${popupPlacement} distance="8" arrow ?shift=${collapsed}>
+                <sl-popup placement="bottom-end" distance="8" arrow ?shift=${collapsed} ?flip=${collapsed}
+                    auto-size="both" auto-size-padding="4"
+                    .shiftBoundary=${boundary} .flipBoundary=${boundary} .autoSizeBoundary=${boundary}>
                     <sl-button
                         slot="anchor"
                         class="topmenu__button"
+                        size=${buttonSize}
                         @click=${(e: Event) => {
+                            this._definitionOpen = false;
                             const popup = (e.target as HTMLElement).closest('sl-popup') as SlPopup;
                             popup.active = !popup.active;
                         }}
@@ -202,7 +204,7 @@ export class TopMenu extends LitElementWw {
                         ${biClipboard}</sl-button
                     >
                     <div class="topmenu__popup">
-                        <b>${msg("Language:")} </b>${this.component.testLanguage}
+                        <b>${this.msg("Language:")} </b>${this.component.testLanguage}
                         <br />
                         <sl-button
                             @click=${(e: Event) => {
@@ -221,7 +223,7 @@ export class TopMenu extends LitElementWw {
 
                                 (e.target as SlButton).variant = accepted ? 'success' : 'danger';
                             }}
-                            >${msg("Check Automaton")}</sl-button
+                            >${this.msg("Check Automaton")}</sl-button
                         >
 
                         ${this.component.testWords.map(
@@ -241,201 +243,216 @@ export class TopMenu extends LitElementWw {
                 </sl-popup>
             </div>
             <div class="topmenu__button_group">
-                <sl-popup placement=${popupPlacement} distance="8" arrow ?shift=${collapsed} ?flip=${collapsed} auto-size="vertical" style="--arrow-color: var(--sl-panel-border-color)">
-                    <sl-button
-                        slot="anchor"
-                        class="topmenu__button"
-                        circle
-                        @click=${(e: Event) => {
-                            const popup = (e.target as HTMLElement).closest('sl-popup') as SlPopup;
-                            popup.active = !popup.active;
-                        }}
-                        ?disabled=${this.component.showFormalDefinition == 'false' &&
-                        this.component.showTransitionsTable == 'false'}
-                        >${biCodeSlash}</sl-button
-                    >
-                    <div class="topmenu__popup">
-                        <sl-tab-group placement="top">
-                            <sl-tab slot="nav" panel="def" 
-                                ?disabled=${this.component.showFormalDefinition == 'false'}
-                                ?active=${this.component.showFormalDefinition == 'true'}
-                                >${msg("Definition")}</sl-tab
-                            >
-                            <sl-tab slot="nav" panel="table" 
-                                ?disabled=${this.component.showTransitionsTable == 'false'}
-                                ?active=${this.component.showTransitionsTable == 'true' && this.component.showFormalDefinition == 'false'}
-                                >${msg("Table")}</sl-tab
-                            >
+                <sl-button class="topmenu__button definition-trigger" size=${buttonSize} circle
+                    aria-label=${this.msg("Definition")} title=${this.msg("Definition")}
+                    aria-expanded=${this._definitionOpen}
+                    aria-controls=${this._definitionOpen ? 'definition-pane' : nothing}
+                    ?disabled=${!this.component.formalDefinitionEnabled && !this.component.transitionsTableEnabled}
+                    @click=${() => void this.setDefinitionOpen(!this._definitionOpen)}
+                    @keydown=${this.handleDefinitionKeydown}>${biCodeSlash}</sl-button>
+            </div>
+            ${this.renderTypeMenu(buttonSize, boundary)}`;
+    }
 
-                            <sl-tab-panel name="def" ?active=${this.component.showFormalDefinition == 'true'} style="--padding: 1em">
-                                <label>${msg("Alphabet:")} </label>${formalDefinition.alphabet}
-                                <br />
-                                <label>${msg("States:")} </label>${formalDefinition.nodes}
-                                <br />
-                                <label>${msg("Transitions:")} </label>${formalDefinition.transitions}
-                                <br />
-                                <label>${msg("Initial State:")} </label>${formalDefinition.initialNode}
-                                <br />
-                                <label>${msg("Final States:")} </label>${formalDefinition.finalNodes}
-                            </sl-tab-panel>
-                            <sl-tab-panel
-                                name="table"
-                                ?active=${this.component.showTransitionsTable == 'true' &&
-                                this.component.showFormalDefinition == 'false'}
-                                style="--padding: 0"
-                            >
-                                ${this.getTransitionsTable()}
-                            </sl-tab-panel>
-                        </sl-tab-group>
+    private renderTypeMenu(size: string, boundary?: HTMLElement) {
+        const label = this.msg("Automaton Type");
+        const { automaton, mode, allowedTypes } = this._component;
+        const types = (['dfa', 'nfa', 'pda'] as const).filter(type => allowedTypes.includes(type) && type !== automaton.type);
+        const disabled = mode !== 'edit' || types.length === 0;
+        const typeLabel = (type: AutomatonType) => type === 'dfa' ? this.msg('DFA') : type === 'nfa' ? this.msg('NFA') : this.msg('PDA');
+        return html`
+            <div class="topmenu__button_group" @keydown=${(event: KeyboardEvent) => {
+                if (event.key === 'Escape') this._typeMenuOpen = false;
+            }}>
+                <sl-popup placement="bottom-end" distance="8" shift flip
+                    .shiftBoundary=${boundary} .flipBoundary=${boundary}
+                    ?active=${!disabled && this._typeMenuOpen}>
+                    <sl-button slot="anchor" class="topmenu__button" size=${size} circle title=${label}
+                        aria-expanded=${!disabled && this._typeMenuOpen} ?disabled=${disabled}
+                        @click=${() => {
+                            this._definitionOpen = false;
+                            this._typeMenuOpen = !this._typeMenuOpen;
+                        }}>
+                        ${typeLabel(automaton.type)}
+                    </sl-button>
+                    <div class="topmenu__choices" role="group" aria-label=${label}>
+                        ${types.map(type => html`
+                            <sl-button size="small" @click=${() => {
+                                this._typeMenuOpen = false;
+                                void this._component.switchType(type);
+                            }}>${typeLabel(type)}</sl-button>
+                        `)}
                     </div>
                 </sl-popup>
-            </div>
-            <div class="topmenu__button_group">
-                <!-- <sl-tooltip content="Transformations" placement="left"> -->
-                <sl-button
-                    class="topmenu__button"
-                    circle
-                    ?disabled=${this._component.allowedTransformations.length === 0 || this._component.mode === 'simulate'}
-                    >${biArrowLeftRight}</sl-button
-                >
-                <!-- </sl-tooltip> -->
-                <div class="topmenu__buttons">
-                    ${this._component.allowedTransformations.includes('sink') && this._component.mode !== 'simulate'
-                        ? html`
-                            <sl-tooltip content=${msg("Add Sinkstate")} placement=${tooltipPlacement} ?hoist=${collapsed}>
-                                <sl-button
-                                    class="topmenu__button"
-                                    size="small"
-                                    ?circle=${msg("Sink").length <= 4}
-                                    @click=${() => {
-                                        transformations.AddSinkstateToDFA(this._component.automaton);
-                                    }}
-                                    >${msg("Sink")}</sl-button
-                                >
-                            </sl-tooltip>
-                        ` : ''}
-                </div>
-            </div>
-            <div class="topmenu__button_group">
-                <sl-tooltip content=${msg("Automaton Type")} placement=${tooltipPlacement} ?hoist=${collapsed}>
-                    <sl-button class="topmenu__button" circle ?disabled=${this._component.allowedTypes.length === 0 || this._component.mode === 'simulate'}>
-                        ${this._component.automaton.type === 'dfa'
-                            ? msg('DFA') : this._component.automaton.type === 'nfa'
-                            ? msg('NFA') : msg('PDA')}
-                    </sl-button>
-                </sl-tooltip>
-                <div class="topmenu__buttons">
-                    ${this._component.allowedTypes.length > 0 && this._component.mode !== 'simulate'
-                         ? html`
-                            <sl-tooltip content=${msg("DFA")} placement=${tooltipPlacement} ?hoist=${collapsed}>
-                                <sl-button
-                                    class="topmenu__button"
-                                    size="small"
-                                    @click=${() => this.switchAutomatonType('dfa')}
-                                    circle
-                                    ?disabled=${!this._component.allowedTypes.includes('dfa')}
-                                    >${msg("DFA")}</sl-button
-                                >
-                            </sl-tooltip>
-                            <sl-tooltip content=${msg("NFA")} placement=${tooltipPlacement} ?hoist=${collapsed}>
-                                <sl-button
-                                    class="topmenu__button"
-                                    size="small"
-                                    @click=${() => this.switchAutomatonType('nfa')}
-                                    circle
-                                    ?disabled=${!this._component.allowedTypes.includes('nfa')}
-                                    >${msg("NFA")}</sl-button
-                                >
-                            </sl-tooltip>
-                            <sl-tooltip content=${msg("PDA")} placement=${tooltipPlacement} ?hoist=${collapsed}>
-                                <sl-button
-                                    class="topmenu__button"
-                                    size="small"
-                                    @click=${() => this.switchAutomatonType('pda')}
-                                    circle
-                                    ?disabled=${!this._component.allowedTypes.includes('pda')}
-                                    >${msg("PDA")}</sl-button
-                                >
-                            </sl-tooltip>
-                        ` : ''}
-                </div>
             </div>`;
     }
 
-    private getTransitionsTable() {
-        const transitions = this._component.automaton.transitions
-            .get()
-            .filter((t) => t.from !== Graph.initialGhostNode.id);
-        const alphabet = this._component.automaton.getFormalDefinition().alphabet.split(', ').sort();
-        const nodes = this._component.automaton.nodes.get().filter((n) => n.id !== Graph.initialGhostNode.id);
+    private async setDefinitionOpen(open: boolean) {
+        this._definitionOpen = open;
+        this._typeMenuOpen = false;
+        if (this._collapsed) this._menuOpen = !open;
+        if (open && this._helpOverlay) {
+            this._helpOverlay = false;
+            this._setHelpOverlay(false);
+        }
+        await this.updateComplete;
+        if (this._definitionOpen !== open || !this.isConnected) return;
+        if (open) {
+            this.renderRoot.querySelector<HTMLButtonElement>('.definition-pane__close')?.focus();
+        } else {
+            const trigger = this.renderRoot.querySelector<SlButton>('.definition-trigger');
+            await trigger?.updateComplete;
+            if (!this._definitionOpen) trigger?.focus();
+        }
+    }
 
-        const table = html`<table class="topmenu__popup__table">
+    private handleDefinitionKeydown(event: KeyboardEvent) {
+        if (event.key !== 'Escape' || !this._definitionOpen) return;
+        event.preventDefault();
+        event.stopPropagation();
+        void this.setDefinitionOpen(false);
+    }
+
+    private renderDefinitionPane() {
+        const { automaton, formalDefinitionEnabled, transitionsTableEnabled } = this._component;
+        const nodes = automaton.nodes.get().filter(node => node.id !== Graph.initialGhostNode.id);
+        const labels = new Map(nodes.map(node => [node.id, node.label]));
+        const transitions = automaton.transitions.get().filter(edge => labels.has(edge.from) && labels.has(edge.to));
+        const outgoing = new Map(nodes.map(node => [node.id, [] as Transition[]]));
+        for (const edge of transitions) outgoing.get(edge.from)!.push(edge);
+        const alphabet = automaton.getAlphabet().sort();
+        const tableAlphabet = transitions.some(edge => edge.symbols.includes('')) ? [...alphabet, ''] : alphabet;
+
+        return html`
+            <section id="definition-pane" class="definition-pane" aria-label=${this.msg("Automaton definition")}
+                contenteditable="false"
+                @keydown=${this.handleDefinitionKeydown}>
+                <button type="button" class="definition-pane__close"
+                    aria-label=${this.msg("Close")} title=${this.msg("Close")}
+                    @click=${() => void this.setDefinitionOpen(false)}>×</button>
+                ${keyed(`${formalDefinitionEnabled}/${transitionsTableEnabled}`, html`
+                    <sl-tab-group placement="top">
+                        <sl-tab slot="nav" panel="def" ?disabled=${!formalDefinitionEnabled}
+                            ?active=${formalDefinitionEnabled}>${this.msg("Definition")}</sl-tab>
+                        <sl-tab slot="nav" panel="table" ?disabled=${!transitionsTableEnabled}
+                            ?active=${!formalDefinitionEnabled && transitionsTableEnabled}>${this.msg("Table")}</sl-tab>
+                        ${formalDefinitionEnabled ? html`
+                            <sl-tab-panel name="def" active tabindex="0">
+                                ${this.renderFormalSummary(nodes, alphabet, transitions, automaton instanceof PDA ? automaton.startingStack : undefined)}
+                                ${this.renderGroupedTransitions(nodes, outgoing, labels)}
+                            </sl-tab-panel>` : nothing}
+                        ${transitionsTableEnabled ? html`
+                            <sl-tab-panel name="table" ?active=${!formalDefinitionEnabled} tabindex="0">
+                                ${this.renderTransitionsTable(nodes, outgoing, labels, tableAlphabet)}
+                            </sl-tab-panel>` : nothing}
+                    </sl-tab-group>
+                `)}
+            </section>
+        `;
+    }
+
+    private renderFormalSummary(nodes: Node[], alphabet: string[], transitions: Transition[], startingStack?: readonly string[]) {
+        const set = (values: string[]) => values.length ? `{ ${values.join(', ')} }` : '∅';
+        const stackSymbol = (symbol: string) => symbol || '""';
+        const stackAlphabet = new Set(startingStack?.map(stackSymbol));
+        if (startingStack) {
+            for (const edge of transitions) {
+                for (const operation of edge.stackOperations ?? []) {
+                    if (operation.condition) stackAlphabet.add(operation.condition);
+                    if (operation.operation === 'push' || operation.operation === 'pop') {
+                        stackAlphabet.add(stackSymbol(operation.symbol));
+                    }
+                }
+            }
+        }
+        const initial = nodes.filter(node => node.initial).map(node => node.label);
+        const rows = [
+            ['Q', this.msg("States"), set(nodes.map(node => node.label))],
+            ['Σ', this.msg("Alphabet"), set(alphabet)],
+            ['q₀', this.msg("Initial state"), initial.length > 1 ? set(initial) : initial[0] ?? '—'],
+            ['F', this.msg("Final states"), set(nodes.filter(node => node.final).map(node => node.label))],
+        ];
+        if (startingStack) rows.push(
+            ['Γ', this.msg("Stack alphabet"), set([...stackAlphabet].sort())],
+            ['', this.msg("Starting stack"), `[${startingStack.map(stackSymbol).join(', ')}]`],
+        );
+        return html`
+            <dl class="definition-summary">
+                ${rows.map(([notation, label, value]) => html`
+                    <div>
+                        <dt>${notation ? html`<code>${notation}</code><span aria-hidden="true"> · </span>` : nothing}${label}</dt>
+                        <dd><code>${value}</code></dd>
+                    </div>
+                `)}
+            </dl>
+        `;
+    }
+
+    private renderGroupedTransitions(nodes: Node[], outgoing: Map<number, Transition[]>, labels: Map<number, string>) {
+        const groups = nodes.filter(node => outgoing.get(node.id)!.some(edge => edge.symbols.length));
+        return html`
+            <h3 class="definition-transitions-title"><code>δ</code> · ${this.msg("Transitions")}</h3>
+            ${groups.length ? groups.map(node => {
+                const rules = outgoing.get(node.id)!.flatMap(edge => edge.symbols.map((symbol, index) => ({
+                    symbol, to: edge.to, operation: edge.stackOperations?.[index],
+                })));
+                rules.sort((left, right) => left.symbol.localeCompare(right.symbol));
+                return html`
+                    <section class="definition-transitions">
+                        <h4><code>${node.label}</code></h4>
+                        <ul role="list">
+                            ${rules.map(({ symbol, to, operation }) => html`
+                                <li>
+                                    <code>${symbol || 'ε'} → ${labels.get(to)}</code>
+                                    ${operation ? this.renderStackOperation(operation) : nothing}
+                                </li>
+                            `)}
+                        </ul>
+                    </section>
+                `;
+            }) : html`<p class="definition-empty">${this.msg("No transitions yet")}</p>`}
+        `;
+    }
+
+    private renderStackOperation({ operation, symbol, condition }: StackOperation) {
+        const label = symbol || '""';
+        const action = {
+            push: () => this.msg(str`Push ${label}`),
+            pop: () => this.msg(str`Pop ${label}`),
+            empty: () => this.msg("Require an empty stack"),
+            none: () => this.msg("Leave stack unchanged"),
+        }[operation]();
+        return html`
+            <span class="definition-stack-operation">
+                ${action}${condition && !(operation === 'pop' && condition === symbol)
+                    ? html` · ${this.msg(str`Top is ${condition}`)}` : nothing}
+            </span>
+        `;
+    }
+
+    private renderTransitionsTable(nodes: Node[], outgoing: Map<number, Transition[]>, labels: Map<number, string>, alphabet: string[]) {
+        return html`<table class="definition-table" aria-label=${this.msg("Transition table")}>
             <thead>
                 <tr>
-                    <th></th>
-                    ${alphabet.map((a) => (a != '' ? html`<th>${a}</th>` : html`<th>ε</th>`))}
+                    <th scope="col">${this.msg("State")}</th>
+                    ${alphabet.map(symbol => html`<th scope="col">${symbol || 'ε'}</th>`)}
                 </tr>
             </thead>
             <tbody>
                 ${nodes.map(
                     (node) => html`<tr>
-                        <td><b>${node.label}</b></td>
+                        <th scope="row">${node.label}</th>
                         ${alphabet.map(
                             (a) => html`<td>
-                                ${transitions
-                                    .filter((t) => t.from === node.id && t.symbols.includes(a))
-                                    .map((t) => nodes.find((n) => n.id === t.to)?.label)
-                                    .join(',')}
+                                ${outgoing.get(node.id)!
+                                    .filter(edge => edge.symbols.includes(a))
+                                    .map(edge => labels.get(edge.to))
+                                    .join(', ')}
                             </td>`
                         )}
                     </tr>`
                 )}
             </tbody>
         </table>`;
-        return table;
-    }
-
-    private switchAutomatonType(type: string): void {
-        Logger.log(
-            'Switching from',
-            this._component.automaton.type.toUpperCase(),
-            'to',
-            type.toUpperCase()
-        );
-
-        switch (this._component.automaton.type) {
-            case 'dfa':
-                if (type === 'nfa') this._component.automaton = transformations.DFAtoNFA(this._component.automaton);
-                if (type === 'pda') this._component.automaton = transformations.DFAtoPDA(this._component.automaton);
-                break;
-            case 'nfa':
-                if (type === 'dfa') this._component.automaton = transformations.NFAtoDFA(this._component.automaton as NFA);
-                if (type === 'pda') this._component.automaton = transformations.NFAtoPDA(this._component.automaton as NFA);
-                break;
-            case 'pda':
-                if (type === 'dfa') this._component.automaton = transformations.PDAtoDFA(this._component.automaton as PDA);
-                if (type === 'nfa') this._component.automaton = transformations.PDAtoNFA(this._component.automaton as PDA);
-                break;
-        }
-
-        this._graph.network.setData({
-            nodes: this._component.automaton.nodes,
-            edges: this._component.automaton.transitions,
-        });
-
-        this._component.nodes = this._component.automaton.nodes
-            .get()
-            .filter((n) => n.id !== Graph.initialGhostNode.id)
-            .map(stripNode);
-        this._component.nodes = [...this._component.nodes];
-
-        this._component.transitions = this._component.automaton.transitions
-            .get()
-            .filter((t) => t.from !== Graph.initialGhostNode.id)
-            .map(stripTransition);
-        this._component.transitions = [...this._component.transitions];
-
-        this.requestUpdate();
-        this._component.requestUpdate();
     }
 }

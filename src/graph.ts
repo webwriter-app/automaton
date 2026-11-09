@@ -1,20 +1,75 @@
 import { Transition, Node, Automaton } from './automata';
-import { Network, Position } from 'vis-network';
-import { ContextMenu } from './components/ContextMenu';
+import { Network, Position, type EdgeOptions } from 'vis-network';
+import { EditingBar, type EditableSelection } from './components/EditingBar';
 import { ToolMenu } from './components/ToolMenu';
 import { DRAW } from './utils/draw';
-import { html, TemplateResult } from 'lit';
-import { styleMap } from 'lit/directives/style-map.js';
-import { biExclamationOctagon } from './styles/icons';
+import { html } from 'lit';
 import { COLORS } from './utils/colors';
 import { AutomatonComponent } from './index';
 import { AutomatonError } from '@u/errors';
-import { Logger } from './utils/logger';
+
+type ConnectionSide = 'top' | 'left' | 'bottom' | 'right';
+type CanvasGesture = {
+    pointer: { DOM: Position; canvas: Position };
+    event: { pointerType?: string; preventDefault(): void };
+};
+
+const MIN_NODE_DIAMETER = 40;
+const NODE_MARGIN = 5;
+const TRANSITION_CURVE = { enabled: true, type: 'curvedCW', forceDirection: 'none', roundness: 0 };
+const POINTER_CURVE = { enabled: true, type: 'continuous', roundness: 0.5 };
+const PREVIEW_OPACITY = 0.55;
+const graphStyle = {
+    nodes: {
+        shape: 'circle',
+        ctxRenderer: DRAW.ctx.doubleCircle,
+        color: {
+            background: 'white',
+            border: 'black',
+            hover: COLORS.blue,
+            highlight: COLORS.blue,
+        },
+        heightConstraint: { minimum: MIN_NODE_DIAMETER },
+        widthConstraint: { minimum: MIN_NODE_DIAMETER },
+    },
+    edges: { color: 'black', smooth: TRANSITION_CURVE, arrows: 'to', font: {} },
+    physics: false,
+    layout: { randomSeed: 1 },
+};
+
+type PreviewEdge = {
+    toId: string | number;
+    from?: Position;
+    to?: Position;
+    edgeType: { getDistanceToEdge(x1: number, y1: number, x2: number, y2: number, x: number, y: number): number };
+    hover: boolean;
+    chooser: boolean | ((values: { color: string; opacity: number; width: number }) => void);
+    options: {
+        label?: string;
+        hidden: boolean;
+        smooth: typeof TRANSITION_CURVE;
+        color: { opacity: number };
+    };
+    setOptions(options: EdgeOptions & { to?: string | number }): void;
+};
+
+function networkBody(network: Network) {
+    return (network as Network & { body: {
+        nodes: Record<string, Position & { options: { opacity: number } }>;
+        edges: Record<string, PreviewEdge>;
+    } }).body;
+}
 
 /**
  * Represents a graph that combines an automaton, network, and other components.
  */
 export class Graph {
+    private readonly lifetime = new AbortController();
+
+    public get signal(): AbortSignal {
+        return this.lifetime.signal;
+    }
+
     private _a: Automaton;
     public get automaton(): Automaton {
         return this._a;
@@ -30,36 +85,28 @@ export class Graph {
         return this._ac;
     }
 
-    private _cm: ContextMenu;
-    public get contextMenu(): ContextMenu {
-        return this._cm;
-    }
+    private editingBar: EditingBar;
 
     private _interactive: boolean = true;
 
     private _tm: ToolMenu;
 
-    private _hovered!: Node | Transition | null;
-    private _hoveredType!: 'Node' | 'Transition';
-
-    private _selected!: Node | Transition;
-    private _selectedType!: 'Node' | 'Transition';
+    private hoveredNodeId?: number;
+    public get nodeWarnings() {
+        return this.hoveredNodeId === undefined ? [] : this._errors.filter(error => error.node?.id === this.hoveredNodeId);
+    }
 
     private _errors: AutomatonError[] = [];
     public get errors(): AutomatonError[] {
         return this._errors;
     }
 
-    private _currentError!: {
-        offset: {
-            x: number;
-            y: number;
-        };
-        message: TemplateResult<1>;
-    } | null;
-
     private _lastPosition: Position = { x: 0, y: 0 };
-    private _nodeCenterPointerOffset: Position = { x: 0, y: 0 };
+    private _connection?: { from: number; side: ConnectionSide };
+    private _connectionDrag?: { id: number; start: Position; moved: boolean };
+
+    private nodeDropPreview?: Position;
+    private _previewPlan?: ReturnType<ToolMenu['planTransition']>;
 
     public toggleMode: () => void = () => {};
 
@@ -67,67 +114,60 @@ export class Graph {
     public set requestUpdate(fn: () => void) {
         this._requestUpdate = () => {
             this._errors = this._a.checkAutomaton();
-            if (!this._errors.some((e) => e.node?.id === this._hovered?.id)) {
-                this._currentError = null;
-            }
-
             fn();
             this.displayErrors();
         };
-
-        this._cm.requestUpdate = this._requestUpdate;
     }
     public get requestUpdate(): () => void {
         return this._requestUpdate;
     }
 
-    constructor(e: HTMLElement, a: Automaton, tm: ToolMenu, ac: AutomatonComponent) {
+    constructor(private canvas: HTMLElement, a: Automaton, tm: ToolMenu, ac: AutomatonComponent) {
         this._a = a;
         this._ac = ac;
         this._tm = tm;
-        this._cm = new ContextMenu(ac);
-        this._cm.requestUpdate = this._requestUpdate;
+        this.editingBar = new EditingBar(ac);
 
         const options = {
-            physics: false,
-            nodes: {
-                shape: 'circle',
-                ctxRenderer: DRAW.ctx.doubleCircle,
-                color: {
-                    background: 'white',
-                    border: 'black',
-                    hover: COLORS.blue,
-                    highlight: COLORS.blue,
-                },
-                heightConstraint: { minimum: 40 },
-                widthConstraint: { minimum: 40 },
-            },
-            edges: {
-                color: 'black',
-                smooth: {
-                    enabled: true,
-                    type: 'curvedCW',
-                    forceDirection: 'none',
-                    roundness: 0,
-                },
-                arrows: 'to',
-                font: {},
-            },
-            layout: {
-                randomSeed: 1,
-            },
+            ...graphStyle,
             interaction: { hover: true },
             manipulation: {
                 enabled: true,
+                controlNodeStyle: {
+                    color: { background: '#0284c7', border: COLORS.blue.border },
+                },
                 addNode: this._tm.handleNodeAdd.bind(this._tm),
                 addEdge: this._tm.handleTransitionAdd.bind(this._tm),
             },
         };
 
-        this._n = new Network(e, a.getGraphData(), options);
+        this._n = new Network(canvas, a.getGraphData(), options);
+        const { signal } = this;
+        canvas.addEventListener('pointermove', event => {
+            if (this._connection) this.moveConnectionPreview(event);
+        }, { signal });
+        canvas.addEventListener('pointerleave', () => {
+            this.hideNodeWarning();
+            if (!this._connection || this._connectionDrag) return;
+            this.previewConnectionTarget({});
+            this._n.redraw();
+        }, { signal });
+        canvas.addEventListener('pointerdown', () => {
+            // Remove the temporary endpoint before vis-network hit-tests the clicked node.
+            if (this._connection) this.connectionPreview._cleanupTemporaryNodesAndEdges();
+        }, { capture: true, signal });
         this._errors = this._a.checkAutomaton();
         this.displayErrors();
         this.setupListeners();
+    }
+
+    public destroy(): void {
+        if (this.signal.aborted) return;
+        this.lifetime.abort();
+        this.cancelConnection();
+        this._tm.cancelNodeDrag();
+        this._tm.mode = 'idle';
+        this._n.destroy();
     }
 
     /**
@@ -136,6 +176,10 @@ export class Graph {
      */
     public setInteractive(interactive: boolean): void {
         this._interactive = interactive;
+        if (!interactive) {
+            this.cancelConnection();
+            this._tm.cancelNodeDrag();
+        }
         if (this._interactive) {
             this._n.setOptions({
                 interaction: {
@@ -161,10 +205,321 @@ export class Graph {
      * @param automaton - The automaton to set.
      */
     public setAutomaton(automaton: Automaton): void {
+        this.cancelConnection();
+        this._tm.cancelNodeDrag();
+        this.hoveredNodeId = undefined;
         this._a = automaton;
         this._n.setData(this._a.getGraphData());
         this._a.redrawNodes();
         this.requestUpdate();
+    }
+
+    private get canUseCanvasTools() {
+        return this._interactive && this._ac.mode === 'edit' && this._tm.mode === 'idle';
+    }
+
+    public get canAddNode() {
+        return this._interactive && this._ac.mode === 'edit' && this._ac.settings.permissions.node.add;
+    }
+
+    private addNodeAt({ pointer }: CanvasGesture): boolean {
+        if (!this.canUseCanvasTools || !this.canAddNode || this._connection ||
+            this._n.getNodeAt(pointer.DOM) !== undefined || this._n.getEdgeAt(pointer.DOM) !== undefined) return false;
+
+        this.insertAndSelectNode(pointer.canvas);
+        return true;
+    }
+
+    public insertNodeFromButton(client?: Position) {
+        if (!this.canAddNode) return;
+        const point = client ? this.nodeDropPoint(client) : this._n.DOMtoCanvas({
+            x: this.canvas.clientWidth / 2,
+            y: this.canvas.clientHeight / 2,
+        });
+        if (!point) return;
+
+        if (this._tm.mode !== 'idle') {
+            this._tm.mode = 'idle';
+            this._n.disableEditMode();
+        }
+        this.cancelConnection();
+        this.insertAndSelectNode(point);
+    }
+
+    private insertAndSelectNode(point: Position) {
+        const node = this._tm.insertNode(
+            { x: Math.round(point.x), y: Math.round(point.y) },
+            node => this._a.addNode(node),
+        );
+        this._n.selectNodes([node.id]);
+        this.commitEdit();
+    }
+
+    public commitEdit() {
+        this._ac.commitGraphEdit();
+        this._requestUpdate();
+    }
+
+    private nodeDropPoint(client: Position) {
+        const bounds = this.canvas.getBoundingClientRect();
+        if (client.x < bounds.left || client.x >= bounds.right ||
+            client.y < bounds.top || client.y >= bounds.bottom) return undefined;
+        return this._n.DOMtoCanvas({
+            x: (client.x - bounds.left) * this.canvas.clientWidth / bounds.width,
+            y: (client.y - bounds.top) * this.canvas.clientHeight / bounds.height,
+        });
+    }
+
+    public previewNodeDrop(client?: Position) {
+        const previous = this.nodeDropPreview;
+        this.nodeDropPreview = client && this.canAddNode ? this.nodeDropPoint(client) : undefined;
+        if (!previous && !this.nodeDropPreview) return;
+        this.canvas.classList.toggle('node-drop-preview', !!this.nodeDropPreview);
+        this._n.redraw();
+    }
+
+    private drawNodeDropPreview(ctx: CanvasRenderingContext2D) {
+        if (!this.nodeDropPreview || !this.canAddNode) return;
+        ctx.save();
+        ctx.globalAlpha = 0.75;
+        DRAW.ctx.circle({
+            ctx,
+            ...this.nodeDropPreview,
+            label: this._a.getNewNodeLabel(),
+            style: {
+                size: MIN_NODE_DIAMETER / 2 + NODE_MARGIN,
+                color: COLORS.blue.background,
+                borderColor: COLORS.blue.border,
+                borderWidth: 1,
+            },
+        }).drawNode();
+        ctx.restore();
+    }
+
+    private get selectedNodeId(): number | undefined {
+        const [id, ...others] = this._n.getSelectedNodes();
+        return typeof id === 'number' && id !== Graph.initialGhostNode.id && !others.length && this._a.getNode(id)
+            ? id : undefined;
+    }
+
+    private connectionPoint(id: number, side: ConnectionSide): Position {
+        const { left, right, top, bottom } = this._n.getBoundingBox(id);
+        const x = side === 'left' ? left : side === 'right' ? right : (left + right) / 2;
+        const y = side === 'top' ? top : side === 'bottom' ? bottom : (top + bottom) / 2;
+        const point = this._n.canvasToDOM({ x, y });
+        return {
+            x: point.x + (side === 'left' ? -4 : side === 'right' ? 4 : 0),
+            y: point.y + (side === 'top' ? -4 : side === 'bottom' ? 4 : 0),
+        };
+    }
+
+    // The public add-edge mode binds its own gestures. Use its preview directly so
+    // the temporary edge and target node match the toolbar's connection tool.
+    private get connectionPreview() {
+        return (this._n as Network & { manipulation: {
+            touchTime: number;
+            temporaryIds: { nodes: string[]; edges: string[] };
+            _handleConnect(event: { center: Position }): void;
+            _dragControlNode(event: { center: Position }): void;
+            _cleanupTemporaryNodesAndEdges(): void;
+        } }).manipulation;
+    }
+
+    private startConnection(side: ConnectionSide): boolean {
+        const from = this.selectedNodeId;
+        if (from === undefined || !this.canUseCanvasTools || !this._ac.settings.permissions.edge.add) return false;
+        if (this._connection?.from === from) {
+            this._connection.side = side;
+            this._n.redraw();
+            return true;
+        }
+
+        this.cancelConnection();
+        this._connection = { from, side };
+        const bounds = this.canvas.getBoundingClientRect();
+        const center = this._n.canvasToDOM(this._n.getPositions([from])[from]);
+        const preview = this.connectionPreview;
+        // These gestures already have one start event per press.
+        preview.touchTime = 0;
+        preview._handleConnect({ center: { x: bounds.left + center.x, y: bounds.top + center.y } });
+        this.previewConnectionTarget({});
+        this._n.redraw();
+        return true;
+    }
+
+    private moveConnectionPreview(event: PointerEvent) {
+        const preview = this.connectionPreview;
+        if (preview.temporaryIds.nodes.length) {
+            preview._dragControlNode({ center: { x: event.clientX, y: event.clientY } });
+        }
+    }
+
+    private get previewBody() {
+        return networkBody(this._n);
+    }
+
+    private previewConnectionTarget({ from, to }: { from?: string | number; to?: string | number }) {
+        const { nodes: [endpointId], edges: [edgeId] } = this.connectionPreview.temporaryIds;
+        if (!endpointId || !edgeId) return;
+
+        const validTarget = this._ac.mode === 'edit' && this._ac.settings.permissions.edge.add &&
+            typeof from === 'number' && typeof to === 'number' &&
+            to !== Graph.initialGhostNode.id && this._a.getNode(from) && this._a.getNode(to);
+        const plan = validTarget ? this._tm.planTransition({ from, to }) : undefined;
+        this._previewPlan = plan;
+
+        const edge = this.previewBody.edges[edgeId];
+        const destination = plan?.transition.to ?? endpointId;
+        const configuredCurve = plan?.transition.smooth;
+        const smooth = plan
+            ? typeof configuredCurve === 'boolean' ? { ...TRANSITION_CURVE, enabled: configuredCurve } : configuredCurve ?? TRANSITION_CURVE
+            : POINTER_CURVE;
+        const label = plan?.transition.label ?? ' ';
+        const hidden = !!plan?.existing;
+        if (edge.toId !== destination || edge.options.label !== label || edge.options.hidden !== hidden ||
+            edge.options.smooth.type !== smooth.type || edge.options.smooth.roundness !== smooth.roundness ||
+            edge.options.smooth.enabled !== smooth.enabled || edge.options.color.opacity !== PREVIEW_OPACITY) {
+            edge.setOptions({
+                to: destination, smooth, label, hidden,
+                chosen: false,
+                labelHighlightBold: false,
+                color: {
+                    color: '#000000', hover: '#000000', highlight: '#000000',
+                    inherit: false, opacity: PREVIEW_OPACITY,
+                },
+                font: { color: 'rgba(52, 52, 52, 0.55)' },
+            });
+        }
+        this.previewBody.nodes[endpointId].options.opacity = PREVIEW_OPACITY;
+    }
+
+    private stylePreviewedEdges(): (() => void) | undefined {
+        const plan = this._previewPlan;
+        if (!plan || !this.connectionPreview.temporaryIds.edges.length) return;
+        if (plan.existing) {
+            const edge = this.previewBody.edges[plan.existing.id];
+            if (!edge) return;
+            const { hover, chooser } = edge;
+            edge.hover = true;
+            edge.chooser = values => {
+                values.color = '#0284c7';
+                values.opacity = PREVIEW_OPACITY;
+                values.width += 2;
+            };
+            return () => {
+                edge.hover = hover;
+                edge.chooser = chooser;
+            };
+        }
+
+        // A new opposite-direction transition bends both arrows when committed.
+        if (plan.reverse && plan.smooth) {
+            const edge = this.previewBody.edges[plan.reverse.id];
+            if (!edge) return;
+            const smooth = edge.options.smooth;
+            if (smooth.enabled === plan.smooth.enabled && smooth.type === plan.smooth.type &&
+                smooth.roundness === plan.smooth.roundness) return;
+            edge.options.smooth = { ...plan.smooth, forceDirection: smooth.forceDirection };
+            edge.setOptions({ smooth: plan.smooth });
+            return () => {
+                edge.options.smooth = smooth;
+                edge.setOptions({});
+            };
+        }
+        return undefined;
+    }
+
+    public cancelConnection() {
+        if (!this._connection) return;
+        this._connection = undefined;
+        this._connectionDrag = undefined;
+        this._previewPlan = undefined;
+        this.connectionPreview._cleanupTemporaryNodesAndEdges();
+    }
+
+    private finishConnection(position: Position) {
+        const from = this._connection?.from;
+        this.cancelConnection();
+        const to = this._n.getNodeAt(position);
+        if (from !== undefined && this.canUseCanvasTools && this._ac.settings.permissions.edge.add &&
+            typeof to === 'number' && to !== Graph.initialGhostNode.id &&
+            this._a.getNode(from) && this._a.getNode(to)) {
+            this._tm.insertTransition({ from, to }, transition => this._a.addTransition(transition));
+            this._n.selectNodes([to]);
+            this.commitEdit();
+        } else {
+            this._n.redraw();
+        }
+    }
+
+    private startConnectionDrag(event: PointerEvent, side: ConnectionSide) {
+        if (event.button !== 0 || !event.isPrimary || !this.startConnection(side)) return;
+        this._connectionDrag = { id: event.pointerId, start: { x: event.clientX, y: event.clientY }, moved: false };
+        (event.currentTarget as HTMLButtonElement).setPointerCapture(event.pointerId);
+    }
+
+    private moveConnectionDrag(event: PointerEvent) {
+        const drag = this._connectionDrag;
+        if (drag?.id !== event.pointerId) return;
+        drag.moved ||= Math.hypot(event.clientX - drag.start.x, event.clientY - drag.start.y) >= 4;
+        if (drag.moved) this.moveConnectionPreview(event);
+    }
+
+    private releaseConnectionDrag(event: PointerEvent) {
+        const drag = this._connectionDrag;
+        if (drag?.id !== event.pointerId) return;
+        this._connectionDrag = undefined;
+        if (!drag.moved) return;
+        const bounds = this.canvas.getBoundingClientRect();
+        if (event.clientX < bounds.left || event.clientX >= bounds.right ||
+            event.clientY < bounds.top || event.clientY >= bounds.bottom) {
+            this.cancelConnection();
+            this._n.redraw();
+            return;
+        }
+        this.finishConnection({ x: event.clientX - bounds.left, y: event.clientY - bounds.top });
+    }
+
+    public renderConnectionPoints() {
+        const labels = {
+            top: this._ac.msg("Connect from top"),
+            left: this._ac.msg("Connect from left"),
+            bottom: this._ac.msg("Connect from bottom"),
+            right: this._ac.msg("Connect from right"),
+        };
+        return html`${(Object.keys(labels) as ConnectionSide[]).map(side => html`
+            <button type="button" class="connection-point" data-side=${side} hidden
+                aria-label=${labels[side]} title=${labels[side]} contenteditable="false"
+                @pointerdown=${(event: PointerEvent) => this.startConnectionDrag(event, side)}
+                @pointermove=${(event: PointerEvent) => this.moveConnectionDrag(event)}
+                @pointerup=${(event: PointerEvent) => this.releaseConnectionDrag(event)}
+                @pointercancel=${() => {
+                    this.cancelConnection();
+                    this._n.redraw();
+                }}
+                @click=${(event: MouseEvent) => {
+                    if (event.detail === 0) this.startConnection(side);
+                }}></button>
+        `)}`;
+    }
+
+    private positionConnectionPoints() {
+        const canConnect = this.canUseCanvasTools && this._ac.settings.permissions.edge.add;
+        if (this._connection && (!canConnect || !this._a.getNode(this._connection.from))) {
+            this.cancelConnection();
+        }
+        this.canvas.classList.toggle('connection-in-progress', this.connectionPreview.temporaryIds.nodes.length > 0);
+
+        const id = canConnect ? this.selectedNodeId : undefined;
+        for (const point of this._ac.shadowRoot!.querySelectorAll<HTMLButtonElement>('.connection-point')) {
+            point.hidden = id === undefined;
+            if (id === undefined) continue;
+            const side = point.dataset.side as ConnectionSide;
+            const { x, y } = this.connectionPoint(id, side);
+            point.style.left = `${x}px`;
+            point.style.top = `${y}px`;
+            point.classList.toggle('connection-point--active', this._connection?.side === side && this._connection.from === id);
+        }
     }
 
     /**
@@ -183,177 +538,104 @@ export class Graph {
         fixed: true,
     };    
     
-    /**
-     * Updates the selected data (either a Node or a Transition) in the graph.
-     *
-     * @param data - The data (Node or Transition) to be updated.
-     */
-    private updateSelectedData(data: Node | Transition) {
-        if (this._selectedType === 'Node') {
-            if (data.id === Graph.initialGhostNode.id) return;
-
-            if (!data.label) this._a.updateNode(data.id, { ...(data as Node), label: undefined });
-            else this._a.updateNode(data.id, data as Node);
-
-            this._selected = this._a.getNode(data.id) as Node;
-        } else if (this._selectedType === 'Transition') {
-            if (!data.label) this._a.updateTransition(data.id, { ...(data as Transition), label: undefined });
-            this._a.updateTransition(data.id, data as Transition);
-
-            this._selected = this._a.getTransition(data.id) as Transition;
+    private get editableSelection(): EditableSelection | undefined {
+        if (!this._interactive || this._ac.mode !== 'edit') return;
+        const [nodeId, ...otherNodes] = this._n.getSelectedNodes();
+        if (nodeId !== undefined) {
+            if (typeof nodeId !== 'number' || nodeId === Graph.initialGhostNode.id || otherNodes.length) return;
+            const node = this._a.getNode(nodeId);
+            if (node) return { type: 'node', data: node };
+            return;
         }
-        this._requestUpdate();
+        const [edgeId, ...otherEdges] = this._n.getSelectedEdges();
+        if (typeof edgeId !== 'number' || otherEdges.length) return;
+        const edge = this._a.getTransition(edgeId);
+        if (edge && edge.from !== Graph.initialGhostNode.id) return { type: 'edge', data: edge };
+        return undefined;
     }
 
-    /**
-     * Deletes the selected node or transition from the automaton.
-     */
-    private deleteSelected() {
-        Logger.log('Deleting', this._selected);
-
-        if (this._selectedType === 'Node') {
-            if (this._selected.id === Graph.initialGhostNode.id) return;
-            if (!this._ac.settings.permissions.node.delete) return;
-
-            this._a.removeNode(this._selected.id);
-        } else if (this._selectedType === 'Transition') {
-            if (!this._ac.settings.permissions.edge.delete) return;
-
-            this._a.removeTransition(this._selected.id);
-        }
-        this._requestUpdate();
-
-        if (this._tm.mode === 'addEdge') {
-            this.network.addEdgeMode();
-        }
-
-        this._cm.blur();
-        this._selected = null as any;
-    }
-
-    /**
-     * Sets up event listeners for the graph.
-     * This method handles various events such as click, context menu, node selection, node hover, etc.
-     * It also handles keyboard events for adding nodes, adding edges, deleting selected elements, etc.
-     */
-    private setupListeners() {
-        this._n.on('click', () => {
-            this._cm.blur();
-        });
-
-        const oncontext = (e: any) => {
-            e.event.preventDefault();
-
-            if (!this._interactive) return;
-
-            if (!this._hovered) {
-                this._cm.blur();
-                return;
-            }
-
-            if (
-                this._hovered.id === Graph.initialGhostNode.id ||
-                (this._hoveredType === 'Transition' && (this._hovered as Transition).from === Graph.initialGhostNode.id)
-            ) {
-                return;
-            }
-
-            this._selected = this._hovered;
-            this._selectedType = this._hoveredType;
-            this._cm.setData(
-                this._selected,
-                this._selectedType,
-                this.updateSelectedData.bind(this),
-                this.deleteSelected.bind(this)
-            );
-            this._cm.setPosition(e.pointer.DOM);
-            if (this._selectedType === 'Node') {
-                this._n.selectNodes([this._selected.id]);
-            } else if (this._selectedType === 'Transition') {
-                this._n.selectEdges([this._selected.id]);
-            }
-            this._cm.show();
+    public renderEditingBar() {
+        const selection = this.editableSelection;
+        if (!selection) return;
+        const currentSelection = () => {
+            const current = this.editableSelection;
+            return current?.type === selection.type && current.data.id === selection.data.id ? current : undefined;
         };
-        this._n.on('oncontext', oncontext);
-        this._n.on('hold', oncontext);
-        this._n.on('selectNode', (e: any) => {
-            const nodeId = e.nodes[0];
-            
-            if (nodeId === Graph.initialGhostNode.id) {
-                this._n.unselectAll();
-                return;
-            }
-            
-            this._selected = this._a.getNode(nodeId) as Node;
-            this._selectedType = 'Node';
+        return this.editingBar.render(selection, (getPatch, permission = 'change', commit = true) => {
+            const current = currentSelection();
+            if (!current || !this._ac.settings.permissions[current.type][permission]) return;
+            const patch = getPatch(current);
+            if (current.type === 'node') this._a.updateNode(current.data.id, patch as Partial<Node>);
+            else this._a.updateTransition(current.data.id, patch as Partial<Transition>);
+            if (commit) this.commitEdit();
+            else this._requestUpdate();
+        }, () => {
+            const current = currentSelection();
+            if (current) this.deleteSelected(current);
         });
-        this._n.on('deselectNode', () => {
-            this._selected = null as any;
-            this._selectedType = null as any;
-        });
-        this._n.on('hoverNode', (e: any) => {
-            const nodeId = e.node as number;
-            if (nodeId === Graph.initialGhostNode.id) return;
-            
-            this._hovered = this._a.getNode(nodeId);
-            this._hoveredType = 'Node';
+    }
 
-            if (this._ac.showHelp == 'false') return;
+    private deleteSelected(selection: EditableSelection) {
+        if (!this._ac.settings.permissions[selection.type].delete) return;
+        this._n.unselectAll();
+        if (selection.type === 'node') this._a.removeNode(selection.data.id);
+        else this._a.removeTransition(selection.data.id);
+        this.commitEdit();
+        if (this._tm.mode === 'addEdge') this.network.addEdgeMode();
+    }
 
-            if (this._errors.some((e) => e.node?.id === this._hovered?.id)) {
-                this._currentError = {
-                    offset: this._n.canvasToDOM({
-                        x: (this._hovered?.x as number) + 15,
-                        y: (this._hovered?.y as number) + 15,
-                    }),
-                    message: this._errors.filter((e) => e.node?.id === this._hovered?.id)?.reduce(
-                        (acc, error) => html`${acc}${error.message}<br/>`,
-                        html``
-                    ) || '',
-                };
-            }
+    private setupListeners() {
+        this._n.on('click', ({ pointer }: CanvasGesture) => {
+            if (this._connection) this.finishConnection(pointer.DOM);
         });
-        this._n.on('blurNode', () => {
-            this._hovered = null;
-            this._currentError = null;
+        this._n.on('doubleClick', (gesture: CanvasGesture) => this.addNodeAt(gesture));
+        this._n.on('controlNodeDragging', event => this.previewConnectionTarget(event.controlEdge));
+        // Highlight or bend existing arrows for this frame without changing their data.
+        let restorePreview: (() => void) | undefined;
+        this._n.on('beforeDrawing', () => { restorePreview = this.stylePreviewedEdges(); });
+        this._n.on('afterDrawing', ctx => {
+            restorePreview?.();
+            this.drawNodeDropPreview(ctx);
+            if (!this.connectionPreview.temporaryIds.edges.length) this._previewPlan = undefined;
+            this.positionConnectionPoints();
         });
-        this._n.on('hoverEdge', (e: any) => {
-            this._hovered = this._a.getTransition(e.edge);
-            this._hoveredType = 'Transition';
-        });
-        this._n.on('blurEdge', () => {
-            this._hovered = null;
-        });        
-        this._n.on('dragging', (e: any) => {
-            if (!e.nodes || e.nodes.length == 0) return;
 
-            const draggedNodeId = e.nodes[0] as number;
-            const draggedNode = this._a.getNode(draggedNodeId);
-            
-            if (draggedNode && draggedNode.initial && draggedNodeId !== Graph.initialGhostNode.id) {
-                const newX = e.pointer.canvas.x + this._nodeCenterPointerOffset.x - 100;
-                const newY = e.pointer.canvas.y + this._nodeCenterPointerOffset.y;
-                
-                this._a.updateNode(Graph.initialGhostNode.id, {
-                    x: newX,
-                    y: newY
-                });
-            }
-        });        
-        this._n.on('dragStart', (e: any) => {
-            this._currentError = null;
-            this._cm.blur();
-
-            if (e.nodes && e.nodes.length > 0) {
-                this._nodeCenterPointerOffset = {
-                    x: (e.nodes[0] !== undefined ? this._a.getNode(e.nodes[0])?.x ?? 0 : 0) - e.pointer.canvas.x,
-                    y: (e.nodes[0] !== undefined ? this._a.getNode(e.nodes[0])?.y ?? 0 : 0) - e.pointer.canvas.y
-                }
+        this._n.on('oncontext', ({ event }: CanvasGesture) => event.preventDefault());
+        this._n.on('hold', (gesture: CanvasGesture) => {
+            if (gesture.event.pointerType === 'touch') this.addNodeAt(gesture);
+        });
+        this._n.on('select', () => this._ac.requestUpdate());
+        this._n.on('hoverNode', ({ node }: { node: number }) => {
+            if (node !== Graph.initialGhostNode.id && this._errors.some(error => error.node?.id === node)) {
+                this.hoveredNodeId = node;
+                this._ac.requestUpdate();
             }
         });
-        this._n.on('dragEnd', () => {
-            this._n.storePositions();
+        this._n.on('blurNode', () => this.hideNodeWarning());
+        this._n.on('dragging', ({ nodes }: { nodes: number[] }) => {
+            if (nodes.length) this.updateGhostNodePosition();
+        });
+        this._n.on('dragStart', () => this.hideNodeWarning());
+        this._n.on('dragEnd', ({ nodes }: { nodes: number[] }) => {
+            const moved = nodes.filter(id => id !== Graph.initialGhostNode.id && this._a.getNode(id));
+            if (moved.length) {
+                const positions = this._n.getPositions(moved);
+                this._a.nodes.update(moved.map(id => ({ id, ...positions[id] })));
+                this.commitEdit();
+            }
             this._lastPosition = this._n.getViewPosition();
+        });
+        let scaleBeforeResize: number | undefined;
+        this._n.on('resize', () => {
+            if (scaleBeforeResize !== undefined) return;
+            const scale = this._n.getScale();
+            scaleBeforeResize = scale;
+            // vis-network emits resize before scaling the camera to the new canvas size.
+            queueMicrotask(() => {
+                scaleBeforeResize = undefined;
+                if (this.signal.aborted) return;
+                if (this._n.getScale() !== scale) this._n.moveTo({ scale });
+            });
         });
         this._n.on('zoom', (e: any) => {
             if (e.scale < 0.5) {
@@ -367,99 +649,203 @@ export class Graph {
         this._ac.addEventListener('keydown', (e: KeyboardEvent) => {
             if (e.key === 'm' && e.ctrlKey) {
                 e.preventDefault();
-                if (this.component.allowedModes.includes(this.component.mode === 'simulate' ? 'edit' : 'simulate'))
-                    this.toggleMode();
+                this.toggleMode();
             }
 
             if (!this._interactive) return;
 
-            if ((e.key === 'Delete' || e.key === 'Backspace') && !this._cm.isVisible() && this._selected) {
+            const insideControls = e.composedPath().some(target =>
+                target instanceof HTMLElement &&
+                (target.classList.contains('editing-bar') || target.classList.contains('definition-pane') ||
+                    target.localName === 'stack-extension'));
+            if (insideControls) return;
+
+            const selected = this.editableSelection;
+            if ((e.key === 'Delete' || e.key === 'Backspace') && selected) {
                 e.preventDefault();
-                this.deleteSelected();
+                this.deleteSelected(selected);
             }
 
             if (e.key === 'Escape') {
                 e.preventDefault();
-                this._selected = null as any;
-                this._selectedType = null as any;
+                this.cancelConnection();
+                this._tm.cancelNodeDrag();
                 this._n.unselectAll();
                 this._a.clearHighlights();
-
-                this._cm.blur();
+                this._ac.requestUpdate();
                 this._tm.mode = 'idle';
             }
 
-            if (e.key === 'q' && e.ctrlKey && !e.shiftKey) {
+            if (e.key === 'q' && e.ctrlKey && !e.shiftKey && this.canAddNode) {
                 e.preventDefault();
                 this._tm.addNode();
-                this._tm.visible = true;
             }
 
             if (e.key === 'Q' && e.ctrlKey && e.shiftKey) {
                 e.preventDefault();
                 this._tm.lockNodeAdd = !this._tm.lockNodeAdd;
-                this._tm.visible = true;
             }
 
-            if (e.key === 'e' && e.ctrlKey && !e.shiftKey) {
+            if (e.key === 'e' && e.ctrlKey && !e.shiftKey && this._ac.settings.permissions.edge.add) {
                 e.preventDefault();
                 this._tm.addEdge();
-                this._tm.visible = true;
             }
 
             if (e.key === 'E' && e.ctrlKey && e.shiftKey) {
                 e.preventDefault();
                 this._tm.lockEdgeAdd = !this._tm.lockEdgeAdd;
-                this._tm.visible = true;
             }
 
-            if (e.key === 'ArrowLeft' && this._selected && this._selectedType === 'Node' && !this._cm.isVisible()) {
-                e.preventDefault();
-                const x = (this._selected as Node).x || 0;
-                this.updateSelectedData({ ...this._selected, x: x - 10 });
-                this.updateGhostNodePosition();
+            if (selected?.type === 'node' && this._ac.settings.permissions.node.change) {
+                const dx = e.key === 'ArrowLeft' ? -10 : e.key === 'ArrowRight' ? 10 : 0;
+                const dy = e.key === 'ArrowUp' ? -10 : e.key === 'ArrowDown' ? 10 : 0;
+                if (dx || dy) {
+                    e.preventDefault();
+                    const { id, x = 0, y = 0 } = selected.data;
+                    this._a.updateNode(id, { x: x + dx, y: y + dy });
+                    this.commitEdit();
+                }
             }
-
-            if (e.key === 'ArrowRight' && this._selected && this._selectedType === 'Node' && !this._cm.isVisible()) {
-                e.preventDefault();
-                const x = (this._selected as Node).x || 0;
-                this.updateSelectedData({ ...this._selected, x: x + 10 });
-                this.updateGhostNodePosition();
-            }
-
-            if (e.key === 'ArrowUp' && this._selected && this._selectedType === 'Node' && !this._cm.isVisible()) {
-                e.preventDefault();
-                const y = (this._selected as Node).y || 0;
-                this.updateSelectedData({ ...this._selected, y: y - 10 });
-                this.updateGhostNodePosition();
-            }
-
-            if (e.key === 'ArrowDown' && this._selected && this._selectedType === 'Node' && !this._cm.isVisible()) {
-                e.preventDefault();
-                const y = (this._selected as Node).y || 0;
-                this.updateSelectedData({ ...this._selected, y: y + 10 });
-                this.updateGhostNodePosition();
-            }
-        });
+        }, { signal: this.signal });
     }
 
-    /**
-     * Updates the position of the ghost node based on the initial node's position.
-     */
-    public updateGhostNodePosition() {
-        const initialNode = this._a.getInitialNode();
-        if (initialNode && this._a.getNode(Graph.initialGhostNode.id)) {
-            const newX = (initialNode.x || 0) - 100;
-            const newY = initialNode.y || 0;
-            
-            Graph.initialGhostNode.x = newX;
-            Graph.initialGhostNode.y = newY;
-            
-            this._a.updateNode(Graph.initialGhostNode.id, {
-                x: newX,
-                y: newY
-            });
+    private static positionInitialArrow(network: Network, automaton: Automaton) {
+        const ghostId = Graph.initialGhostNode.id;
+        const { nodes, edges } = networkBody(network);
+        const ghost = nodes[ghostId];
+        const initial = automaton.getInitialNode();
+        if (edges[ghostId]) edges[ghostId].options.hidden = !initial;
+        if (!ghost || !initial || !nodes[initial.id]) return;
+
+        const center = nodes[initial.id];
+        const nodeRadius = (id: number) => {
+            const { left, right, top, bottom } = network.getBoundingBox(id);
+            return Math.max(20, (right - left) / 2, (bottom - top) / 2);
+        };
+        const radius = nodeRadius(initial.id);
+        const length = Math.max(100, radius + 70);
+        const obstacles = automaton.nodes.get()
+            .filter(node => node.id !== ghostId && node.id !== initial.id && nodes[node.id])
+            .map(node => ({ position: nodes[node.id], radius: nodeRadius(node.id) + 6 }))
+            .filter(node => Math.hypot(node.position.x - center.x, node.position.y - center.y) <= length + node.radius);
+        const transitions = automaton.transitions.get()
+            .filter(transition => transition.from !== ghostId)
+            .map(transition => edges[transition.id])
+            .filter(edge => edge?.from && edge.to && !edge.options.hidden);
+
+        let best = { x: center.x - length, y: center.y };
+        let bestScore = Infinity;
+        // Prefer the usual left side, then try nearby angles until the shaft is clear.
+        for (let index = 0; index < 16; index++) {
+            const step = Math.ceil(index / 2) * (index % 2 ? 1 : -1);
+            const angle = Math.PI + step * Math.PI / 8;
+            const dx = Math.cos(angle);
+            const dy = Math.sin(angle);
+            let score = 0;
+            for (let distance = radius + 4; distance <= length; distance += 8) {
+                const x = center.x + dx * distance;
+                const y = center.y + dy * distance;
+                if (obstacles.some(node => Math.hypot(x - node.position.x, y - node.position.y) < node.radius)) score += 2;
+                if (transitions.some(({ from, to, edgeType }) =>
+                    edgeType.getDistanceToEdge(from!.x, from!.y, to!.x, to!.y, x, y) < 9)) score++;
+                if (score >= bestScore) break;
+            }
+            if (score < bestScore) {
+                best = { x: center.x + dx * length, y: center.y + dy * length };
+                bestScore = score;
+                if (score === 0) break;
+            }
         }
+
+        // This helper node belongs to the canvas. Its position is never authored.
+        ghost.x = best.x;
+        ghost.y = best.y;
+    }
+
+    private updateGhostNodePosition() {
+        Graph.positionInitialArrow(this._n, this._a);
+    }
+
+    /** Render the authored machine without changing the interactive canvas or its camera. */
+    public static drawForPrint(target: HTMLCanvasElement, automaton: Automaton) {
+        if (automaton.getInitialNode()) automaton.redrawNodes();
+        const source = target.ownerDocument.createElement('div');
+        source.style.cssText = 'position: fixed; inset: 0 auto auto -10000px; width: 1440px; height: 1000px; visibility: hidden';
+        target.getRootNode().appendChild(source);
+        let network: Network | undefined;
+        try {
+            if (!source.clientWidth) return;
+            network = new Network(source, automaton.getGraphData(), {
+                ...graphStyle, autoResize: false,
+                edges: { ...graphStyle.edges, font: { background: 'white' } },
+            });
+            network.redraw();
+            Graph.positionInitialArrow(network, automaton);
+            network.redraw();
+            const canvas = source.querySelector('canvas')!;
+            const ctx = canvas.getContext('2d')!;
+            const bounds = Graph.printBounds(network, automaton, ctx);
+            const width = bounds.right - bounds.left;
+            const height = bounds.bottom - bounds.top;
+            const scale = Math.min(2, 1440 / width, 1000 / height);
+            network.setSize(`${Math.ceil(width * scale)}px`, `${Math.ceil(height * scale)}px`);
+            network.moveTo({
+                scale,
+                position: { x: (bounds.left + bounds.right) / 2, y: (bounds.top + bounds.bottom) / 2 },
+            });
+            network.redraw();
+            target.width = canvas.width;
+            target.height = canvas.height;
+            target.style.width = `${width * Math.min(1, 720 / width, 500 / height)}px`;
+            target.getContext('2d')!.drawImage(canvas, 0, 0);
+        } finally {
+            network?.destroy();
+            source.remove();
+        }
+    }
+
+    private static printBounds(network: Network, automaton: Automaton, ctx: CanvasRenderingContext2D) {
+        const { nodes, edges } = networkBody(network);
+        let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
+        const include = (x: number, y: number, paddingX = 0, paddingY = 0) => {
+            left = Math.min(left, x - paddingX);
+            right = Math.max(right, x + paddingX);
+            top = Math.min(top, y - paddingY);
+            bottom = Math.max(bottom, y + paddingY);
+        };
+        for (const id of automaton.nodes.getIds()) {
+            const box = network.getBoundingBox(id);
+            include(box.left, box.top);
+            include(box.right, box.bottom);
+            include(nodes[id].x, nodes[id].y);
+        }
+
+        ctx.save();
+        ctx.font = '14px arial';
+        for (const transition of automaton.transitions.get()) {
+            const edge = edges[transition.id];
+            if (edge.options.hidden || !edge.from || !edge.to) continue;
+            const geometry = edge.edgeType as PreviewEdge['edgeType'] & {
+                getViaNode(): Position | undefined;
+                getPoint(fraction: number, via?: Position): Position;
+                _getCircleData(ctx: CanvasRenderingContext2D): [number, number, number];
+            };
+            const lines = (edge.options.label ?? '').split('\n');
+            const halfWidth = lines.reduce((width, line) => Math.max(width, ctx.measureText(line).width), 0) / 2;
+            const halfHeight = lines.length * 8;
+            if (transition.from === transition.to) {
+                const [x, y, radius] = geometry._getCircleData(ctx);
+                include(x, y, radius + halfWidth, radius + halfHeight);
+            } else {
+                const via = geometry.getViaNode();
+                if (via) include(via.x, via.y);
+                const label = geometry.getPoint(0.5, via);
+                include(label.x, label.y, halfWidth, halfHeight);
+            }
+        }
+        ctx.restore();
+        const margin = 14;
+        return { left: left - margin, right: right + margin, top: top - margin, bottom: bottom + margin };
     }
 
     /**
@@ -467,6 +853,7 @@ export class Graph {
      */
     private displayErrors() {
         this._a.redrawNodes();
+        this.updateGhostNodePosition();
         for (const error of this._errors) {
             if (error.node) {
                 this._a.highlightErrorNode(error.node.id);
@@ -475,21 +862,9 @@ export class Graph {
         this._n.redraw();
     }
 
-    /**
-     * Renders the error display.
-     * @returns The HTML representation of the error display.
-     */
-    public renderErrorDisplay() {
-        return html`<sl-alert
-            class="errordisplay"
-            variant="danger"
-            style=${styleMap({
-                display: this._currentError ? 'block' : 'none',
-                left: `${this._currentError?.offset.x}px`,
-                top: `${this._currentError?.offset.y}px`,
-            })}
-            open
-            >${biExclamationOctagon} ${this._currentError?.message}</sl-alert
-        >`;
+    private hideNodeWarning() {
+        if (this.hoveredNodeId === undefined) return;
+        this.hoveredNodeId = undefined;
+        this._ac.requestUpdate();
     }
 }
