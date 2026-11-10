@@ -1109,7 +1109,7 @@ describe("Simulation Tests", () => {
 			widget.style.width = "300px";
 			widget.style.height = "300px";
 			widget.lang = "de";
-			await waitForLocale(widget, "de-DE");
+			await waitForLocale(widget, "de");
 			try {
 				const layout = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 				await layout();
