@@ -124,7 +124,16 @@
       "so": "Dhis, sawir ahaan u muuji oo la falgal noocyo kala duwan oo mashiinnada xaaladaha ah (DFA, NFA, PDA).",
       "ti": "ዝተፈላለዩ ዓይነታት ኣውቶማቶን (DFA, NFA, PDA) ሃንጽ፡ ርአ፡ ተጠቐመሎም።",
       "sw": "Unda, tazama na utumie aina mbalimbali za otomatoni (DFA, NFA, PDA).",
-      "ha": "Gina, duba, kuma yi hulɗa da nau’o’in otomaton daban-daban (DFA, NFA, PDA)."
+      "ha": "Gina, duba, kuma yi hulɗa da nau’o’in otomaton daban-daban (DFA, NFA, PDA).",
+      "yue-Hans": "建立、视觉化同操作唔同种类嘅自动机（DFA、NFA、PDA）。",
+      "yue-Hant": "建立、視覺化同操作唔同種類嘅自動機（DFA、NFA、PDA）。",
+      "kmr": "Cureyên cuda yên otomatan ava bike, dîtbar bike û bi wan re têkilî dayne (DFA, NFA, PDA).",
+      "kmr-Latn": "Cureyên cuda yên otomatan ava bike, dîtbar bike û bi wan re têkilî dayne (DFA, NFA, PDA).",
+      "kmr-Arab": "جورەیێن جودا یێن ئۆتۆماتان ئاڤا بکە, دیتبار بکە ئوو ب وان رە تێکلی dayne (DFA, NFA, PDA).",
+      "ckb": "ئۆتۆمات جیاوازەکان دروست بکە، پیشانیان بدە و لەگەڵیان کار بکە (DFA، NFA، PDA).",
+      "ckb-Arab": "ئۆتۆمات جیاوازەکان دروست بکە، پیشانیان بدە و لەگەڵیان کار بکە (DFA، NFA، PDA).",
+      "af-ZA": "Bou, visualiseer en verken verskillende soorte outomate (DFA, NFA, PDA).",
+      "af-NA": "Bou, visualiseer en verken verskillende soorte outomate (DFA, NFA, PDA)."
     },
     "label": {
       "_": "Automaton",
@@ -250,7 +259,16 @@
       "so": "Mashiinka xaaladaha",
       "ti": "ኣውቶማቶን",
       "sw": "Otomatoni",
-      "ha": "Otomaton"
+      "ha": "Otomaton",
+      "yue-Hans": "自动机",
+      "yue-Hant": "自動機",
+      "kmr": "Otomat",
+      "kmr-Latn": "Otomat",
+      "kmr-Arab": "ئۆتۆمات",
+      "ckb": "ئۆتۆمات",
+      "ckb-Arab": "ئۆتۆمات",
+      "af-ZA": "Outomaat",
+      "af-NA": "Outomaat"
     }
   },
   "./widgets/webwriter-automaton": {
@@ -378,7 +396,16 @@
       "so": "Mashiinka xaaladaha",
       "ti": "ኣውቶማቶን",
       "sw": "Otomatoni",
-      "ha": "Otomaton"
+      "ha": "Otomaton",
+      "yue-Hans": "自动机",
+      "yue-Hant": "自動機",
+      "kmr": "Otomat",
+      "kmr-Latn": "Otomat",
+      "kmr-Arab": "ئۆتۆمات",
+      "ckb": "ئۆتۆمات",
+      "ckb-Arab": "ئۆتۆمات",
+      "af-ZA": "Outomaat",
+      "af-NA": "Outomaat"
     },
     "warningIgnorePattern": "development"
   },
@@ -507,7 +534,16 @@
       "so": "DFA (fudud)",
       "ti": "DFA (ቀሊል)",
       "sw": "DFA (rahisi)",
-      "ha": "DFA (mai sauƙi)"
+      "ha": "DFA (mai sauƙi)",
+      "yue-Hans": "DFA（简单）",
+      "yue-Hant": "DFA（簡單）",
+      "kmr": "DFA (hêsan)",
+      "kmr-Latn": "DFA (hêsan)",
+      "kmr-Arab": "DFA (هێسان)",
+      "ckb": "DFA (سادە)",
+      "ckb-Arab": "DFA (سادە)",
+      "af-ZA": "DFA (eenvoudig)",
+      "af-NA": "DFA (eenvoudig)"
     }
   },
   "./snippets/dfa-complex": {
@@ -635,7 +671,16 @@
       "so": "DFA (adag)",
       "ti": "DFA (ዝተሓላለኸ)",
       "sw": "DFA (changamano)",
-      "ha": "DFA (mai sarƙaƙiya)"
+      "ha": "DFA (mai sarƙaƙiya)",
+      "yue-Hans": "DFA（复杂）",
+      "yue-Hant": "DFA（複雜）",
+      "kmr": "DFA (kompleks)",
+      "kmr-Latn": "DFA (kompleks)",
+      "kmr-Arab": "DFA (کۆمپلەکس)",
+      "ckb": "DFA (ئاڵۆز)",
+      "ckb-Arab": "DFA (ئاڵۆز)",
+      "af-ZA": "DFA (kompleks)",
+      "af-NA": "DFA (kompleks)"
     }
   },
   "./snippets/nfa-simple": {
@@ -763,7 +808,16 @@
       "so": "NFA (fudud)",
       "ti": "NFA (ቀሊል)",
       "sw": "NFA (rahisi)",
-      "ha": "NFA (mai sauƙi)"
+      "ha": "NFA (mai sauƙi)",
+      "yue-Hans": "NFA（简单）",
+      "yue-Hant": "NFA（簡單）",
+      "kmr": "NFA (hêsan)",
+      "kmr-Latn": "NFA (hêsan)",
+      "kmr-Arab": "NFA (هێسان)",
+      "ckb": "NFA (سادە)",
+      "ckb-Arab": "NFA (سادە)",
+      "af-ZA": "NFA (eenvoudig)",
+      "af-NA": "NFA (eenvoudig)"
     }
   },
   "./snippets/nfa-complex": {
@@ -891,7 +945,16 @@
       "so": "NFA (adag)",
       "ti": "NFA (ዝተሓላለኸ)",
       "sw": "NFA (changamano)",
-      "ha": "NFA (mai sarƙaƙiya)"
+      "ha": "NFA (mai sarƙaƙiya)",
+      "yue-Hans": "NFA（复杂）",
+      "yue-Hant": "NFA（複雜）",
+      "kmr": "NFA (kompleks)",
+      "kmr-Latn": "NFA (kompleks)",
+      "kmr-Arab": "NFA (کۆمپلەکس)",
+      "ckb": "NFA (ئاڵۆز)",
+      "ckb-Arab": "NFA (ئاڵۆز)",
+      "af-ZA": "NFA (kompleks)",
+      "af-NA": "NFA (kompleks)"
     }
   },
   "./snippets/pda-simple": {
@@ -1019,7 +1082,16 @@
       "so": "PDA (fudud)",
       "ti": "PDA (ቀሊል)",
       "sw": "PDA (rahisi)",
-      "ha": "PDA (mai sauƙi)"
+      "ha": "PDA (mai sauƙi)",
+      "yue-Hans": "PDA（简单）",
+      "yue-Hant": "PDA（簡單）",
+      "kmr": "PDA (hêsan)",
+      "kmr-Latn": "PDA (hêsan)",
+      "kmr-Arab": "PDA (هێسان)",
+      "ckb": "PDA (سادە)",
+      "ckb-Arab": "PDA (سادە)",
+      "af-ZA": "PDA (eenvoudig)",
+      "af-NA": "PDA (eenvoudig)"
     }
   },
   "./snippets/pda-complex": {
@@ -1147,7 +1219,16 @@
       "so": "PDA (adag)",
       "ti": "PDA (ዝተሓላለኸ)",
       "sw": "PDA (changamano)",
-      "ha": "PDA (mai sarƙaƙiya)"
+      "ha": "PDA (mai sarƙaƙiya)",
+      "yue-Hans": "PDA（复杂）",
+      "yue-Hant": "PDA（複雜）",
+      "kmr": "PDA (kompleks)",
+      "kmr-Latn": "PDA (kompleks)",
+      "kmr-Arab": "PDA (کۆمپلەکس)",
+      "ckb": "PDA (ئاڵۆز)",
+      "ckb-Arab": "PDA (ئاڵۆز)",
+      "af-ZA": "PDA (kompleks)",
+      "af-NA": "PDA (kompleks)"
     }
   }
 }
