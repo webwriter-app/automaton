@@ -18,13 +18,15 @@ function resolveLocale(language: string): string {
   const tag = language.trim().toLowerCase();
   const subtags = tag.split('-');
   const [base] = subtags;
-  while (subtags.length) {
+  const exact = supported.get(tag);
+  if (exact) return exact;
+  while (subtags.length > 2) {
+    subtags.pop();
     const locale = supported.get(subtags.join('-'));
     if (locale) return locale;
-    subtags.pop();
   }
-  const fallback = regionalDefaults.get(base) ?? sourceLocale;
-  if (tag === base && regionalDefaults.has(base)) return fallback;
+  const fallback = supported.get(base) ?? regionalDefaults.get(base) ?? sourceLocale;
+  if (tag === base) return fallback;
 
   // Match script or region when the document has a more specific language tag.
   try {

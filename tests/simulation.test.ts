@@ -1042,8 +1042,8 @@ describe("Simulation Tests", () => {
 			}
 			for (const [tag, expected] of [
 				["PT-br", "pt-BR"],
-				["pt", "pt-PT"],
-				["de", "de-DE"],
+				["pt", "pt"],
+				["de", "de"],
 				["zh-TW", "zh-Hant"],
 				["zh-CN", "zh-Hans"],
 				["pa-PK", "pa-Arab"],
@@ -1057,6 +1057,11 @@ describe("Simulation Tests", () => {
 			]) {
 				await localize.setLocale(tag);
 				assert.equal(localize.getLocale(), expected, tag);
+			}
+			for (const locale of ["ca-ES-valencia", "sr-ijekavsk", "am", "om", "so", "ti", "sw", "ha"]) {
+				await localize.setLocale(locale);
+				assert.equal(localize.getLocale(), locale);
+				assert.notEqual(localize.msg("Choose a move:"), "Choose a move:", locale);
 			}
 			await Promise.all([localize.setLocale("de-DE"), localize.setLocale(sourceLocale)]);
 			assert.equal(localize.getLocale(), sourceLocale, "A late load cannot restore an earlier language");
@@ -1104,7 +1109,7 @@ describe("Simulation Tests", () => {
 			widget.style.width = "300px";
 			widget.style.height = "300px";
 			widget.lang = "de";
-			await waitForLocale(widget, "de-DE");
+			await waitForLocale(widget, "de");
 			try {
 				const layout = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 				await layout();
