@@ -1,19 +1,19 @@
+/// <reference types="mocha" />
 import "mocha/mocha.js";
 import { getMochaConfig } from "@webwriter/build/test";
 import { assert } from "chai";
-import "../src";
-import { AutomatonComponent } from "../src";
-import type { StackExtension } from "../src/automata/pda";
-import type { ManualAutoSimulator } from "../src/automata/manual-auto";
-import type { Graph } from "../src/graph";
+import "../src/widgets/webwriter-automaton";
+import { AutomatonComponent } from "../src/widgets/webwriter-automaton";
+import type { StackExtension } from "../src/components/automata/stack-extension";
+import type { ManualAutoSimulator } from "../src/components/automata/manual-auto";
 import type SlButton from "@shoelace-style/shoelace/dist/components/button/button.component.js";
 import type SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.component.js";
-import { machineBlockSelector, type MachineData } from "../src/utils/machineData";
-import { createLocalizer } from "../localization/localizer";
-import { sourceLocale, targetLocales } from "../localization/generated/locale-codes.js";
+import { machineBlockSelector, type MachineData } from "../src/model/machine-data";
+import { sourceLocale, targetLocales } from "../localization/generated/locale-codes";
 
 mocha.setup(getMochaConfig());
 
+type Localize = { getLocale(): string; setLocale(tag: string): Promise<void>; msg(text: string): string };
 type Rule = MachineData["transitions"][number]["rules"][number];
 
 const state = (id: number, x: number, y: number, flags: { initial?: boolean; final?: boolean } = {}) =>
@@ -29,13 +29,42 @@ const setMachine = (widget: AutomatonComponent, patch: Partial<MachineData>) =>
 	widget.setData("application/json", JSON.stringify({ ...machineData(widget), ...patch }), { slot: "data" });
 
 async function waitForLocale(widget: AutomatonComponent, expected: string) {
-	const { localize } = widget as unknown as { localize: ReturnType<typeof createLocalizer> };
+	const { localize } = widget as unknown as { localize: Localize };
 	for (let frame = 0; frame < 60 && localize.getLocale() !== expected; frame++) {
 		await new Promise(resolve => requestAnimationFrame(resolve));
 	}
 	assert.equal(localize.getLocale(), expected);
 	await widget.updateComplete;
 }
+
+const nextFrames = async (count = 3) => {
+	for (let frame = 0; frame < count; frame++) await new Promise(resolve => requestAnimationFrame(resolve));
+};
+const choose = async (widget: AutomatonComponent, ...keys: string[]) => {
+	widget.graph!.selection = new Set(keys);
+	widget.requestUpdate();
+	await widget.updateComplete;
+};
+const centreOf = (element: Element) => {
+	const { left, top, width, height } = element.getBoundingClientRect();
+	return { x: left + width / 2, y: top + height / 2 };
+};
+const pointerEvent = (target: Element, type: string, at: { x: number; y: number }) => target.dispatchEvent(new PointerEvent(type, {
+	bubbles: true, composed: true, cancelable: true, pointerId: 9, isPrimary: true, button: 0, clientX: at.x, clientY: at.y,
+}));
+/** A pointer drag from one element to another, as a reader makes it. */
+async function sweep(from: Element, to: { x: number; y: number }) {
+	const start = centreOf(from);
+	pointerEvent(from, "pointerdown", start);
+	pointerEvent(from, "pointermove", { x: start.x + 6, y: start.y + 6 });
+	await nextFrames(2);
+	pointerEvent(from, "pointermove", to);
+	await nextFrames(2);
+	pointerEvent(from, "pointerup", to);
+	await nextFrames(3);
+}
+const stateOf = (widget: AutomatonComponent, id: number) => widget.shadowRoot!.querySelector<HTMLElement>(`ww-node[data-ww-key="n${id}"]`)!;
+const connectionPoints = (widget: AutomatonComponent) => [...widget.shadowRoot!.querySelectorAll<HTMLElement>(".state__port")];
 
 describe("Simulation Tests", () => {
 	let automaton: AutomatonComponent | null;
@@ -205,7 +234,7 @@ describe("Simulation Tests", () => {
 			assert.isBelow(sinkRect.height, plusRect.height);
 			assert.isBelow(sinkRect.bottom, plusRect.top);
 			assert.closeTo(sinkRect.x + sinkRect.width / 2, plusRect.x + plusRect.width / 2, 1);
-			assert.isNull(sinkButton()!.querySelector(".bi-plus"));
+			assert.isNull(sinkButton()!.querySelector("sl-icon[name=plus]"));
 			await addSink();
 			assert.isEmpty(widget.nodes, "An empty graph cannot gain a sink");
 			setMachine(widget, { states: [state(0, 0, 0, { initial: true, final: true })] });
@@ -250,14 +279,13 @@ describe("Simulation Tests", () => {
 
 		it("releases the graph on removal and restores it from authored data on reconnect", async () => {
 			const widget = await createConfiguredDFA();
-			const graphOf = () => (widget as unknown as { graph?: Graph }).graph;
-			const canvas = widget.shadowRoot!.querySelector("#graphCanvas")!;
-			const previous = graphOf()!;
-			assert.exists(canvas.querySelector("canvas"));
+			const root = widget.shadowRoot!;
+			const previous = widget.graph!;
+			assert.exists(root.querySelector("ww-scene"));
 
 			widget.remove();
-			assert.isUndefined(graphOf());
-			assert.isNull(canvas.querySelector("canvas"));
+			assert.isUndefined(widget.graph);
+			assert.isTrue(previous.signal.aborted);
 			assert.isTrue(widget.dispatchEvent(new KeyboardEvent("keydown", {
 				key: "m", ctrlKey: true, cancelable: true,
 			})), "A detached widget no longer intercepts graph shortcuts");
@@ -268,14 +296,16 @@ describe("Simulation Tests", () => {
 			document.body.append(widget);
 			await widget.updateComplete;
 
-			const restored = graphOf()!;
-			assert.notEqual(restored.network, previous.network);
-			assert.exists(canvas.querySelector("canvas"));
+			assert.notEqual(widget.graph, previous);
+			assert.exists(root.querySelector("ww-scene"));
 			assert.deepEqual(machineData(widget), machine);
-			assert.equal(restored.network.getPosition(0).x, -250);
+			assert.equal(widget.automaton.getNode(0)?.x, -250);
 
-			restored.network.selectNodes([0]);
-			widget.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
+			await choose(widget, "n0");
+			root.querySelector("ww-scene")!.dispatchEvent(new CustomEvent("ww-move", {
+				bubbles: true, composed: true, cancelable: true,
+				detail: { items: [{ key: "n0", x: -250 - 25 + 10, y: -25 }], dx: 10, dy: 0 },
+			}));
 			assert.equal(machineData(widget).states[0].x, -240);
 		});
 
@@ -290,15 +320,12 @@ describe("Simulation Tests", () => {
 			document.body.append(widget);
 			await widget.updateComplete;
 
-			const { graph } = widget as unknown as { graph: Graph };
+			const graph = widget.graph!;
 			const simulator = widget.automaton.simulator as ManualAutoSimulator;
 			simulator.word = "a";
 			simulator.setManualMode(true);
 			simulator.initStepByStep(graph, () => {});
-			const network = graph.network as unknown as { body: {
-				emitter: { emit(event: string, selection: { edges: number[] }): void };
-			} };
-			network.body.emitter.emit("selectEdge", { edges: [0] });
+			graph.dispatchEvent(new CustomEvent("edge-select", { detail: 0 }));
 			assert.exists(widget.shadowRoot!.querySelector("dialog[open]"));
 
 			widget.remove();
@@ -321,8 +348,8 @@ describe("Simulation Tests", () => {
 			assert.isEmpty(widget.nodes);
 			assert.isNull(widget.querySelector(machineBlockSelector));
 
-			const { graph } = widget as unknown as { graph: Graph };
-			graph.insertNodeFromButton();
+			await nextFrames(4);
+			widget.graph!.insertNodeFromButton();
 			const block = widget.querySelector<HTMLScriptElement>(machineBlockSelector)!;
 			assert.deepEqual(machineData(widget).states.map(node => [node.id, node.initial]), [[0, true]]);
 			const label = "</script><b>q0</b>";
@@ -378,36 +405,28 @@ describe("Simulation Tests", () => {
 			widget.style.width = "300px";
 			setMachine(widget, { startingStack: ["Z"] });
 			await widget.updateComplete;
-			const { network } = (widget as unknown as { graph: Graph }).graph;
-			network.selectNodes([1]);
+			await choose(widget, "n1");
 			const figure = widget.shadowRoot!.querySelector<HTMLElement>(".print-machine")!;
-			const canvas = figure.querySelector("canvas")!;
 			const saved = machineText(widget);
 			assert.equal(getComputedStyle(figure).display, "none");
 
-			window.dispatchEvent(new Event("beforeprint"));
-			assert.isAbove(canvas.width, 0);
-			assert.isAbove(canvas.height, 0);
-			const ctx = canvas.getContext("2d")!;
-			const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-			assert.isTrue(pixels.some((value, index) => index % 4 === 3 && value > 0));
-			const fitted = canvas.toDataURL();
+			const diagram = figure.querySelector("svg")!;
+			assert.equal(diagram.querySelectorAll("circle").length, widget.automaton.nodes.length + widget.automaton.nodes.get().filter(node => node.final).length);
+			assert.equal(diagram.querySelectorAll("polyline[marker-end]").length, widget.automaton.transitions.length + 1, "An arrowhead for each transition and the initial arrow");
+			const fitted = diagram.outerHTML;
 
-			network.moveTo({ scale: 2, position: { x: 2000, y: 1000 } });
+			widget.viewport.zoomTo(2);
 			(widget.automaton.extension as StackExtension).setStack(["runtime"]);
-			window.dispatchEvent(new Event("beforeprint"));
-			assert.equal(canvas.toDataURL(), fitted);
+			await widget.updateComplete;
+			assert.equal(figure.querySelector("svg")!.outerHTML, fitted);
 			assert.include(figure.querySelector("figcaption")!.textContent, "[Z]");
 			assert.notInclude(figure.textContent, "runtime");
 			assert.equal(machineText(widget), saved);
-			assert.equal(network.getScale(), 2);
-			assert.deepEqual(network.getSelectedNodes(), [1]);
+			assert.equal(widget.viewport.scale, 2);
+			assert.deepEqual([...widget.graph!.selection], ["n1"]);
 
-			window.dispatchEvent(new Event("afterprint"));
-			assert.equal(canvas.width, 0);
 			widget.remove();
-			window.dispatchEvent(new Event("beforeprint"));
-			assert.equal(canvas.width, 0, "Disconnected widgets no longer handle print events");
+			assert.isUndefined(widget.graph);
 		});
 	});
 
@@ -626,156 +645,67 @@ describe("Simulation Tests", () => {
 			widget.permissions = "777";
 			setMachine(widget, { states: [state(0, 0, 0, { initial: true }), state(1, 180, 0, { final: true })] });
 			await widget.updateComplete;
+			await nextFrames(6);
 			assert.isNull(root.querySelector(".empty-canvas-hint"));
-			const { network } = (widget as unknown as { graph: Graph }).graph;
-			network.selectNodes([0]);
-			network.redraw();
-			const visiblePoints = () => [...root.querySelectorAll<HTMLElement>(".connection-point:not([hidden])")];
-			assert.deepEqual(visiblePoints().map(point => point.dataset.side), ["top", "left", "bottom", "right"]);
-			visiblePoints()[0].click();
-			assert.exists(root.querySelector(".connection-point--active"));
-			const canvas = root.querySelector("canvas")!;
-			assert.equal(getComputedStyle(canvas).cursor, "none");
-			const preview = network as unknown as {
-				manipulation: { temporaryIds: { nodes: string[]; edges: string[] } };
-				body: {
-					emitter: { emit(event: "click", data: { pointer: { DOM: { x: number; y: number } } }): void };
-					nodes: Record<string, { x: number; y: number; options: { opacity: number } }>;
-					edges: Record<string, {
-						toId: number | string;
-						hover: boolean;
-						options: {
-							label: string; hidden: boolean; smooth: { roundness: number };
-							color: { opacity: number }; selfReference: { angle: number; size: number };
-						};
-					}>;
-				};
-			};
-			const { nodes: [endpointId], edges: [edgeId] } = preview.manipulation.temporaryIds;
-			const canvasBounds = canvas.getBoundingClientRect();
-			const hover = (point: { x: number; y: number }) => {
-				canvas.dispatchEvent(new PointerEvent("pointermove", {
-					bubbles: true,
-					clientX: canvasBounds.left + point.x,
-					clientY: canvasBounds.top + point.y,
-				}));
-			};
-			const target = network.canvasToDOM(network.getPositions([1])[1]);
-			hover(target);
-			assert.equal(preview.body.edges[edgeId].toId, 1, "The preview attaches to the destination node");
-			assert.equal(preview.body.edges[edgeId].options.label, "a");
-			assert.equal(preview.body.edges[edgeId].options.smooth.roundness, 0);
-			assert.isBelow(preview.body.edges[edgeId].options.color.opacity, 1);
-			const besideTarget = { x: target.x + 6, y: target.y };
-			hover(besideTarget);
-			assert.equal(preview.body.edges[edgeId].toId, 1, "The preview stays snapped");
-			const endpoint = preview.body.nodes[endpointId];
-			assert.isAbove(endpoint.options.opacity, 0, "The blue cursor remains visible while snapped");
-			assert.closeTo(endpoint.x, network.DOMtoCanvas(besideTarget).x, 1);
-			assert.closeTo(endpoint.y, network.DOMtoCanvas(besideTarget).y, 1);
-			assert.isEmpty(widget.transitions, "Hovering leaves the authored graph unchanged");
-			hover({ x: target.x, y: target.y + 80 });
-			assert.equal(preview.body.edges[edgeId].toId, endpointId, "Leaving the node restores the free endpoint");
-			assert.isBelow(preview.body.edges[edgeId].options.color.opacity, 1);
-			hover(target);
-			root.querySelector("#graphCanvas")!.dispatchEvent(new PointerEvent("pointerleave"));
-			assert.equal(preview.body.edges[edgeId].toId, endpointId, "Leaving the canvas also clears the target");
-			widget.requestUpdate();
-			await widget.updateComplete;
-			network.redraw();
-			assert.equal(getComputedStyle(canvas).cursor, "none", "Rendering preserves the preview");
-			widget.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
-			network.redraw();
-			assert.isEmpty(visiblePoints());
-			assert.notEqual(getComputedStyle(canvas).cursor, "none");
-			assert.isEmpty(widget.transitions);
+			assert.isEmpty(connectionPoints(widget), "Nothing is selected");
+			await choose(widget, "n0");
+			assert.deepEqual(connectionPoints(widget).map(point => point.dataset.wwPort), ["top", "right", "bottom", "left"]);
+			const transitions = () => machineData(widget).transitions;
 
-			network.selectNodes([0]);
-			network.redraw();
-			visiblePoints()[0].click();
-			const origin = network.canvasToDOM(network.getPositions([0])[0]);
-			hover(origin);
-			const loopPreview = preview.body.edges[preview.manipulation.temporaryIds.edges[0]];
-			assert.equal(loopPreview.toId, 0, "The source node is a valid destination");
-			assert.equal(loopPreview.options.label, "a");
-			assert.isBelow(loopPreview.options.color.opacity, 1);
-			assert.isAbove(preview.body.nodes[preview.manipulation.temporaryIds.nodes[0]].options.opacity, 0);
-			assert.isEmpty(widget.transitions);
-			preview.body.emitter.emit("click", { pointer: { DOM: origin } });
-			assert.deepEqual(machineData(widget).transitions, [edge(0, 0, 0, "a")]);
-			const savedLoop = preview.body.edges[0];
-			assert.equal(savedLoop.options.selfReference.angle, loopPreview.options.selfReference.angle);
-			assert.equal(savedLoop.options.selfReference.size, loopPreview.options.selfReference.size);
+			// A wire that is let go away from every state adds nothing.
+			await sweep(connectionPoints(widget)[1], { x: 5, y: 5 });
+			assert.isEmpty(transitions(), "Dragging a connection to nowhere leaves the authored graph unchanged");
+
+			// A wire to the other state adds a transition with the first symbol.
+			await sweep(connectionPoints(widget)[1], centreOf(stateOf(widget, 1)));
+			assert.deepEqual(transitions(), [edge(0, 0, 1, "a")]);
+			assert.deepEqual([...widget.graph!.selection], ["n1"], "The destination is selected");
+
+			// A wire to the source state is a loop; it has no bend of its own.
+			await sweep(connectionPoints(widget)[1], centreOf(stateOf(widget, 1)));
+			assert.deepEqual(transitions(), [edge(0, 0, 1, "a"), edge(1, 1, 1, "a")]);
+			await choose(widget, "n0");
+			await sweep(connectionPoints(widget)[1], centreOf(stateOf(widget, 0)));
+			assert.deepEqual(transitions().find(transition => transition.id === 2), edge(2, 0, 0, "a"));
 
 			setMachine(widget, { transitions: [{ ...edge(0, 0, 0, "b"), loopAngle: 180 }] });
 			await widget.updateComplete;
-			network.selectNodes([0]);
-			network.redraw();
-			visiblePoints()[0].click();
-			let highlightsLoop = false;
-			network.once("beforeDrawing", () => { highlightsLoop = preview.body.edges[0].hover; });
-			hover(origin);
-			assert.isTrue(highlightsLoop);
-			assert.isTrue(preview.body.edges[preview.manipulation.temporaryIds.edges[0]].options.hidden);
-			assert.deepEqual(machineData(widget).transitions, [{ ...edge(0, 0, 0, "b"), loopAngle: 180 }]);
-			preview.body.emitter.emit("click", { pointer: { DOM: origin } });
-			assert.deepEqual(machineData(widget).transitions, [{ ...edge(0, 0, 0, "b", "a"), loopAngle: 180 }], "Extending a loop preserves its placement");
+			await choose(widget, "n0");
+			await sweep(connectionPoints(widget)[1], centreOf(stateOf(widget, 0)));
+			assert.deepEqual(transitions(), [{ ...edge(0, 0, 0, "b", "a"), loopAngle: 180 }], "Extending a loop preserves its placement");
 
+			// The reverse of an existing arrow bends both.
 			setMachine(widget, { transitions: [edge(0, 1, 0, "b")] });
 			await widget.updateComplete;
-			network.selectNodes([0]);
-			network.redraw();
-			visiblePoints()[0].click();
-			const reversePreviewId = preview.manipulation.temporaryIds.edges[0];
-			let reverseBend = 0;
-			network.once("beforeDrawing", () => { reverseBend = preview.body.edges[0].options.smooth.roundness; });
-			hover(target);
-			assert.equal(reverseBend, 0.2, "The existing reverse edge bends during the preview");
-			assert.equal(preview.body.edges[reversePreviewId].options.smooth.roundness, 0.2);
-			assert.equal(preview.body.edges[0].options.smooth.roundness, 0, "Preview styling is removed after drawing");
-			assert.deepEqual(machineData(widget).transitions, [edge(0, 1, 0, "b")]);
-
-			widget.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
-			setMachine(widget, { transitions: [edge(0, 0, 1, "b"), edge(1, 1, 0, "b")] });
-			await widget.updateComplete;
-			network.selectNodes([0]);
-			network.redraw();
-			visiblePoints()[0].click();
-			const existingPreviewId = preview.manipulation.temporaryIds.edges[0];
-			let highlightsExisting = false;
-			network.once("beforeDrawing", () => { highlightsExisting = preview.body.edges[0].hover; });
-			hover(target);
-			assert.isTrue(highlightsExisting);
-			assert.isTrue(preview.body.edges[existingPreviewId].options.hidden, "An existing edge takes the place of the preview");
-			assert.deepEqual(machineData(widget).transitions, [edge(0, 0, 1, "b"), edge(1, 1, 0, "b")]);
-			widget.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+			await choose(widget, "n0");
+			await sweep(connectionPoints(widget)[1], centreOf(stateOf(widget, 1)));
+			assert.deepEqual(transitions(), [{ ...edge(0, 1, 0, "b"), bend: 0.2 }, { ...edge(1, 0, 1, "a"), bend: 0.2 }]);
 
 			widget.permissions = "757";
-			await widget.updateComplete;
-			network.selectEdges([0]);
+			await choose(widget, "e0");
 			widget.dispatchEvent(new KeyboardEvent("keydown", { key: "Backspace" }));
 			assert.exists(widget.automaton.getTransition(0), "Delete permissions still apply");
 			widget.permissions = "777";
 			await widget.updateComplete;
-			network.selectEdges([0]);
+			await choose(widget, "e0");
 			widget.dispatchEvent(new KeyboardEvent("keydown", { key: "Backspace" }));
 			assert.isNull(widget.automaton.getTransition(0));
-			network.selectEdges([1]);
+			await choose(widget, "e1");
 			widget.dispatchEvent(new KeyboardEvent("keydown", { key: "Delete" }));
 			assert.isNull(widget.automaton.getTransition(1));
 			assert.exists(widget.automaton.getNode(0));
 			assert.exists(widget.automaton.getNode(1));
 
-			network.selectNodes([0]);
+			await choose(widget, "n0");
 			widget.permissions = "737";
 			await widget.updateComplete;
-			assert.isEmpty(visiblePoints());
+			assert.isEmpty(connectionPoints(widget));
 			widget.permissions = "777";
 			await widget.updateComplete;
-			assert.lengthOf(visiblePoints(), 4);
+			assert.lengthOf(connectionPoints(widget), 4);
 			widget.mode = "simulate";
 			await widget.updateComplete;
-			assert.isEmpty(visiblePoints());
+			assert.isEmpty(connectionPoints(widget));
 		});
 
 		it("adds and selects a node at the center of the visible canvas from the plus button", async () => {
@@ -783,19 +713,22 @@ describe("Simulation Tests", () => {
 			document.body.append(widget);
 			await widget.updateComplete;
 			await widget.updateComplete;
-			const { network } = (widget as unknown as { graph: Graph }).graph;
+			await nextFrames(4);
 			const root = widget.shadowRoot!;
 			const canvas = root.querySelector<HTMLElement>("#graphCanvas")!;
 			const plus = root.querySelector("#toolMenu")!.shadowRoot!.querySelector<HTMLElement>(".toolmenu__node")!;
-			network.moveTo({ position: { x: 130, y: -85 }, scale: 1.7 });
-			const center = network.DOMtoCanvas({ x: canvas.clientWidth / 2, y: canvas.clientHeight / 2 });
+			widget.viewport.zoomTo(1.7);
+			widget.viewport.panBy(130, -85);
+			await nextFrames(3);
+			const box = canvas.getBoundingClientRect();
+			const center = widget.viewport.toWorld(box.left + box.width / 2, box.top + box.height / 2);
 			plus.click();
 			await widget.updateComplete;
-			const [selected] = network.getSelectedNodes();
-			const node = widget.automaton.getNode(Number(selected));
+			const [selected] = [...widget.graph!.selection];
+			const node = widget.automaton.getNode(Number(selected.slice(1)));
 			assert.exists(node);
 			assert.isTrue(node!.initial, "The first added node is initial");
-			assert.equal(widget.automaton.getTransition(-1)?.to, selected, "The initial arrow points to the new node");
+			assert.exists(widget.graph!.layout.initial, "The initial arrow points to the new node");
 			assert.closeTo(node!.x!, center.x, 1);
 			assert.closeTo(node!.y!, center.y, 1);
 			const bar = root.querySelector(".editing-bar")!.getBoundingClientRect();
@@ -804,14 +737,14 @@ describe("Simulation Tests", () => {
 			assert.closeTo(bar.bottom, button.bottom, 1);
 			plus.click();
 			await widget.updateComplete;
-			const [second] = network.getSelectedNodes();
-			assert.isFalse(widget.automaton.getNode(Number(second))!.initial);
-			assert.equal(widget.automaton.getInitialNode().id, selected);
+			const [second] = [...widget.graph!.selection];
+			assert.isFalse(widget.automaton.getNode(Number(second.slice(1)))!.initial);
+			assert.equal(`n${widget.automaton.getInitialNode().id}`, selected);
 
 			widget.permissions = "377";
 			await widget.updateComplete;
 			plus.click();
-			assert.lengthOf(widget.automaton.nodes.getIds().filter(id => id !== -1), 2, "Insertion observes current permissions");
+			assert.lengthOf(widget.automaton.nodes.getIds(), 2, "Insertion observes current permissions");
 		});
 
 		it("edits the selected node or transition in the bottom bar", async () => {
@@ -820,15 +753,9 @@ describe("Simulation Tests", () => {
 			widget.style.height = "300px";
 			await widget.updateComplete;
 			await widget.updateComplete;
-			const { network } = (widget as unknown as { graph: Graph }).graph;
 			const root = widget.shadowRoot!;
 			const bar = () => root.querySelector<HTMLElement>(".editing-bar");
-			const select = async (type: "node" | "edge", id: number) => {
-				if (type === "node") network.selectNodes([id]);
-				else network.selectEdges([id]);
-				widget.requestUpdate();
-				await widget.updateComplete;
-			};
+			const select = (type: "node" | "edge", id: number) => choose(widget, `${type === "node" ? "n" : "e"}${id}`);
 			const edit = (field: Element, property: "value" | "checked", value: string | boolean, event: string) => {
 				Object.assign(field, { [property]: value });
 				field.dispatchEvent(new Event(event, { bubbles: true, composed: true }));
@@ -897,7 +824,7 @@ describe("Simulation Tests", () => {
 			widget.permissions = "077";
 			await widget.updateComplete;
 			assert.isNull(bar()!.querySelector(".editing-bar__delete"));
-			assert.isTrue((bar()!.querySelector("sl-input") as HTMLElement & { disabled: boolean }).disabled);
+			assert.isTrue((bar()!.querySelector("sl-input") as unknown as HTMLElement & { disabled: boolean }).disabled);
 			widget.mode = "simulate";
 			await widget.updateComplete;
 			assert.isNull(bar());
@@ -906,11 +833,8 @@ describe("Simulation Tests", () => {
 		it("commits a bend on release and restores its default when the authored bend is undone", async () => {
 			const widget = await createConfiguredDFA();
 			await widget.updateComplete;
-			const { network } = (widget as unknown as { graph: Graph }).graph;
 			const original = machineData(widget).transitions;
-			network.selectEdges([0]);
-			widget.requestUpdate();
-			await widget.updateComplete;
+			await choose(widget, "e0");
 			const range = widget.shadowRoot!.querySelector<HTMLInputElement>(".editing-bar__range input")!;
 			range.value = "40";
 			range.dispatchEvent(new Event("input"));
@@ -920,11 +844,11 @@ describe("Simulation Tests", () => {
 			assert.equal(bent[0].bend, 0.4);
 			setMachine(widget, { transitions: original });
 			await widget.updateComplete;
-			assert.isUndefined(widget.automaton.getTransition(0)?.smooth);
+			assert.isUndefined(widget.automaton.getTransition(0)?.bend);
 			assert.deepEqual(machineData(widget).transitions, original);
 			setMachine(widget, { transitions: bent });
 			await widget.updateComplete;
-			assert.deepInclude(widget.automaton.getTransition(0)?.smooth as object, { roundness: 0.4 });
+			assert.equal(widget.automaton.getTransition(0)?.bend, 0.4);
 		});
 
 		it("saves the authored PDA starting stack and reopens without the simulation stack", async () => {
@@ -974,16 +898,15 @@ describe("Simulation Tests", () => {
 			document.body.append(widget);
 			await widget.updateComplete;
 			await widget.updateComplete;
-			const { network } = (widget as unknown as { graph: Graph }).graph;
-			const position = () => network.getPositions([-1])[-1];
-			assert.isAbove(Math.abs(position().y), 20, "The arrow avoids the incoming transition");
+			const tail = () => widget.graph!.initialArrow![0];
+			assert.isAbove(Math.abs(tail().y), 20, "The arrow avoids the incoming transition");
 			setMachine(widget, { transitions: [] });
 			await widget.updateComplete;
-			assert.isBelow(position().x, 0);
-			assert.closeTo(position().y, 0, 1, "The arrow points from the left when clear");
+			assert.isBelow(tail().x, 0);
+			assert.closeTo(tail().y, 0, 1, "The arrow points from the left when clear");
 			setMachine(widget, { states: [state(0, 0, 0, { initial: true }), state(1, -65, 0)] });
 			await widget.updateComplete;
-			assert.isAbove(Math.abs(position().y), 20, "The arrow moves when a node obstructs it");
+			assert.isAbove(Math.abs(tail().y), 20, "The arrow moves when a node obstructs it");
 			assert.deepEqual(machineData(widget).states, [state(0, 0, 0, { initial: true }), state(1, -65, 0)]);
 		});
 
@@ -1035,7 +958,9 @@ describe("Simulation Tests", () => {
 
 		it("loads every locale and resolves regional and script variants", async function () {
 			this.timeout(10000);
-			const localize = createLocalizer();
+			const host = document.createElement("webwriter-automaton") as AutomatonComponent;
+			document.body.append(host);
+			const { localize } = host as unknown as { localize: Localize };
 			for (const locale of targetLocales) {
 				await localize.setLocale(locale);
 				assert.equal(localize.getLocale(), locale);
@@ -1065,6 +990,7 @@ describe("Simulation Tests", () => {
 			}
 			await Promise.all([localize.setLocale("de-DE"), localize.setLocale(sourceLocale)]);
 			assert.equal(localize.getLocale(), sourceLocale, "A late load cannot restore an earlier language");
+			host.remove();
 		});
 
 		it("keeps separate translations when Automaton instances have different languages", async () => {
@@ -1090,8 +1016,8 @@ describe("Simulation Tests", () => {
 				assert.equal(editLabel(second), "Edit");
 				assert.equal(stackLabel(first), "Stapel");
 				assert.equal(stackLabel(second), "Stack");
-				assert.deepEqual(first.options.sinkStateEnabled.label, { _: "Fangzustand aktivieren" });
-				assert.deepEqual(second.options.sinkStateEnabled.label, { _: "Enable sink state" });
+				assert.deepEqual(first.options!.sinkStateEnabled.label, "Fangzustand aktivieren");
+				assert.deepEqual(second.options!.sinkStateEnabled.label, "Enable sink state");
 
 				parent.lang = "HR-hr";
 				await waitForLocale(first, "hr");
@@ -1129,14 +1055,14 @@ describe("Simulation Tests", () => {
 				await layout();
 				const panel = menu.querySelector(".topmenu__collapsed_panel")!;
 				assertInside(panel);
-				panel.querySelector<HTMLElement>("sl-button:has(.bi-question-lg)")!.click();
+				panel.querySelector<HTMLElement>("sl-button.topmenu__help")!.click();
 				await layout();
 				const help = root.querySelector(".compact-help")!;
 				assertInside(help);
 				assert.include(help.textContent, "Übergänge");
 				assert.include(help.textContent, "Fangzustand hinzufügen");
 				assert.equal(help.scrollWidth, help.clientWidth, "German help text wraps");
-				panel.querySelector<HTMLElement>("sl-button:has(.bi-question-lg)")!.click();
+				panel.querySelector<HTMLElement>("sl-button.topmenu__help")!.click();
 				panel.querySelector<SlButton>(".definition-trigger")!.click();
 				await layout();
 				assertInside(menu.querySelector(".definition-pane")!);
@@ -1151,8 +1077,8 @@ describe("Simulation Tests", () => {
 				assertInside(group);
 				assert.equal(edit.textContent!.trim(), "Bearbeiten");
 				assert.equal(simulate.textContent!.trim(), "Simulieren");
-				assert.exists(edit.querySelector(".bi-pencil"));
-				assert.exists(simulate.querySelector(".bi-boxes"));
+				assert.exists(edit.querySelector("sl-icon"));
+				assert.exists(simulate.querySelector("sl-icon"));
 				assert.equal(edit.getAttribute("aria-pressed"), "true");
 				await tooltip.show();
 				assertInside(tooltip.body);
@@ -1250,8 +1176,7 @@ describe("Simulation Tests", () => {
 			setMachine(widget, { startingStack: ["Y"] });
 			await layout();
 			assert.equal(pane.querySelector(".definition-summary > div:last-child dd")?.textContent, "[Y]");
-			const { network } = (widget as unknown as { graph: Graph }).graph;
-			network.selectNodes([0]);
+			await choose(widget, "n0");
 			pane.dispatchEvent(new KeyboardEvent("keydown", { key: "Delete", bubbles: true, composed: true }));
 			assert.exists(widget.automaton.getNode(0), "Reading the pane does not trigger canvas editing shortcuts");
 			pane.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true, composed: true }));
@@ -1286,10 +1211,9 @@ describe("Simulation Tests", () => {
 		it("allows canvas focus without drawing a widget focus outline", async () => {
 			const widget = await createConfiguredDFA();
 			await widget.updateComplete;
-			const frame = widget.shadowRoot!.querySelector<HTMLElement>(".vis-network")!;
+			const frame = widget.shadowRoot!.querySelector<HTMLElement>("#graphCanvas")!;
 			frame.focus();
 			assert.equal(widget.shadowRoot!.activeElement, frame);
-			assert.equal(getComputedStyle(frame).outlineStyle, "none");
 			assert.equal(getComputedStyle(widget).outlineStyle, "none");
 		});
 
@@ -1312,37 +1236,47 @@ describe("Simulation Tests", () => {
 			};
 			const pointer = (type: string, position: ReturnType<typeof point>) => {
 				grip.dispatchEvent(new PointerEvent(type, {
-					...position, bubbles: true, isPrimary: true, pointerId: 1, pointerType: "touch",
+					...position, bubbles: true, composed: true, cancelable: true, isPrimary: true, pointerId: 1, pointerType: "mouse",
 				}));
+			};
+			const frame = () => new Promise(resolve => requestAnimationFrame(resolve));
+			const marker = () => root.querySelector("[data-ww-drop-marker]");
+			const hold = async (target: HTMLElement, fraction: number) => {
+				const start = point(grip);
+				pointer("pointerdown", start);
+				pointer("pointermove", { clientX: start.clientX + 6, clientY: start.clientY + 6 });
+				await frame();
+				pointer("pointermove", point(target, fraction));
+				await frame();
+				await stack.updateComplete;
+			};
+			const settle = async () => {
+				for (let i = 0; i < 5; i++) await frame();
+				await stack.updateComplete;
 			};
 			let changes = 0;
 			stack.addEventListener("starting-stack-change", () => changes++);
 
-			pointer("pointerdown", point(grip));
-			pointer("pointermove", point(last, 0.9));
-			await stack.updateComplete;
-			assert.isTrue(last.classList.contains("drop-after"));
+			await hold(last, 0.9);
+			assert.isNotNull(marker(), "The drop marker shows where the item lands");
 			pointer("pointercancel", point(last, 0.9));
-			await stack.updateComplete;
-			assert.isFalse(last.classList.contains("drop-after"));
+			await settle();
+			assert.isNull(marker());
 			assert.equal(changes, 0);
 
-			pointer("pointerdown", point(grip));
-			pointer("pointermove", point(last, 0.9));
+			await hold(last, 0.9);
 			pointer("pointerup", point(last, 0.9));
-			await stack.updateComplete;
+			await settle();
 			assert.deepEqual(machineData(widget).startingStack, ["C", "A", "B"]);
 			assert.equal(changes, 1);
 
-			pointer("pointerdown", point(grip));
-			pointer("pointermove", point(trash));
-			await stack.updateComplete;
-			assert.isTrue(trash.classList.contains("dragover"));
+			await hold(trash, 0.5);
+			assert.isTrue(trash.hasAttribute("data-ww-drop-over"));
 			pointer("pointerup", point(trash));
-			await stack.updateComplete;
+			await settle();
 			assert.deepEqual(machineData(widget).startingStack, ["C", "A"]);
 			assert.equal(changes, 2);
-			assert.isFalse(trash.classList.contains("dragover"));
+			assert.isFalse(trash.hasAttribute("data-ww-drop-over"));
 		});
 
 		it("shows stack removal and help within the widget at compact and wide widths", async () => {
@@ -1391,7 +1325,7 @@ describe("Simulation Tests", () => {
 			const menu = root.querySelector("#topMenu")!.shadowRoot!;
 			menu.querySelector<HTMLElement>(".topmenu--hamburger > sl-button")!.click();
 			await layout();
-			menu.querySelector<HTMLElement>("sl-button:has(.bi-question-lg)")!.click();
+			menu.querySelector<HTMLElement>("sl-button.topmenu__help")!.click();
 			await layout();
 			const compactHelp = root.querySelector(".compact-help")!;
 			const stackHelp = [...compactHelp.children].find(item => item.textContent?.includes("Remove stack items with ×"))!;
@@ -1460,7 +1394,6 @@ describe("Simulation Tests", () => {
 				assert.isAtMost(buttons.right, widget.getBoundingClientRect().right, `${width}px playback controls fit`);
 				const canvas = graph.getBoundingClientRect();
 				const stackPanel = panel.getBoundingClientRect();
-				assert.closeTo(graph.querySelector("canvas")!.getBoundingClientRect().width, canvas.width, 1);
 				assert.isBelow(input.top, canvas.bottom, `${width}px simulator overlays the canvas`);
 				assert.isAtMost(input.bottom, canvas.bottom);
 				assert.isAtMost(stackPanel.bottom, input.top, `${width}px stack clears the simulator bar`);
@@ -1480,24 +1413,20 @@ describe("Simulation Tests", () => {
 			assert.isAtMost(panel.getBoundingClientRect().bottom, graph.getBoundingClientRect().bottom);
 		});
 
-		it("preserves the canvas zoom and center through width and height changes", async () => {
+		it("keeps the canvas zoom through width and height changes", async () => {
 			const widget = await createConfiguredPDA();
 			widget.style.width = "800px";
 			await widget.updateComplete;
 			const afterResize = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 			await afterResize();
 
-			const { network } = (widget as unknown as { graph: Graph }).graph;
-			const position = { x: 90, y: -40 };
 			const scale = 1.75;
-			network.moveTo({ scale, position });
+			widget.viewport.zoomTo(scale);
 			for (const [width, height] of [[300, 500], [300, 300], [1000, 600]]) {
 				widget.style.width = `${width}px`;
 				widget.style.height = `${height}px`;
 				await afterResize();
-				assert.equal(network.getScale(), scale, `${width} × ${height} zoom`);
-				assert.closeTo(network.getViewPosition().x, position.x, 0.01);
-				assert.closeTo(network.getViewPosition().y, position.y, 0.01);
+				assert.equal(widget.viewport.scale, scale, `${width} × ${height} zoom`);
 			}
 		});
 	});

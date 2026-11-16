@@ -150,27 +150,25 @@
   "license": "MIT",
   "author": "Jorik van Genuchten",
   "scripts": {
-    "prepublishOnly": "npx @webwriter/build && esbuild tests/simulation.test.ts --bundle --format=esm --target=es2022 --outfile=dist/tests/simulation.js"
+    "prepublishOnly": "npx @webwriter/build --shared-dependencies"
   },
   "dependencies": {
     "@lit/localize": "^0.12.2",
     "@shoelace-style/shoelace": "^2.20.1",
-    "@webwriter/lit": "^3.0.0",
-    "lit": "^3.3.3",
-    "lodash": "^4.18.1",
-    "randexp": "^0.6.1",
-    "uuid": "^14.0.3",
-    "vis-data": "^8.0.6",
-    "vis-network": "^10.1.5"
+    "@tabler/icons": "^3.52.0",
+    "@webwriter/lit": "^3.2.0",
+    "@webwriter/widget": "^1.2.0",
+    "lit": "^3.3.0",
+    "pixi.js": "^8.23.0",
+    "randexp": "^0.6.1"
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.27",
+    "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
-    "@webwriter/build": "^1.13.1",
+    "@webwriter/build": "^1.14.0",
     "chai": "^6.3.0",
-    "esbuild": "0.28.2",
     "mocha": "^12.0.3",
-    "typescript": "~7.0.2"
+    "typescript": "^7.0.2"
   },
   "overrides": {
     "@aidenlx/esbuild-plugin-inline-worker": {
@@ -184,15 +182,23 @@
   },
   "exports": {
     "./widgets/webwriter-automaton.*": {
-      "source": "./src/index.ts",
+      "source": "./src/widgets/webwriter-automaton.ts",
       "default": "./dist/widgets/webwriter-automaton.*"
     },
-    "./snippets/dfa-simple.html": "./snippets/dfa/example-simple.html",
-    "./snippets/dfa-complex.html": "./snippets/dfa/example-complex.html",
-    "./snippets/nfa-simple.html": "./snippets/nfa/example-simple.html",
-    "./snippets/nfa-complex.html": "./snippets/nfa/example-complex.html",
-    "./snippets/pda-simple.html": "./snippets/pda/example-simple.html",
-    "./snippets/pda-complex.html": "./snippets/pda/example-complex.html",
+    "./snippets/dfa-simple.html": "./snippets/dfa-simple.html",
+    "./snippets/dfa-complex.html": "./snippets/dfa-complex.html",
+    "./snippets/nfa-simple.html": "./snippets/nfa-simple.html",
+    "./snippets/nfa-complex.html": "./snippets/nfa-complex.html",
+    "./snippets/pda-simple.html": "./snippets/pda-simple.html",
+    "./snippets/pda-complex.html": "./snippets/pda-complex.html",
+    "./tests/diagram.*": {
+      "source": "./tests/diagram.test.ts",
+      "default": "./dist/tests/diagram.*"
+    },
+    "./tests/stack.*": {
+      "source": "./tests/stack.test.ts",
+      "default": "./dist/tests/stack.*"
+    },
     "./tests/simulation.*": {
       "source": "./tests/simulation.test.ts",
       "default": "./dist/tests/simulation.*"
@@ -211,5 +217,11 @@
     "./snippets/pda-simple": {},
     "./snippets/pda-complex": {}
   },
-  "customElements": "custom-elements.json"
+  "customElements": "custom-elements.json",
+  "prebuiltDependencies": [
+    "@webwriter/lit",
+    "@webwriter/widget",
+    "pixi.js",
+    "randexp"
+  ]
 }
