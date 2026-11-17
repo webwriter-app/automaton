@@ -1,7 +1,6 @@
 import { Automaton, Node, SimulationResult, Simulator, Transition } from './';
 import { AutoSimulator } from './auto';
 import { AutomatonError } from '../errors';
-import { Logger } from '../../model/logger';
 import { AutomatonType } from '../../widgets/webwriter-automaton';
 
 export class DFA extends Automaton {

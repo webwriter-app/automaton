@@ -1,6 +1,5 @@
 import { Automaton, SimulationResult, Node, Transition } from './';
 import { ManualAutoSimulator } from './manual-auto';
-import { Logger } from '../../model/logger';
 import { AutomatonType } from '../../widgets/webwriter-automaton';
 
 export class NFA extends Automaton {

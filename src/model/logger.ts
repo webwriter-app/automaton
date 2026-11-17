@@ -15,12 +15,6 @@ export class Logger {
         }
     }
 
-    public static warn(...args: unknown[]): void {
-        if (Logger._verbose) {
-            console.warn('[webwriter-automaton]', ...args);
-        }
-    }
-
     public static error(...args: unknown[]): void {
         console.error('[webwriter-automaton]', ...args);
     }
