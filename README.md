@@ -18,8 +18,13 @@ Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).
 
 
 ## `AutomatonComponent` (`<webwriter-automaton>`)
-Represents an Automaton Component.
-This component is responsible for rendering and managing the automaton editor and simulator.
+Automaton editor and simulator.
+
+Conversions: a JFLAP file (`.jff`, finite and pushdown automata) imports and exports; bends and loop angles are not part of that format and the test for an empty stack becomes an unconditional transition. The diagram exports as `image/svg+xml`, the transitions as a `table`.
+
+Signal `accepted`: a boolean that is true while the last simulation run accepted its word and false otherwise, also after a reset.
+
+Theme: `--ww-text-color`, `--ww-font-family`, `--ww-theme-accent-1` and `-2`; width limit `--ww-widget-max` (2100px).
 
 ### Usage
 
@@ -49,6 +54,8 @@ npm install @webwriter/automaton
 | `AutomatonComponent.dataType` | `string` | - | `"application/json"` | ✗ |
 | `AutomatonComponent.options` | - | - | `options` | ✗ |
 | `AutomatonComponent.optionGroups` | - | - | `optionGroups` | ✗ |
+| `AutomatonComponent.convertFrom` | `object` | - | `{ ".jff": importJff }` | ✗ |
+| `AutomatonComponent.convertTo` | `object` | - | `{ ".jff": exportJff, "image/svg+xml": exportSvg, table: exportTable }` | ✗ |
 | `actions` | - | - | - | ✗ |
 | `mode` (`mode`) | `"edit" \| "simulate"` | The current mode. Can be `'edit'`, or `'simulate'`. | `"edit"` | ✓ |
 | `testLanguage` (`testLanguage`) | `string` | A regular expression to check the language of the automaton against. | `""` | ✓ |
@@ -66,6 +73,9 @@ npm install @webwriter/automaton
 | `startingStack` | `readonly string[]` | The authored PDA starting stack, ordered from bottom to top. | - | ✗ |
 | `type` | `AutomatonType` | The authored automaton type. | - | ✗ |
 | `forcedAlphabet` | `readonly string[]` | The explicitly configured alphabet from the JSON data block. | - | ✗ |
+| `forcedAlphabetInput` | - | - | - | ✗ |
+| `signals` | `object` | Published for other widgets. | `{ accepted: computed(() => this.#accepted.get()) }` | ✗ |
+| `settings` | `Settings` | - | - | ✗ |
 | `selectedPermissions` | - | - | - | ✗ |
 | `allowedTypeOptions` | - | - | - | ✗ |
 | `sinkStateEnabled` | - | - | - | ✗ |
@@ -74,7 +84,6 @@ npm install @webwriter/automaton
 | `formalDefinitionEnabled` | - | - | - | ✗ |
 | `transitionsTableEnabled` | - | - | - | ✗ |
 | `testWordsInput` | - | - | - | ✗ |
-| `forcedAlphabetInput` | - | - | - | ✗ |
 
 *Fields including [properties](https://developer.mozilla.org/en-US/docs/Glossary/Property/JavaScript) and [attributes](https://developer.mozilla.org/en-US/docs/Glossary/Attribute) define the current state of the widget and offer customization options.*
 
@@ -85,6 +94,14 @@ npm install @webwriter/automaton
 
 *[Events](https://developer.mozilla.org/en-US/docs/Web/Events) are dispatched by the widget after certain triggers.*
 
+## CSS parts
+| Name | Description |
+| :--: | :---------: |
+| canvas | The diagram surface. |
+| state | A state of the diagram. |
+
+*[CSS parts](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_shadow_parts) allow freely styling internals of the widget with CSS.*
+
 ## Editing config
 | Name | Value |
 | :--: | :---------: |
@@ -92,7 +109,7 @@ npm install @webwriter/automaton
 
 *The [editing config](https://webwriter.app/docs/packages/configuring/#editingconfig) defines how explorable authoring tools such as [WebWriter](https://webwriter.app) treat the widget.*
 
-*No public methods, slots, custom CSS properties, or CSS parts.*
+*No public methods, slots, or custom CSS properties.*
 
 
 ---

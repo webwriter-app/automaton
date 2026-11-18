@@ -391,6 +391,37 @@ describe("Diagram on Scene", function () {
 			equal([...widget.children].map(child => child.localName), ["script"], "only the data block is authored content");
 		});
 	});
+	describe("touch and theme", function () {
+		it("a state is dragged by a finger", async function () {
+			const { widget, root } = await mountDiagram({ editor: true });
+			const node = stateOf(root, 2);
+			const at = point(node);
+			const touch = (type: string, to: { clientX: number; clientY: number }) => node.dispatchEvent(new PointerEvent(type, {
+				...to, bubbles: true, composed: true, cancelable: true, isPrimary: true, pointerId: 11, pointerType: "touch", button: 0,
+			}));
+			touch("pointerdown", at);
+			touch("pointermove", shifted(at, 6, 6));
+			await frames(2);
+			touch("pointermove", shifted(at, 60, 30));
+			await frames(2);
+			touch("pointerup", shifted(at, 60, 30));
+			await settle(widget);
+			assert.notEqual(statesOf(widget).find(state => state.id === 2)!.x, 0, "q2 moved by touch");
+		});
+
+		it("text color, font and accent colors come from the page theme and fall back to today's look", async function () {
+			const { root, widget } = await mountDiagram({ editor: true, attributes: 'showhelp="false"' });
+			assert.equal(getComputedStyle(widget).color, "rgb(0, 0, 0)", "no theme: black");
+			const wrapper = widget.parentElement!;
+			wrapper.setAttribute("style", "--ww-text-color: rgb(10, 20, 30); --ww-font-family: Georgia, serif; --ww-theme-accent-1: rgb(1, 2, 3)");
+			await select(widget, root, 1);
+			assert.equal(getComputedStyle(widget).color, "rgb(10, 20, 30)");
+			assert.include(getComputedStyle(widget).fontFamily, "Georgia");
+			assert.equal(getComputedStyle(stateOf(root, 1).querySelector(".state__ring")!).borderTopColor, "rgb(1, 2, 3)", "selected state takes accent 1");
+			assert.equal(getComputedStyle(stateOf(root, 1).querySelector(".state__label")!).color, "rgb(10, 20, 30)", "state text takes the text color");
+			assert.equal(root.querySelector("ww-scene")!.getAttribute("part"), "canvas");
+		});
+	});
 });
 
 mocha.run();

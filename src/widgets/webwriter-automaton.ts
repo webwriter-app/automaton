@@ -6,7 +6,7 @@ import {
 	type TemplateResult,
 } from "lit";
 import { customElement, property, query, state } from "lit/decorators.js";
-import { LitElementWw } from "@webwriter/lit";
+import { computed, signal } from "@webwriter/lit";
 import { SceneController } from "@webwriter/lit/scene";
 import { Viewport } from "@webwriter/lit/viewport";
 import { Scene, sceneElements, webglAvailable } from "@webwriter/widget/scene";
@@ -37,7 +37,6 @@ import {
 	renderPrintMachine,
 	renderWarnings,
 } from "../components/automaton-panels";
-
 import { styleMap } from "lit/directives/style-map.js";
 
 import { guard } from "lit/directives/guard.js";
@@ -50,6 +49,8 @@ import { StackExtension } from "../components/automata/stack-extension";
 import { localizer } from "@webwriter/lit/localize";
 import { sourceLocale, targetLocales } from "../../localization/generated/locale-codes";
 import { ATTRIBUTE_CONVERTERS } from "../model/attribute-converters";
+import { AutomatonOptions } from "../components/automaton-options";
+import { exportJff, exportSvg, exportTable, importJff } from "../components/exports";
 
 const stringListProperty = {
 	type: Array,
@@ -62,11 +63,18 @@ const stringListProperty = {
 export type AutomatonType = "dfa" | "nfa" | "pda";
 
 /**
- * Represents an Automaton Component.
- * This component is responsible for rendering and managing the automaton editor and simulator.
+ * Automaton editor and simulator.
+ *
+ * Conversions: a JFLAP file (`.jff`, finite and pushdown automata) imports and exports; bends and loop angles are not part of that format and the test for an empty stack becomes an unconditional transition. The diagram exports as `image/svg+xml`, the transitions as a `table`.
+ *
+ * Signal `accepted`: a boolean that is true while the last simulation run accepted its word and false otherwise, also after a reset.
+ *
+ * Theme: `--ww-text-color`, `--ww-font-family`, `--ww-theme-accent-1` and `-2`; width limit `--ww-widget-max` (2100px).
+ * @part canvas - The diagram surface.
+ * @part state - A state of the diagram.
  */
 @customElement("webwriter-automaton")
-export class AutomatonComponent extends LitElementWw {
+export class AutomatonComponent extends AutomatonOptions {
 	static styles = styles;
 
 	static scopedElements = {
@@ -90,6 +98,9 @@ export class AutomatonComponent extends LitElementWw {
 
 	static options = options;
 	static optionGroups = optionGroups;
+
+	static convertFrom = { ".jff": importJff };
+	static convertTo = { ".jff": exportJff, "image/svg+xml": exportSvg, table: exportTable };
 
 	protected localize = localizer(this, {
 		sourceLocale,
@@ -174,66 +185,17 @@ export class AutomatonComponent extends LitElementWw {
 	/** The explicitly configured alphabet from the JSON data block. */
 	public get forcedAlphabet(): readonly string[] { return this._machine.requiredAlphabet; }
 
-	// The drawer's values differ from these settings' authored attribute formats.
-	/** @internal */
-	get selectedPermissions() { return this.settings.selectedPermissions; }
-	set selectedPermissions(value: string[] | null) { this.settings.selectedPermissions = value; }
-
-	/** @internal */
-	get allowedTypeOptions() { return this.allowedTypes; }
-	set allowedTypeOptions(value: string[] | null) {
-		this.writeSetting("allowedtypes", ATTRIBUTE_CONVERTERS.stringArray.toAttribute(value));
-	}
-
-	/** @internal */
-	get sinkStateEnabled() { return this.allowedTransformations.includes("sink"); }
-	set sinkStateEnabled(value: boolean | null) {
-		const transformations = this.allowedTransformations.filter(transformation => transformation !== "sink");
-		if (value === null && !transformations.length) {
-			this.removeAttribute("allowedtransformations");
-			return;
-		}
-		const enabled = value ?? true;
-		if (this.sinkStateEnabled === enabled) return;
-		if (enabled) transformations.push("sink");
-		this.writeSetting("allowedtransformations", ATTRIBUTE_CONVERTERS.stringArray.toAttribute(transformations));
-	}
-
-	/** @internal */
-	get allowedModeOptions() { return this.allowedModes; }
-	set allowedModeOptions(value: string[] | null) {
-		this.writeSetting("allowedmodes", ATTRIBUTE_CONVERTERS.stringArray.toAttribute(value));
-	}
-
-	/** @internal */
-	get helpEnabled() { return this.showHelp === "true"; }
-	set helpEnabled(value: boolean | null) { this.writeSetting("showhelp", value === null ? null : String(value)); }
-
-	/** @internal */
-	get formalDefinitionEnabled() { return this.showFormalDefinition === "true"; }
-	set formalDefinitionEnabled(value: boolean | null) { this.writeSetting("showformaldefinition", value === null ? null : String(value)); }
-
-	/** @internal */
-	get transitionsTableEnabled() { return this.showTransitionsTable === "true"; }
-	set transitionsTableEnabled(value: boolean | null) { this.writeSetting("showtransitionstable", value === null ? null : String(value)); }
-
-	/** @internal */
-	get testWordsInput() { return (this.testWords ?? []).join(","); }
-	set testWordsInput(value: string | null) {
-		this.writeSetting("testwords", value === null ? null : JSON.stringify(value ? value.split(",") : []));
-	}
-
-	private writeSetting(attribute: string, value: string | null) {
-		if (value === null) this.removeAttribute(attribute);
-		else this.setAttribute(attribute, value);
-	}
-
 	/** @internal */
 	get forcedAlphabetInput() { return (this.forcedAlphabet ?? []).join(","); }
 	set forcedAlphabetInput(value: string | null) {
 		const symbols = value?.split(",").filter(symbol => symbol.length === 1) ?? [];
 		if (this.canWriteMachine()) this.saveMachine({ ...this._machine, requiredAlphabet: [...new Set(symbols)] });
 	}
+
+	readonly #accepted = signal(false);
+
+	/** Published for other widgets. */
+	readonly signals = { accepted: computed(() => this.#accepted.get()) };
 
 	@query("#toolMenu") private accessor toolMenu!: ToolMenu;
 	@query("#simulatorMenu") private accessor simulatorMenu!: SimulatorMenu;
@@ -509,7 +471,12 @@ export class AutomatonComponent extends LitElementWw {
 	private saveMachine(machine: Machine) {
 		const text = writeMachine(machine);
 		if (text === writeMachine(this._machine)) return;
+		this.writeBlock(text);
+		this.machineText = text;
+		this._machine = machine;
+	}
 
+	private writeBlock(text: string) {
 		const existing = this.machineBlock;
 		const block = existing ?? this.ownerDocument.createElement("script");
 		if (!existing) {
@@ -518,8 +485,24 @@ export class AutomatonComponent extends LitElementWw {
 		}
 		block.textContent = text;
 		if (!existing) this.append(block);
-		this.machineText = text;
-		this._machine = machine;
+	}
+
+	/** The authored machine for an export, or `null` if the data is invalid or there is no state. @internal */
+	public machineForExport() {
+		this.syncMachine();
+		return this._invalidMachineData || !this._machine.nodes.length ? null : this._machine;
+	}
+
+	/** Replaces the authored machine and reloads the diagram. @internal */
+	public replaceMachine(machine: Machine) {
+		if (!this.isConnected) return;
+		this.writeBlock(writeMachine(machine));
+		this.#accepted.set(false);
+		this.syncMachine();
+	}
+
+	private setAccepted(event: CustomEvent<boolean>) {
+		this.#accepted.set(event.detail);
 	}
 
 	private saveStartingStack(event: Event) {
@@ -562,6 +545,7 @@ export class AutomatonComponent extends LitElementWw {
 						></webwriter-automaton-toolmenu>
 						<webwriter-automaton-simulatormenu
 							id="simulatorMenu"
+								@simulation-result=${this.setAccepted}
 							?hidden=${this.mode !== "simulate" || this._invalidMachineData || this._graph?.errors.length !== 0}
 						></webwriter-automaton-simulatormenu>
 					</div>

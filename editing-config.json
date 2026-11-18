@@ -407,7 +407,14 @@
       "af-ZA": "Outomaat",
       "af-NA": "Outomaat"
     },
-    "warningIgnorePattern": "development"
+    "warningIgnorePattern": "development",
+    "importFormats": [
+      ".jff"
+    ],
+    "exportFormats": [
+      ".jff",
+      "image/svg+xml"
+    ]
   },
   "./snippets/dfa-simple": {
     "label": {

@@ -1,4 +1,4 @@
-import { TemplateResult, html } from 'lit';
+import { PropertyValues, TemplateResult, html } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 
 import '@shoelace-style/shoelace/dist/themes/light.css';
@@ -65,6 +65,13 @@ export class SimulatorMenu extends LitElementWw {
 
     @state()
     private accessor _animationRunning: boolean = false;
+
+    protected updated(changed: PropertyValues) {
+        super.updated(changed);
+        if (changed.has('_result')) {
+            this.dispatchEvent(new CustomEvent('simulation-result', { detail: this._result?.status === SimulationStatus.ACCEPTED }));
+        }
+    }
 
     public static get styles() {
         return simulationMenuStyles;

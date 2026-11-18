@@ -7,16 +7,20 @@ const baseStyles = css`
         display: block;
         box-sizing: border-box;
         min-width: 300px;
+        max-width: var(--ww-widget-max, 2100px);
         height: 500px;
         min-height: 300px;
         max-height: 1200px;
 
+        color: var(--ww-text-color, inherit);
+        font-family: var(--ww-font-family, inherit);
         user-select: none;
     }
 
     :host(:fullscreen) {
         width: 100%;
         height: 100%;
+        max-width: none;
         min-width: 0;
         min-height: 0;
         max-height: none;
@@ -29,7 +33,7 @@ const baseStyles = css`
     #graphCanvas {
         height: 100%;
         width: 100%;
-        color: black;
+        color: var(--ww-text-color, black);
         outline: 1px solid lightgray;
         outline-offset: -1px;
         user-select: none;
@@ -48,28 +52,28 @@ const baseStyles = css`
     }
 
     ww-path {
-        stroke: black;
+        stroke: var(--ww-text-color, black);
         stroke-width: 1px;
     }
 
     ww-path:state(hover),
     ww-path[selected] {
-        stroke: var(--sl-color-primary-600);
+        stroke: var(--ww-theme-accent-1, var(--sl-color-primary-600));
     }
 
     ww-path.active {
-        stroke: #075985;
+        stroke: var(--ww-theme-accent-2, #075985);
         stroke-width: 2px;
     }
 
     ww-path.planned {
-        stroke: var(--sl-color-primary-600);
+        stroke: var(--ww-theme-accent-1, var(--sl-color-primary-600));
         stroke-dasharray: 4 3;
     }
 
     ww-text.label {
-        fill: #222;
-        font: 12px Arial, sans-serif;
+        fill: var(--ww-text-color, #222);
+        font: 12px var(--ww-font-family, Arial, sans-serif);
         white-space: pre-line;
         background-color: white;
         padding: 0 2px;
@@ -77,15 +81,15 @@ const baseStyles = css`
 
     ww-node.state {
         box-sizing: border-box;
-        font: 12px Arial, sans-serif;
-        color: black;
+        font: 12px var(--ww-font-family, Arial, sans-serif);
+        color: var(--ww-text-color, black);
     }
 
     .state__ring {
         position: absolute;
         inset: 0;
         box-sizing: border-box;
-        border: 1px solid black;
+        border: 1px solid var(--ww-text-color, black);
         border-radius: 50%;
         background: white;
     }
@@ -94,7 +98,7 @@ const baseStyles = css`
         content: "";
         position: absolute;
         inset: 4px;
-        border: 1px solid black;
+        border: 1px solid var(--ww-text-color, black);
         border-radius: 50%;
     }
 
@@ -110,12 +114,12 @@ const baseStyles = css`
     ww-node.state:hover .state__ring,
     ww-node.state.active .state__ring {
         background: #e0f2fe;
-        border-color: #075985;
+        border-color: var(--ww-theme-accent-2, #075985);
     }
 
     ww-node.state[selected] .state__ring {
         background: #e0f2fe;
-        border-color: #0284c7;
+        border-color: var(--ww-theme-accent-1, #0284c7);
         border-width: 2px;
     }
 
@@ -142,7 +146,7 @@ const baseStyles = css`
 
     ww-node.state--preview .state__ring {
         background: #e0f2fe;
-        border-color: #075985;
+        border-color: var(--ww-theme-accent-2, #075985);
     }
 
     .state__target {
@@ -481,8 +485,8 @@ const baseStyles = css`
             display: block;
             margin: 0;
             break-inside: avoid;
-            color: #222;
-            font: 10pt/1.4 var(--sl-font-sans, sans-serif);
+            color: #000;
+            font: 10pt/1.4 var(--ww-font-family, var(--sl-font-sans, sans-serif));
         }
 
         .print-machine figcaption {

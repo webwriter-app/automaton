@@ -41,7 +41,7 @@ export function renderScene(graph: Graph) {
     const plan = graph.pending && graph.planTransition(graph.pending.from, graph.pending.to);
     const initial = graph.initialArrow;
 
-    return html`<ww-scene id="graphCanvas" contenteditable="false"
+    return html`<ww-scene id="graphCanvas" part="canvas" contenteditable="false"
         class=${classMap({ 'node-drop-preview': !!graph.dropPreview, 'scene--adding': graph.mode === 'addNode' })}
         select=${graph.multipleSelection ? 'multiple' : 'single'} move-step="10" connect-click
         data-ww-viewport="canvas" data-ww-viewport-zoom="0.5 5" data-ww-viewport-wheel="zoom" data-ww-viewport-resize="centre"
@@ -73,7 +73,7 @@ export function renderScene(graph: Graph) {
                 error: node.highlight !== 'active' && graph.hasError(node.id),
             });
             return html`
-                <ww-node class=${classes} data-ww-key=${key} outline="circle" x=${x - NODE_RADIUS} y=${y - NODE_RADIUS} width=${DIAMETER} height=${DIAMETER}
+                <ww-node class=${classes} part="state" data-ww-key=${key} outline="circle" x=${x - NODE_RADIUS} y=${y - NODE_RADIUS} width=${DIAMETER} height=${DIAMETER}
                     aria-label=${node.label} ?selectable=${editing} ?movable=${graph.canMoveNodes} ?selected=${selected}
                     @pointerenter=${() => graph.hoverNode(node.id)} @pointerleave=${() => graph.hoverNode()}>
                     <span class="state__ring"></span>

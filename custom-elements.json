@@ -8,8 +8,18 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Represents an Automaton Component.\nThis component is responsible for rendering and managing the automaton editor and simulator.",
+          "description": "Automaton editor and simulator.\n\nConversions: a JFLAP file (`.jff`, finite and pushdown automata) imports and exports; bends and loop angles are not part of that format and the test for an empty stack becomes an unconditional transition. The diagram exports as `image/svg+xml`, the transitions as a `table`.\n\nSignal `accepted`: a boolean that is true while the last simulation run accepted its word and false otherwise, also after a reset.\n\nTheme: `--ww-text-color`, `--ww-font-family`, `--ww-theme-accent-1` and `-2`; width limit `--ww-widget-max` (2100px).",
           "name": "AutomatonComponent",
+          "cssParts": [
+            {
+              "description": "The diagram surface.",
+              "name": "canvas"
+            },
+            {
+              "description": "A state of the diagram.",
+              "name": "state"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -41,6 +51,24 @@
               "name": "optionGroups",
               "static": true,
               "default": "optionGroups"
+            },
+            {
+              "kind": "field",
+              "name": "convertFrom",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ \".jff\": importJff }"
+            },
+            {
+              "kind": "field",
+              "name": "convertTo",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ \".jff\": exportJff, \"image/svg+xml\": exportSvg, table: exportTable }"
             },
             {
               "kind": "field",
@@ -87,7 +115,11 @@
               "default": "[]",
               "description": "Words used for automatically testing the automaton as a string separated by spaces.",
               "attribute": "testWords",
-              "reflects": true
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "AutomatonOptions",
+                "module": "src/components/automaton-options.ts"
+              }
             },
             {
               "kind": "field",
@@ -131,7 +163,11 @@
               "default": "\"true\"",
               "description": "If true, the widget displays automaton error messages.",
               "attribute": "showHelp",
-              "reflects": true
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "AutomatonOptions",
+                "module": "src/components/automaton-options.ts"
+              }
             },
             {
               "kind": "field",
@@ -143,7 +179,11 @@
               "default": "\"true\"",
               "description": "If true, the widget allows viewing the automaton's formal definition.",
               "attribute": "showFormalDefinition",
-              "reflects": true
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "AutomatonOptions",
+                "module": "src/components/automaton-options.ts"
+              }
             },
             {
               "kind": "field",
@@ -155,7 +195,11 @@
               "default": "\"true\"",
               "description": "If true, the widget allows viewing the automaton's transition table.",
               "attribute": "showTransitionsTable",
-              "reflects": true
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "AutomatonOptions",
+                "module": "src/components/automaton-options.ts"
+              }
             },
             {
               "kind": "field",
@@ -166,7 +210,11 @@
               "privacy": "public",
               "default": "[\"dfa\", \"nfa\", \"pda\"]",
               "description": "The types of automata that are allowed in the editor.",
-              "attribute": "allowedTypes"
+              "attribute": "allowedTypes",
+              "inheritedFrom": {
+                "name": "AutomatonOptions",
+                "module": "src/components/automaton-options.ts"
+              }
             },
             {
               "kind": "field",
@@ -177,7 +225,11 @@
               "privacy": "public",
               "default": "[\"edit\", \"simulate\"]",
               "description": "The modes that are allowed in the editor.",
-              "attribute": "allowedModes"
+              "attribute": "allowedModes",
+              "inheritedFrom": {
+                "name": "AutomatonOptions",
+                "module": "src/components/automaton-options.ts"
+              }
             },
             {
               "kind": "field",
@@ -188,7 +240,11 @@
               "privacy": "public",
               "default": "[\"sink\"]",
               "description": "The transformations that are allowed in the editor.",
-              "attribute": "allowedTransformations"
+              "attribute": "allowedTransformations",
+              "inheritedFrom": {
+                "name": "AutomatonOptions",
+                "module": "src/components/automaton-options.ts"
+              }
             },
             {
               "kind": "field",
@@ -242,58 +298,23 @@
             },
             {
               "kind": "field",
-              "name": "selectedPermissions"
-            },
-            {
-              "kind": "field",
-              "name": "allowedTypeOptions"
-            },
-            {
-              "kind": "field",
-              "name": "sinkStateEnabled"
-            },
-            {
-              "kind": "field",
-              "name": "allowedModeOptions"
-            },
-            {
-              "kind": "field",
-              "name": "helpEnabled"
-            },
-            {
-              "kind": "field",
-              "name": "formalDefinitionEnabled"
-            },
-            {
-              "kind": "field",
-              "name": "transitionsTableEnabled"
-            },
-            {
-              "kind": "field",
-              "name": "testWordsInput"
-            },
-            {
-              "kind": "method",
-              "name": "writeSetting",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "attribute",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "string | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
               "name": "forcedAlphabetInput"
+            },
+            {
+              "kind": "field",
+              "name": "#accepted",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "signals",
+              "type": {
+                "text": "object"
+              },
+              "readonly": true,
+              "default": "{ accepted: computed(() => this.#accepted.get()) }",
+              "description": "Published for other widgets."
             },
             {
               "kind": "field",
@@ -353,16 +374,6 @@
               },
               "privacy": "private",
               "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "scene",
-              "type": {
-                "text": "SceneController"
-              },
-              "privacy": "private",
-              "readonly": true,
-              "default": "new SceneController(this, { viewport: this.viewport.core, can: action => this._graph?.can(action) ?? false, })"
             },
             {
               "kind": "field",
@@ -515,6 +526,32 @@
             },
             {
               "kind": "method",
+              "name": "writeBlock",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "text",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setAccepted",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "CustomEvent<boolean>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "saveStartingStack",
               "privacy": "private",
               "parameters": [
@@ -530,6 +567,105 @@
               "kind": "method",
               "name": "helpArgs",
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "settings",
+              "type": {
+                "text": "Settings"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "AutomatonOptions",
+                "module": "src/components/automaton-options.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "selectedPermissions",
+              "inheritedFrom": {
+                "name": "AutomatonOptions",
+                "module": "src/components/automaton-options.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "allowedTypeOptions",
+              "inheritedFrom": {
+                "name": "AutomatonOptions",
+                "module": "src/components/automaton-options.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "sinkStateEnabled",
+              "inheritedFrom": {
+                "name": "AutomatonOptions",
+                "module": "src/components/automaton-options.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "allowedModeOptions",
+              "inheritedFrom": {
+                "name": "AutomatonOptions",
+                "module": "src/components/automaton-options.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "helpEnabled",
+              "inheritedFrom": {
+                "name": "AutomatonOptions",
+                "module": "src/components/automaton-options.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "formalDefinitionEnabled",
+              "inheritedFrom": {
+                "name": "AutomatonOptions",
+                "module": "src/components/automaton-options.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "transitionsTableEnabled",
+              "inheritedFrom": {
+                "name": "AutomatonOptions",
+                "module": "src/components/automaton-options.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "testWordsInput",
+              "inheritedFrom": {
+                "name": "AutomatonOptions",
+                "module": "src/components/automaton-options.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "writeSetting",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "attribute",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "AutomatonOptions",
+                "module": "src/components/automaton-options.ts"
+              }
             }
           ],
           "events": [
@@ -641,8 +777,8 @@
             }
           ],
           "superclass": {
-            "name": "LitElementWw",
-            "package": "@webwriter/lit"
+            "name": "AutomatonOptions",
+            "module": "/src/components/automaton-options"
           },
           "tagName": "webwriter-automaton",
           "customElement": true,
