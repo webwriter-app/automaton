@@ -1,25 +1,30 @@
-# Automaton (`@webwriter/automaton@4.0.0`)
-[License: MIT](LICENSE) | Version: 4.0.0
+# Automaton (`@webwriter/automaton@4.1.0`)
+[License: MIT](LICENSE) | Version: 4.1.0
 
-Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).
+Design, visualize, and test finite automata and pushdown automata.
 
 ## Snippets
 [Snippets](https://webwriter.app/docs/snippets/snippets/) are examples and templates using the package's widgets.
 
 | Name | Import Path |
 | :--: | :---------: |
-| DFA (simple) | `@webwriter/automaton/snippets/dfa-simple.html` |
-| DFA (complex) | `@webwriter/automaton/snippets/dfa-complex.html` |
-| NFA (simple) | `@webwriter/automaton/snippets/nfa-simple.html` |
-| NFA (complex) | `@webwriter/automaton/snippets/nfa-complex.html` |
-| PDA (simple) | `@webwriter/automaton/snippets/pda-simple.html` |
-| PDA (complex) | `@webwriter/automaton/snippets/pda-complex.html` |
+| Dfa Simple | `@webwriter/automaton/snippets/dfa-simple.html` |
+| Dfa Complex | `@webwriter/automaton/snippets/dfa-complex.html` |
+| Nfa Simple | `@webwriter/automaton/snippets/nfa-simple.html` |
+| Nfa Complex | `@webwriter/automaton/snippets/nfa-complex.html` |
+| Pda Simple | `@webwriter/automaton/snippets/pda-simple.html` |
+| Pda Complex | `@webwriter/automaton/snippets/pda-complex.html` |
 
 
 
 ## `AutomatonComponent` (`<webwriter-automaton>`)
-Represents an Automaton Component.
-This component is responsible for rendering and managing the automaton editor and simulator.
+Automaton editor and simulator.
+
+Conversions: a JFLAP file (`.jff`, finite and pushdown automata) imports and exports; bends and loop angles are not part of that format and the test for an empty stack becomes an unconditional transition. The diagram exports as `image/svg+xml`, the transitions as a `table`.
+
+Signal `accepted`: a boolean that is true while the last simulation run accepted its word and false otherwise, also after a reset.
+
+Theme: `--ww-text-color`, `--ww-font-family`, `--ww-theme-accent-1` and `-2`; width limit `--ww-widget-max` (2100px).
 
 ### Usage
 
@@ -42,47 +47,16 @@ npm install @webwriter/automaton
 <webwriter-automaton></webwriter-automaton>
 ```
 
-### Machine data
-
-Put the authored machine in a direct JSON data block.
-
-```html
-<webwriter-automaton>
-  <script type="application/json" slot="data">
-    {
-      "format": "webwriter-automaton",
-      "version": 1,
-      "type": "nfa",
-      "states": [
-        { "id": 0, "label": "q0", "x": 0, "y": 0, "initial": true },
-        { "id": 1, "label": "q1", "x": 180, "y": 0, "final": true }
-      ],
-      "transitions": [
-        { "id": 0, "from": 0, "to": 1, "rules": [{ "read": "" }, { "read": "a" }] }
-      ]
-    }
-  </script>
-</webwriter-automaton>
-```
-
-- `type` is `dfa`, `nfa`, or `pda`. An empty widget starts as a DFA.
-- State and transition IDs are unique non-negative integers within their respective lists. Transition endpoints refer to state IDs. State flags default to false.
-- Each transition describes one edge. Each rule has a `read` string, with `""` for ε. Optional `bend` is signed curvature. Optional `loopAngle` is measured clockwise from the top in degrees.
-- PDA rules can include `stack` with `op` set to `push`, `pop`, `empty`, or `none`, plus a `symbol` and `ifTop` condition where applicable. An omitted stack operation leaves the stack unchanged. Optional `startingStack` lists symbols from bottom to top. The live simulation stack stays in memory.
-- Optional `requiredAlphabet` lists the DFA's predefined input symbols.
-
-The JSON block is the authored machine saved with the document. Earlier graph attributes are ignored.
-
-### Printing
-
-Print the document from WebWriter or the browser to get a fitted state diagram and, for a PDA, its authored starting stack.
-
-## Settings
-
-Omitted settings use the defaults below. Removing an attribute restores its default. An empty allowed list is an explicit override.
-
+## Fields
 | Name (Attribute Name) | Type | Description | Default | Reflects |
 | :-------------------: | :--: | :---------: | :-----: | :------: |
+| `AutomatonComponent.scopedElements` | `object` | - | `{ ...shoelaceElements, ...sceneElements, // Where the browser has no WebGL the same diagram is drawn with SVG. "ww-scene": webglAvailable() ? PixiScene : Scene, "webwriter-automaton-toolmenu": ToolMenu, "webwriter-automaton-simulatormenu": SimulatorMenu, "webwriter-automaton-topmenu": TopMenu, "stack-extension": StackExtension, }` | ✗ |
+| `AutomatonComponent.dataType` | `string` | - | `"application/json"` | ✗ |
+| `AutomatonComponent.options` | - | - | `options` | ✗ |
+| `AutomatonComponent.optionGroups` | - | - | `optionGroups` | ✗ |
+| `AutomatonComponent.convertFrom` | `object` | - | `{ ".jff": importJff }` | ✗ |
+| `AutomatonComponent.convertTo` | `object` | - | `{ ".jff": exportJff, "image/svg+xml": exportSvg, table: exportTable }` | ✗ |
+| `actions` | - | - | - | ✗ |
 | `mode` (`mode`) | `"edit" \| "simulate"` | The current mode. Can be `'edit'`, or `'simulate'`. | `"edit"` | ✓ |
 | `testLanguage` (`testLanguage`) | `string` | A regular expression to check the language of the automaton against. | `""` | ✓ |
 | `testWords` (`testWords`) | `string[]` | Words used for automatically testing the automaton as a string separated by spaces. | `[]` | ✓ |
@@ -91,11 +65,42 @@ Omitted settings use the defaults below. Removing an attribute restores its defa
 | `showHelp` (`showHelp`) | `string` | If true, the widget displays automaton error messages. | `"true"` | ✓ |
 | `showFormalDefinition` (`showFormalDefinition`) | `string` | If true, the widget allows viewing the automaton's formal definition. | `"true"` | ✓ |
 | `showTransitionsTable` (`showTransitionsTable`) | `string` | If true, the widget allows viewing the automaton's transition table. | `"true"` | ✓ |
-| `allowedTypes` (`allowedTypes`) | `string[]` | The types of automata that are allowed in the editor. | `["dfa", "nfa", "pda"]` | ✓ |
-| `allowedModes` (`allowedModes`) | `string[]` | The modes that are allowed in the editor. | `["edit", "simulate"]` | ✓ |
-| `allowedTransformations` (`allowedTransformations`) | `string[]` | The transformations that are allowed in the editor. | `["sink"]` | ✓ |
+| `allowedTypes` (`allowedTypes`) | `string[]` | The types of automata that are allowed in the editor. | `["dfa", "nfa", "pda"]` | ✗ |
+| `allowedModes` (`allowedModes`) | `string[]` | The modes that are allowed in the editor. | `["edit", "simulate"]` | ✗ |
+| `allowedTransformations` (`allowedTransformations`) | `string[]` | The transformations that are allowed in the editor. | `["sink"]` | ✗ |
+| `nodes` | `readonly Node[]` | The authored states from the JSON data block. | - | ✗ |
+| `transitions` | `readonly Transition[]` | The authored transitions from the JSON data block. | - | ✗ |
+| `startingStack` | `readonly string[]` | The authored PDA starting stack, ordered from bottom to top. | - | ✗ |
+| `type` | `AutomatonType` | The authored automaton type. | - | ✗ |
+| `forcedAlphabet` | `readonly string[]` | The explicitly configured alphabet from the JSON data block. | - | ✗ |
+| `forcedAlphabetInput` | - | - | - | ✗ |
+| `signals` | `object` | Published for other widgets. | `{ accepted: computed(() => this.#accepted.get()) }` | ✗ |
+| `settings` | `Settings` | - | - | ✗ |
+| `selectedPermissions` | - | - | - | ✗ |
+| `allowedTypeOptions` | - | - | - | ✗ |
+| `sinkStateEnabled` | - | - | - | ✗ |
+| `allowedModeOptions` | - | - | - | ✗ |
+| `helpEnabled` | - | - | - | ✗ |
+| `formalDefinitionEnabled` | - | - | - | ✗ |
+| `transitionsTableEnabled` | - | - | - | ✗ |
+| `testWordsInput` | - | - | - | ✗ |
 
 *Fields including [properties](https://developer.mozilla.org/en-US/docs/Glossary/Property/JavaScript) and [attributes](https://developer.mozilla.org/en-US/docs/Glossary/Attribute) define the current state of the widget and offer customization options.*
+
+## Events
+| Name | Description |
+| :--: | :---------: |
+| optionschange | - |
+
+*[Events](https://developer.mozilla.org/en-US/docs/Web/Events) are dispatched by the widget after certain triggers.*
+
+## CSS parts
+| Name | Description |
+| :--: | :---------: |
+| canvas | The diagram surface. |
+| state | A state of the diagram. |
+
+*[CSS parts](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_shadow_parts) allow freely styling internals of the widget with CSS.*
 
 ## Editing config
 | Name | Value |
@@ -104,8 +109,8 @@ Omitted settings use the defaults below. Removing an attribute restores its defa
 
 *The [editing config](https://webwriter.app/docs/packages/configuring/#editingconfig) defines how explorable authoring tools such as [WebWriter](https://webwriter.app) treat the widget.*
 
-*No public methods, slots, events, custom CSS properties, or CSS parts.*
+*No public methods, slots, or custom CSS properties.*
 
 
 ---
-*Generated with @webwriter/build@1.9.0*
+*Generated with @webwriter/build@1.15.0*

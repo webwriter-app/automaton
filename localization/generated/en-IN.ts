@@ -138,4 +138,11 @@
 'sfb68cae41d749423': `Initial`,
 'sfc513553a0d4ed1c': `Remove stack item`,
 'sfe31787cc1b7e04e': `The DFA already has a transition for every symbol at each state.`,
+'se4c06056144c9044': `This is not a JFLAP file.`,
+'sb96a5d63b20eb653': `Only JFLAP finite automata and pushdown automata can be imported.`,
+'s712930d1235f18b5': `The JFLAP file is incomplete or uses a feature the automaton cannot represent.`,
+'se06ad3e4a4e4639d': `This automaton type is not allowed in this widget.`,
+'sa6ab5184d6315895': `From`,
+'s740d542bbe696de5': `Read`,
+'s09353907b5c79284': `To`,
     };

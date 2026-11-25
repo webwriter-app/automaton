@@ -21,49 +21,13 @@
         <source>Unknown error</source>
         <target>Nezināma kļūda</target>
       </trans-unit>
-      <trans-unit id="s1b00cf75d5f4f616">
-        <source>Choose a move:</source>
-        <target>Izvēlieties kustību:</target>
-      </trans-unit>
-      <trans-unit id="s6c80030e2762459d">
-        <source>push</source>
-        <target>push</target>
-      </trans-unit>
-      <trans-unit id="s779b5819564f2f50">
-        <source>pop</source>
-        <target>pop</target>
-      </trans-unit>
-      <trans-unit id="s904fefb3d01cb2ae">
-        <source>empty</source>
-        <target>tukšs</target>
-      </trans-unit>
-      <trans-unit id="s3c0d17bad169557b">
-        <source>none</source>
-        <target>nav</target>
-      </trans-unit>
       <trans-unit id="sae4f7c13b7ec18ff">
         <source>Stack</source>
         <target>Steks</target>
       </trans-unit>
-      <trans-unit id="s42b6431842b835b3">
-        <source>Language:</source>
-        <target>Valoda:</target>
-      </trans-unit>
-      <trans-unit id="sa4088b649da557a5">
-        <source>Check Automaton</source>
-        <target>Pārbaudes automāts</target>
-      </trans-unit>
       <trans-unit id="sea4f20ea1ece70a0">
         <source>Definition</source>
         <target>Definīcija</target>
-      </trans-unit>
-      <trans-unit id="s337a1e9022a8d19f">
-        <source>Table</source>
-        <target>Tabula</target>
-      </trans-unit>
-      <trans-unit id="sb80ac0a010cbc647">
-        <source>Automaton Type</source>
-        <target>Automāta tips</target>
       </trans-unit>
       <trans-unit id="se033711991bc46ea">
         <source>DFA</source>
@@ -76,93 +40,6 @@
       <trans-unit id="s8d5ca919f3cad950">
         <source>PDA</source>
         <target>PDA</target>
-      </trans-unit>
-      <trans-unit id="h56d667fd1fb9d47d">
-        <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</source>
-        <target>Lūdzu, salabojiet šādu 
-          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>kļūdas
-          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> lai palaistu simulāciju:
-        </target>
-      </trans-unit>
-      <trans-unit id="h6c2fe3d409d7ba36">
-        <source>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</source>
-        <target>Nav atrasts derīgs ceļš. Automāts 
-          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>noraida
-          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> vārdu 
-          <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.
-        </target>
-      </trans-unit>
-      <trans-unit id="h25e62c96f8182fcc">
-        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
-        <target>
-          <x id="0" equiv-text="&lt;span&gt;"/>Automāts 
-          <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>pieņem
-          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> vārdu 
-          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
-          <x id="4" equiv-text="&lt;/span&gt;"/>
-        </target>
-      </trans-unit>
-      <trans-unit id="h28031e78bb7297a9">
-        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
-        <target>
-          <x id="0" equiv-text="&lt;span&gt;"/>Automāts 
-          <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>noraida
-          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> vārdu 
-          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
-          <x id="4" equiv-text="&lt;/span&gt;"/>
-        </target>
-      </trans-unit>
-      <trans-unit id="s4f6476c3d1856c19">
-        <source>No further moves possible. Try a different path.</source>
-        <target>Turpmākie soļi nav iespējami. Izmēģiniet citu ceļu.</target>
-      </trans-unit>
-      <trans-unit id="sed72ab193dd16a0a">
-        <source>Simulation paused.</source>
-        <target>Simulācija apstājās.</target>
-      </trans-unit>
-      <trans-unit id="saad05eab0e59411c">
-        <source>Input Word e.g. aaabbb, step;step;stop</source>
-        <target>Ievads Vārds, piemēram, aaabbb, solis;solis;apstāties</target>
-      </trans-unit>
-      <trans-unit id="s956c5a9fb7ee0b23">
-        <source>Manual</source>
-        <target>Rokasgrāmata</target>
-      </trans-unit>
-      <trans-unit id="s61f0ff0bab2b8310">
-        <source>Animate</source>
-        <target>Animēt</target>
-      </trans-unit>
-      <trans-unit id="s36494e700fe1e5c6">
-        <source>Step by Step</source>
-        <target>Soli pa solim</target>
-      </trans-unit>
-      <trans-unit id="s42cbd8dca939a9c7">
-        <source>Check</source>
-        <target>Pārbaudiet</target>
-      </trans-unit>
-      <trans-unit id="sc16e00a7a8b2fde2">
-        <source>Back</source>
-        <target>Atpakaļ</target>
-      </trans-unit>
-      <trans-unit id="s0fbf6dc6a1966408">
-        <source>Next</source>
-        <target>Nākamais</target>
-      </trans-unit>
-      <trans-unit id="s255857544a9d5ec0">
-        <source>Reset</source>
-        <target>Atiestatīt</target>
-      </trans-unit>
-      <trans-unit id="s061cc20e3432dead">
-        <source>Pause</source>
-        <target>Pauze</target>
-      </trans-unit>
-      <trans-unit id="scd105819b5a10243">
-        <source>Play</source>
-        <target>Spēlēt</target>
-      </trans-unit>
-      <trans-unit id="sd9ad53251f2330a5">
-        <source>Stop</source>
-        <target>Pārtraukt</target>
       </trans-unit>
       <trans-unit id="s05c44a5db696fcaf">
         <source>Editing</source>
@@ -179,14 +56,6 @@
       <trans-unit id="s2f64461723d3df5d">
         <source>Change</source>
         <target>Mainīt</target>
-      </trans-unit>
-      <trans-unit id="s66bd1cc6d2f6b68d">
-        <source>Node</source>
-        <target>Mezgls</target>
-      </trans-unit>
-      <trans-unit id="s6503256c2de2745c">
-        <source>Edge</source>
-        <target>Edge</target>
       </trans-unit>
       <trans-unit id="s860b83fc8a41ca5c">
         <source>Automaton Types</source>
@@ -268,30 +137,6 @@
         <source>Simulate</source>
         <target>Simulēt</target>
       </trans-unit>
-      <trans-unit id="s5590dbf7e425789d">
-        <source>Label</source>
-        <target>Etiķete</target>
-      </trans-unit>
-      <trans-unit id="sfb68cae41d749423">
-        <source>Initial</source>
-        <target>Sākotnējais</target>
-      </trans-unit>
-      <trans-unit id="s8f1034e1a9d93097">
-        <source>Final</source>
-        <target>Galīgais</target>
-      </trans-unit>
-      <trans-unit id="sd083d3aa96af5af1">
-        <source>Symbol</source>
-        <target>Simbols</target>
-      </trans-unit>
-      <trans-unit id="s09243007b5b91006">
-        <source>If</source>
-        <target>Ja</target>
-      </trans-unit>
-      <trans-unit id="s3de7bee91528e5cc">
-        <source>Stack Actions</source>
-        <target>Kaudzes darbības</target>
-      </trans-unit>
       <trans-unit id="s970d041a28d1067d">
         <source>Push</source>
         <target>Push</target>
@@ -307,18 +152,6 @@
       <trans-unit id="sd60a7dde73859828">
         <source>Keep</source>
         <target>Saglabājiet</target>
-      </trans-unit>
-      <trans-unit id="sba6693303903d6b8">
-        <source>Add symbol</source>
-        <target>Pievienot simbolu</target>
-      </trans-unit>
-      <trans-unit id="sc1611c0558728a2a">
-        <source>Position</source>
-        <target>Pozīcija</target>
-      </trans-unit>
-      <trans-unit id="sa0a141a796a5b36a">
-        <source>Bend</source>
-        <target>Bend</target>
       </trans-unit>
       <trans-unit id="s261af1b4598fef3f">
         <source>Allowed modes</source>
@@ -344,6 +177,233 @@
   <source>Remove stack items with ×</source>
   <target>Noņemiet steka elementus ar ×</target>
 </trans-unit>
+<trans-unit id="s8a0ee3d87938f19a">
+  <source>Nodes</source>
+  <target>Mezgli</target>
+</trans-unit>
+<trans-unit id="se8dca0132c66ae03">
+  <source>Permissions</source>
+  <target>Atļaujas</target>
+</trans-unit>
+<trans-unit id="s699faf39e76b0a5c">
+  <source>Enable sink state</source>
+  <target>Iespējot slazda stāvokli</target>
+</trans-unit>
+<trans-unit id="s7815e752b14f6f96">
+  <source>Add sink state</source>
+  <target>Pievienot slazda stāvokli</target>
+</trans-unit>
+<trans-unit id="se5113f4874d8494d">
+  <source>Starting stack</source>
+  <target>Sākuma steks</target>
+</trans-unit>
+<trans-unit id="s5798e7f4322a6963">
+  <source>Transitions</source>
+  <target>Pārejas</target>
+</trans-unit>
+<trans-unit id="sdb05063db77404d8">
+  <source>The automaton data block is invalid or uses an unsupported format.</source>
+  <target>Automāta datu bloks nav derīgs vai izmanto neatbalstītu formātu.</target>
+</trans-unit>
+<trans-unit id="s93ef8405b9b83023">
+  <source>State diagram</source>
+  <target>Stāvokļu diagramma</target>
+</trans-unit>
+<trans-unit id="s3a2084e9089a7fca">
+  <source>No states yet</source>
+  <target>Vēl nav stāvokļu</target>
+</trans-unit>
+<trans-unit id="s521208df9ea3e694">
+  <source>Click or drag + to add a node</source>
+  <target>Noklikšķiniet uz + vai velciet to, lai pievienotu mezglu</target>
+</trans-unit>
+<trans-unit id="sc0bffa27613488fe">
+  <source>Select a node or transition to edit it</source>
+  <target>Atlasiet mezglu vai pāreju, ko rediģēt</target>
+</trans-unit>
+<trans-unit id="s8a7f6fa052132a14">
+  <source>Warnings</source>
+  <target>Brīdinājumi</target>
+</trans-unit>
+<trans-unit id="se4c06056144c9044">
+  <source>This is not a JFLAP file.</source>
+  <target>Šis nav JFLAP fails.</target>
+</trans-unit>
+<trans-unit id="sb96a5d63b20eb653">
+  <source>Only JFLAP finite automata and pushdown automata can be imported.</source>
+  <target>Var importēt tikai JFLAP galīgus automātus un steka automātus.</target>
+</trans-unit>
+<trans-unit id="s712930d1235f18b5">
+  <source>The JFLAP file is incomplete or uses a feature the automaton cannot represent.</source>
+  <target>JFLAP fails ir nepilnīgs vai izmanto iespēju, ko automāts nevar attēlot.</target>
+</trans-unit>
+    <trans-unit id="s1b00cf75d5f4f616">
+        <source>Choose a move:</source>
+        <target>Izvēlieties kustību:</target>
+      </trans-unit>
+<trans-unit id="s6c80030e2762459d">
+        <source>push</source>
+        <target>push</target>
+      </trans-unit>
+<trans-unit id="s779b5819564f2f50">
+        <source>pop</source>
+        <target>pop</target>
+      </trans-unit>
+<trans-unit id="s904fefb3d01cb2ae">
+        <source>empty</source>
+        <target>tukšs</target>
+      </trans-unit>
+<trans-unit id="s3c0d17bad169557b">
+        <source>none</source>
+        <target>nav</target>
+      </trans-unit>
+<trans-unit id="s42b6431842b835b3">
+        <source>Language:</source>
+        <target>Valoda:</target>
+      </trans-unit>
+<trans-unit id="sa4088b649da557a5">
+        <source>Check Automaton</source>
+        <target>Pārbaudes automāts</target>
+      </trans-unit>
+<trans-unit id="s337a1e9022a8d19f">
+        <source>Table</source>
+        <target>Tabula</target>
+      </trans-unit>
+<trans-unit id="sb80ac0a010cbc647">
+        <source>Automaton Type</source>
+        <target>Automāta tips</target>
+      </trans-unit>
+<trans-unit id="h56d667fd1fb9d47d">
+        <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</source>
+        <target>Lūdzu, salabojiet šādu 
+          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>kļūdas
+          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> lai palaistu simulāciju:
+        </target>
+      </trans-unit>
+<trans-unit id="h6c2fe3d409d7ba36">
+        <source>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</source>
+        <target>Nav atrasts derīgs ceļš. Automāts 
+          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>noraida
+          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> vārdu 
+          <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.
+        </target>
+      </trans-unit>
+<trans-unit id="h25e62c96f8182fcc">
+        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+        <target>
+          <x id="0" equiv-text="&lt;span&gt;"/>Automāts 
+          <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>pieņem
+          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> vārdu 
+          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
+          <x id="4" equiv-text="&lt;/span&gt;"/>
+        </target>
+      </trans-unit>
+<trans-unit id="h28031e78bb7297a9">
+        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+        <target>
+          <x id="0" equiv-text="&lt;span&gt;"/>Automāts 
+          <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>noraida
+          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> vārdu 
+          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
+          <x id="4" equiv-text="&lt;/span&gt;"/>
+        </target>
+      </trans-unit>
+<trans-unit id="s4f6476c3d1856c19">
+        <source>No further moves possible. Try a different path.</source>
+        <target>Turpmākie soļi nav iespējami. Izmēģiniet citu ceļu.</target>
+      </trans-unit>
+<trans-unit id="sed72ab193dd16a0a">
+        <source>Simulation paused.</source>
+        <target>Simulācija apstājās.</target>
+      </trans-unit>
+<trans-unit id="saad05eab0e59411c">
+        <source>Input Word e.g. aaabbb, step;step;stop</source>
+        <target>Ievads Vārds, piemēram, aaabbb, solis;solis;apstāties</target>
+      </trans-unit>
+<trans-unit id="s956c5a9fb7ee0b23">
+        <source>Manual</source>
+        <target>Rokasgrāmata</target>
+      </trans-unit>
+<trans-unit id="s61f0ff0bab2b8310">
+        <source>Animate</source>
+        <target>Animēt</target>
+      </trans-unit>
+<trans-unit id="s36494e700fe1e5c6">
+        <source>Step by Step</source>
+        <target>Soli pa solim</target>
+      </trans-unit>
+<trans-unit id="s42cbd8dca939a9c7">
+        <source>Check</source>
+        <target>Pārbaudiet</target>
+      </trans-unit>
+<trans-unit id="sc16e00a7a8b2fde2">
+        <source>Back</source>
+        <target>Atpakaļ</target>
+      </trans-unit>
+<trans-unit id="s0fbf6dc6a1966408">
+        <source>Next</source>
+        <target>Nākamais</target>
+      </trans-unit>
+<trans-unit id="s255857544a9d5ec0">
+        <source>Reset</source>
+        <target>Atiestatīt</target>
+      </trans-unit>
+<trans-unit id="s061cc20e3432dead">
+        <source>Pause</source>
+        <target>Pauze</target>
+      </trans-unit>
+<trans-unit id="scd105819b5a10243">
+        <source>Play</source>
+        <target>Spēlēt</target>
+      </trans-unit>
+<trans-unit id="sd9ad53251f2330a5">
+        <source>Stop</source>
+        <target>Pārtraukt</target>
+      </trans-unit>
+<trans-unit id="s66bd1cc6d2f6b68d">
+        <source>Node</source>
+        <target>Mezgls</target>
+      </trans-unit>
+<trans-unit id="s6503256c2de2745c">
+        <source>Edge</source>
+        <target>Edge</target>
+      </trans-unit>
+<trans-unit id="s5590dbf7e425789d">
+        <source>Label</source>
+        <target>Etiķete</target>
+      </trans-unit>
+<trans-unit id="sfb68cae41d749423">
+        <source>Initial</source>
+        <target>Sākotnējais</target>
+      </trans-unit>
+<trans-unit id="s8f1034e1a9d93097">
+        <source>Final</source>
+        <target>Galīgais</target>
+      </trans-unit>
+<trans-unit id="sd083d3aa96af5af1">
+        <source>Symbol</source>
+        <target>Simbols</target>
+      </trans-unit>
+<trans-unit id="s09243007b5b91006">
+        <source>If</source>
+        <target>Ja</target>
+      </trans-unit>
+<trans-unit id="s3de7bee91528e5cc">
+        <source>Stack Actions</source>
+        <target>Kaudzes darbības</target>
+      </trans-unit>
+<trans-unit id="sba6693303903d6b8">
+        <source>Add symbol</source>
+        <target>Pievienot simbolu</target>
+      </trans-unit>
+<trans-unit id="sc1611c0558728a2a">
+        <source>Position</source>
+        <target>Pozīcija</target>
+      </trans-unit>
+<trans-unit id="sa0a141a796a5b36a">
+        <source>Bend</source>
+        <target>Bend</target>
+      </trans-unit>
 <trans-unit id="sfc513553a0d4ed1c">
   <source>Remove stack item</source>
   <target>Noņemt elementu no steka</target>
@@ -408,25 +468,9 @@
   <source>Switch to PDA</source>
   <target>Pārslēgties uz PDA</target>
 </trans-unit>
-<trans-unit id="s8a0ee3d87938f19a">
-  <source>Nodes</source>
-  <target>Mezgli</target>
-</trans-unit>
-<trans-unit id="se8dca0132c66ae03">
-  <source>Permissions</source>
-  <target>Atļaujas</target>
-</trans-unit>
-<trans-unit id="s699faf39e76b0a5c">
-  <source>Enable sink state</source>
-  <target>Iespējot slazda stāvokli</target>
-</trans-unit>
 <trans-unit id="se63c78875f5b2178">
   <source>Add node</source>
   <target>Pievienot mezglu</target>
-</trans-unit>
-<trans-unit id="s7815e752b14f6f96">
-  <source>Add sink state</source>
-  <target>Pievienot slazda stāvokli</target>
 </trans-unit>
 <trans-unit id="s59329d2125467032">
   <source>Automaton definition</source>
@@ -455,14 +499,6 @@
 <trans-unit id="sb3fa6348186c2022">
   <source>Stack alphabet</source>
   <target>Steka alfabēts</target>
-</trans-unit>
-<trans-unit id="se5113f4874d8494d">
-  <source>Starting stack</source>
-  <target>Sākuma steks</target>
-</trans-unit>
-<trans-unit id="s5798e7f4322a6963">
-  <source>Transitions</source>
-  <target>Pārejas</target>
 </trans-unit>
 <trans-unit id="sd07c6d5726032834">
   <source>No transitions yet</source>
@@ -516,30 +552,22 @@
   <source>Double click / long tap to add a node</source>
   <target>Veiciet dubultklikšķi vai turiet nospiestu, lai pievienotu mezglu</target>
 </trans-unit>
-<trans-unit id="sdb05063db77404d8">
-  <source>The automaton data block is invalid or uses an unsupported format.</source>
-  <target>Automāta datu bloks nav derīgs vai izmanto neatbalstītu formātu.</target>
+<trans-unit id="s740d542bbe696de5">
+  <source>Read</source>
+  <target>Lasīt</target>
 </trans-unit>
-<trans-unit id="s93ef8405b9b83023">
-  <source>State diagram</source>
-  <target>Stāvokļu diagramma</target>
+<trans-unit id="sa6ab5184d6315895">
+  <source>From</source>
+  <target>No</target>
 </trans-unit>
-<trans-unit id="s3a2084e9089a7fca">
-  <source>No states yet</source>
-  <target>Vēl nav stāvokļu</target>
+<trans-unit id="s09353907b5c79284">
+  <source>To</source>
+  <target>Uz</target>
 </trans-unit>
-<trans-unit id="s521208df9ea3e694">
-  <source>Click or drag + to add a node</source>
-  <target>Noklikšķiniet uz + vai velciet to, lai pievienotu mezglu</target>
+<trans-unit id="se06ad3e4a4e4639d">
+  <source>This automaton type is not allowed in this widget.</source>
+  <target>Šis automāta veids logrīkā nav atļauts.</target>
 </trans-unit>
-<trans-unit id="sc0bffa27613488fe">
-  <source>Select a node or transition to edit it</source>
-  <target>Atlasiet mezglu vai pāreju, ko rediģēt</target>
-</trans-unit>
-<trans-unit id="s8a7f6fa052132a14">
-  <source>Warnings</source>
-  <target>Brīdinājumi</target>
-</trans-unit>
-    </body>
+</body>
   </file>
 </xliff>
