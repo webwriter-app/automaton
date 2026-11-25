@@ -21,49 +21,13 @@
         <source>Unknown error</source>
         <target>未知錯誤</target>
       </trans-unit>
-      <trans-unit id="s1b00cf75d5f4f616">
-        <source>Choose a move:</source>
-        <target>選擇移動：</target>
-      </trans-unit>
-      <trans-unit id="s6c80030e2762459d">
-        <source>push</source>
-        <target>推入</target>
-      </trans-unit>
-      <trans-unit id="s779b5819564f2f50">
-        <source>pop</source>
-        <target>彈出</target>
-      </trans-unit>
-      <trans-unit id="s904fefb3d01cb2ae">
-        <source>empty</source>
-        <target>空的</target>
-      </trans-unit>
-      <trans-unit id="s3c0d17bad169557b">
-        <source>none</source>
-        <target>無</target>
-      </trans-unit>
       <trans-unit id="sae4f7c13b7ec18ff">
         <source>Stack</source>
         <target>堆疊</target>
       </trans-unit>
-      <trans-unit id="s42b6431842b835b3">
-        <source>Language:</source>
-        <target>語言：</target>
-      </trans-unit>
-      <trans-unit id="sa4088b649da557a5">
-        <source>Check Automaton</source>
-        <target>自動檢查</target>
-      </trans-unit>
       <trans-unit id="sea4f20ea1ece70a0">
         <source>Definition</source>
         <target>定義</target>
-      </trans-unit>
-      <trans-unit id="s337a1e9022a8d19f">
-        <source>Table</source>
-        <target>表格</target>
-      </trans-unit>
-      <trans-unit id="sb80ac0a010cbc647">
-        <source>Automaton Type</source>
-        <target>自動化類型</target>
       </trans-unit>
       <trans-unit id="se033711991bc46ea">
         <source>DFA</source>
@@ -76,93 +40,6 @@
       <trans-unit id="s8d5ca919f3cad950">
         <source>PDA</source>
         <target>PDA</target>
-      </trans-unit>
-      <trans-unit id="h56d667fd1fb9d47d">
-        <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</source>
-        <target>請修正下列
-          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>錯誤
-          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> 以執行模擬：
-        </target>
-      </trans-unit>
-      <trans-unit id="h6c2fe3d409d7ba36">
-        <source>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</source>
-        <target>未找到有效路徑。自動機
-          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>拒絕
-          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> 字詞
-          <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.
-        </target>
-      </trans-unit>
-      <trans-unit id="h25e62c96f8182fcc">
-        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
-        <target>
-          <x id="0" equiv-text="&lt;span&gt;"/>自動機
-          <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>接受
-          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> 字詞
-          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
-          <x id="4" equiv-text="&lt;/span&gt;"/>
-        </target>
-      </trans-unit>
-      <trans-unit id="h28031e78bb7297a9">
-        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
-        <target>
-          <x id="0" equiv-text="&lt;span&gt;"/>自動機
-          <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>拒絕
-          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> 這個字
-          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
-          <x id="4" equiv-text="&lt;/span&gt;"/>
-        </target>
-      </trans-unit>
-      <trans-unit id="s4f6476c3d1856c19">
-        <source>No further moves possible. Try a different path.</source>
-        <target>無法繼續移動。嘗試不同的路徑。</target>
-      </trans-unit>
-      <trans-unit id="sed72ab193dd16a0a">
-        <source>Simulation paused.</source>
-        <target>模擬暫停。</target>
-      </trans-unit>
-      <trans-unit id="saad05eab0e59411c">
-        <source>Input Word e.g. aaabbb, step;step;stop</source>
-        <target>輸入字元，例如 aaabbb、step;step;stop</target>
-      </trans-unit>
-      <trans-unit id="s956c5a9fb7ee0b23">
-        <source>Manual</source>
-        <target>手冊</target>
-      </trans-unit>
-      <trans-unit id="s61f0ff0bab2b8310">
-        <source>Animate</source>
-        <target>動畫</target>
-      </trans-unit>
-      <trans-unit id="s36494e700fe1e5c6">
-        <source>Step by Step</source>
-        <target>逐步進行</target>
-      </trans-unit>
-      <trans-unit id="s42cbd8dca939a9c7">
-        <source>Check</source>
-        <target>檢查</target>
-      </trans-unit>
-      <trans-unit id="sc16e00a7a8b2fde2">
-        <source>Back</source>
-        <target>返回</target>
-      </trans-unit>
-      <trans-unit id="s0fbf6dc6a1966408">
-        <source>Next</source>
-        <target>下一頁</target>
-      </trans-unit>
-      <trans-unit id="s255857544a9d5ec0">
-        <source>Reset</source>
-        <target>重設</target>
-      </trans-unit>
-      <trans-unit id="s061cc20e3432dead">
-        <source>Pause</source>
-        <target>暫停</target>
-      </trans-unit>
-      <trans-unit id="scd105819b5a10243">
-        <source>Play</source>
-        <target>遊戲</target>
-      </trans-unit>
-      <trans-unit id="sd9ad53251f2330a5">
-        <source>Stop</source>
-        <target>停止</target>
       </trans-unit>
       <trans-unit id="s05c44a5db696fcaf">
         <source>Editing</source>
@@ -179,14 +56,6 @@
       <trans-unit id="s2f64461723d3df5d">
         <source>Change</source>
         <target>變更</target>
-      </trans-unit>
-      <trans-unit id="s66bd1cc6d2f6b68d">
-        <source>Node</source>
-        <target>節點</target>
-      </trans-unit>
-      <trans-unit id="s6503256c2de2745c">
-        <source>Edge</source>
-        <target>邊緣</target>
       </trans-unit>
       <trans-unit id="s860b83fc8a41ca5c">
         <source>Automaton Types</source>
@@ -268,30 +137,6 @@
         <source>Simulate</source>
         <target>模擬</target>
       </trans-unit>
-      <trans-unit id="s5590dbf7e425789d">
-        <source>Label</source>
-        <target>標籤</target>
-      </trans-unit>
-      <trans-unit id="sfb68cae41d749423">
-        <source>Initial</source>
-        <target>初始</target>
-      </trans-unit>
-      <trans-unit id="s8f1034e1a9d93097">
-        <source>Final</source>
-        <target>決賽</target>
-      </trans-unit>
-      <trans-unit id="sd083d3aa96af5af1">
-        <source>Symbol</source>
-        <target>符號</target>
-      </trans-unit>
-      <trans-unit id="s09243007b5b91006">
-        <source>If</source>
-        <target>如果</target>
-      </trans-unit>
-      <trans-unit id="s3de7bee91528e5cc">
-        <source>Stack Actions</source>
-        <target>堆疊動作</target>
-      </trans-unit>
       <trans-unit id="s970d041a28d1067d">
         <source>Push</source>
         <target>推入堆疊</target>
@@ -307,18 +152,6 @@
       <trans-unit id="sd60a7dde73859828">
         <source>Keep</source>
         <target>保持</target>
-      </trans-unit>
-      <trans-unit id="sba6693303903d6b8">
-        <source>Add symbol</source>
-        <target>新增符號</target>
-      </trans-unit>
-      <trans-unit id="sc1611c0558728a2a">
-        <source>Position</source>
-        <target>職位</target>
-      </trans-unit>
-      <trans-unit id="sa0a141a796a5b36a">
-        <source>Bend</source>
-        <target>彎曲</target>
       </trans-unit>
       <trans-unit id="s261af1b4598fef3f">
         <source>Allowed modes</source>
@@ -344,6 +177,233 @@
   <source>Remove stack items with ×</source>
   <target>用 × 刪除堆疊項目</target>
 </trans-unit>
+<trans-unit id="s8a0ee3d87938f19a">
+  <source>Nodes</source>
+  <target>節點</target>
+</trans-unit>
+<trans-unit id="se8dca0132c66ae03">
+  <source>Permissions</source>
+  <target>權限</target>
+</trans-unit>
+<trans-unit id="s699faf39e76b0a5c">
+  <source>Enable sink state</source>
+  <target>啟用吸收狀態</target>
+</trans-unit>
+<trans-unit id="s7815e752b14f6f96">
+  <source>Add sink state</source>
+  <target>新增吸收狀態</target>
+</trans-unit>
+<trans-unit id="se5113f4874d8494d">
+  <source>Starting stack</source>
+  <target>初始堆疊</target>
+</trans-unit>
+<trans-unit id="s5798e7f4322a6963">
+  <source>Transitions</source>
+  <target>過渡</target>
+</trans-unit>
+<trans-unit id="sdb05063db77404d8">
+  <source>The automaton data block is invalid or uses an unsupported format.</source>
+  <target>自動機資料塊無效或使用不受支援的格式。</target>
+</trans-unit>
+<trans-unit id="s93ef8405b9b83023">
+  <source>State diagram</source>
+  <target>狀態圖</target>
+</trans-unit>
+<trans-unit id="s3a2084e9089a7fca">
+  <source>No states yet</source>
+  <target>自動機還沒有狀態</target>
+</trans-unit>
+<trans-unit id="s521208df9ea3e694">
+  <source>Click or drag + to add a node</source>
+  <target>點選或拖曳 + 新增節點</target>
+</trans-unit>
+<trans-unit id="sc0bffa27613488fe">
+  <source>Select a node or transition to edit it</source>
+  <target>選擇一個節點或過渡進行編輯</target>
+</trans-unit>
+<trans-unit id="s8a7f6fa052132a14">
+  <source>Warnings</source>
+  <target>警告</target>
+</trans-unit>
+<trans-unit id="se4c06056144c9044">
+  <source>This is not a JFLAP file.</source>
+  <target>這不是 JFLAP 檔案。</target>
+</trans-unit>
+<trans-unit id="sb96a5d63b20eb653">
+  <source>Only JFLAP finite automata and pushdown automata can be imported.</source>
+  <target>僅可匯入 JFLAP 有限自動機和下推自動機。</target>
+</trans-unit>
+<trans-unit id="s712930d1235f18b5">
+  <source>The JFLAP file is incomplete or uses a feature the automaton cannot represent.</source>
+  <target>JFLAP 檔案不完整，或使用了自動機無法表示的功能。</target>
+</trans-unit>
+    <trans-unit id="s1b00cf75d5f4f616">
+        <source>Choose a move:</source>
+        <target>選擇移動：</target>
+      </trans-unit>
+<trans-unit id="s6c80030e2762459d">
+        <source>push</source>
+        <target>推入</target>
+      </trans-unit>
+<trans-unit id="s779b5819564f2f50">
+        <source>pop</source>
+        <target>彈出</target>
+      </trans-unit>
+<trans-unit id="s904fefb3d01cb2ae">
+        <source>empty</source>
+        <target>空的</target>
+      </trans-unit>
+<trans-unit id="s3c0d17bad169557b">
+        <source>none</source>
+        <target>無</target>
+      </trans-unit>
+<trans-unit id="s42b6431842b835b3">
+        <source>Language:</source>
+        <target>語言：</target>
+      </trans-unit>
+<trans-unit id="sa4088b649da557a5">
+        <source>Check Automaton</source>
+        <target>自動檢查</target>
+      </trans-unit>
+<trans-unit id="s337a1e9022a8d19f">
+        <source>Table</source>
+        <target>表格</target>
+      </trans-unit>
+<trans-unit id="sb80ac0a010cbc647">
+        <source>Automaton Type</source>
+        <target>自動化類型</target>
+      </trans-unit>
+<trans-unit id="h56d667fd1fb9d47d">
+        <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</source>
+        <target>請修正下列
+          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>錯誤
+          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> 以執行模擬：
+        </target>
+      </trans-unit>
+<trans-unit id="h6c2fe3d409d7ba36">
+        <source>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</source>
+        <target>未找到有效路徑。自動機
+          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>拒絕
+          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> 字詞
+          <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.
+        </target>
+      </trans-unit>
+<trans-unit id="h25e62c96f8182fcc">
+        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+        <target>
+          <x id="0" equiv-text="&lt;span&gt;"/>自動機
+          <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>接受
+          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> 字詞
+          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
+          <x id="4" equiv-text="&lt;/span&gt;"/>
+        </target>
+      </trans-unit>
+<trans-unit id="h28031e78bb7297a9">
+        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+        <target>
+          <x id="0" equiv-text="&lt;span&gt;"/>自動機
+          <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>拒絕
+          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> 這個字
+          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
+          <x id="4" equiv-text="&lt;/span&gt;"/>
+        </target>
+      </trans-unit>
+<trans-unit id="s4f6476c3d1856c19">
+        <source>No further moves possible. Try a different path.</source>
+        <target>無法繼續移動。嘗試不同的路徑。</target>
+      </trans-unit>
+<trans-unit id="sed72ab193dd16a0a">
+        <source>Simulation paused.</source>
+        <target>模擬暫停。</target>
+      </trans-unit>
+<trans-unit id="saad05eab0e59411c">
+        <source>Input Word e.g. aaabbb, step;step;stop</source>
+        <target>輸入字元，例如 aaabbb、step;step;stop</target>
+      </trans-unit>
+<trans-unit id="s956c5a9fb7ee0b23">
+        <source>Manual</source>
+        <target>手冊</target>
+      </trans-unit>
+<trans-unit id="s61f0ff0bab2b8310">
+        <source>Animate</source>
+        <target>動畫</target>
+      </trans-unit>
+<trans-unit id="s36494e700fe1e5c6">
+        <source>Step by Step</source>
+        <target>逐步進行</target>
+      </trans-unit>
+<trans-unit id="s42cbd8dca939a9c7">
+        <source>Check</source>
+        <target>檢查</target>
+      </trans-unit>
+<trans-unit id="sc16e00a7a8b2fde2">
+        <source>Back</source>
+        <target>返回</target>
+      </trans-unit>
+<trans-unit id="s0fbf6dc6a1966408">
+        <source>Next</source>
+        <target>下一頁</target>
+      </trans-unit>
+<trans-unit id="s255857544a9d5ec0">
+        <source>Reset</source>
+        <target>重設</target>
+      </trans-unit>
+<trans-unit id="s061cc20e3432dead">
+        <source>Pause</source>
+        <target>暫停</target>
+      </trans-unit>
+<trans-unit id="scd105819b5a10243">
+        <source>Play</source>
+        <target>遊戲</target>
+      </trans-unit>
+<trans-unit id="sd9ad53251f2330a5">
+        <source>Stop</source>
+        <target>停止</target>
+      </trans-unit>
+<trans-unit id="s66bd1cc6d2f6b68d">
+        <source>Node</source>
+        <target>節點</target>
+      </trans-unit>
+<trans-unit id="s6503256c2de2745c">
+        <source>Edge</source>
+        <target>邊緣</target>
+      </trans-unit>
+<trans-unit id="s5590dbf7e425789d">
+        <source>Label</source>
+        <target>標籤</target>
+      </trans-unit>
+<trans-unit id="sfb68cae41d749423">
+        <source>Initial</source>
+        <target>初始</target>
+      </trans-unit>
+<trans-unit id="s8f1034e1a9d93097">
+        <source>Final</source>
+        <target>決賽</target>
+      </trans-unit>
+<trans-unit id="sd083d3aa96af5af1">
+        <source>Symbol</source>
+        <target>符號</target>
+      </trans-unit>
+<trans-unit id="s09243007b5b91006">
+        <source>If</source>
+        <target>如果</target>
+      </trans-unit>
+<trans-unit id="s3de7bee91528e5cc">
+        <source>Stack Actions</source>
+        <target>堆疊動作</target>
+      </trans-unit>
+<trans-unit id="sba6693303903d6b8">
+        <source>Add symbol</source>
+        <target>新增符號</target>
+      </trans-unit>
+<trans-unit id="sc1611c0558728a2a">
+        <source>Position</source>
+        <target>職位</target>
+      </trans-unit>
+<trans-unit id="sa0a141a796a5b36a">
+        <source>Bend</source>
+        <target>彎曲</target>
+      </trans-unit>
 <trans-unit id="sfc513553a0d4ed1c">
   <source>Remove stack item</source>
   <target>刪除堆疊項</target>
@@ -408,25 +468,9 @@
   <source>Switch to PDA</source>
   <target>切換到掌上電腦</target>
 </trans-unit>
-<trans-unit id="s8a0ee3d87938f19a">
-  <source>Nodes</source>
-  <target>節點</target>
-</trans-unit>
-<trans-unit id="se8dca0132c66ae03">
-  <source>Permissions</source>
-  <target>權限</target>
-</trans-unit>
-<trans-unit id="s699faf39e76b0a5c">
-  <source>Enable sink state</source>
-  <target>啟用吸收狀態</target>
-</trans-unit>
 <trans-unit id="se63c78875f5b2178">
   <source>Add node</source>
   <target>新增節點</target>
-</trans-unit>
-<trans-unit id="s7815e752b14f6f96">
-  <source>Add sink state</source>
-  <target>新增吸收狀態</target>
 </trans-unit>
 <trans-unit id="s59329d2125467032">
   <source>Automaton definition</source>
@@ -455,14 +499,6 @@
 <trans-unit id="sb3fa6348186c2022">
   <source>Stack alphabet</source>
   <target>堆疊字母表</target>
-</trans-unit>
-<trans-unit id="se5113f4874d8494d">
-  <source>Starting stack</source>
-  <target>初始堆疊</target>
-</trans-unit>
-<trans-unit id="s5798e7f4322a6963">
-  <source>Transitions</source>
-  <target>過渡</target>
 </trans-unit>
 <trans-unit id="sd07c6d5726032834">
   <source>No transitions yet</source>
@@ -516,30 +552,22 @@
   <source>Double click / long tap to add a node</source>
   <target>雙擊/長按新增節點</target>
 </trans-unit>
-<trans-unit id="sdb05063db77404d8">
-  <source>The automaton data block is invalid or uses an unsupported format.</source>
-  <target>自動機資料塊無效或使用不受支援的格式。</target>
+<trans-unit id="s740d542bbe696de5">
+  <source>Read</source>
+  <target>讀取</target>
 </trans-unit>
-<trans-unit id="s93ef8405b9b83023">
-  <source>State diagram</source>
-  <target>狀態圖</target>
+<trans-unit id="sa6ab5184d6315895">
+  <source>From</source>
+  <target>起點</target>
 </trans-unit>
-<trans-unit id="s3a2084e9089a7fca">
-  <source>No states yet</source>
-  <target>自動機還沒有狀態</target>
+<trans-unit id="s09353907b5c79284">
+  <source>To</source>
+  <target>終點</target>
 </trans-unit>
-<trans-unit id="s521208df9ea3e694">
-  <source>Click or drag + to add a node</source>
-  <target>點選或拖曳 + 新增節點</target>
+<trans-unit id="se06ad3e4a4e4639d">
+  <source>This automaton type is not allowed in this widget.</source>
+  <target>此小工具不支援這種自動機類型。</target>
 </trans-unit>
-<trans-unit id="sc0bffa27613488fe">
-  <source>Select a node or transition to edit it</source>
-  <target>選擇一個節點或過渡進行編輯</target>
-</trans-unit>
-<trans-unit id="s8a7f6fa052132a14">
-  <source>Warnings</source>
-  <target>警告</target>
-</trans-unit>
-    </body>
+</body>
   </file>
 </xliff>

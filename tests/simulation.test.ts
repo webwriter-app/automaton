@@ -971,23 +971,26 @@ describe("Simulation Tests", () => {
 				["de", "de"],
 				["zh-TW", "zh-Hant"],
 				["zh-CN", "zh-Hans"],
-				["pa-PK", "pa-Arab"],
-				["pa-Aran-PK", "pa-Arab"],
-				["pa-IN", "pa-Guru"],
-				["sr-ME", "sr-Latn"],
+				["pa-PK", "pa"],
+				["pa-Aran-PK", "pa"],
+				["pa-IN", "pa"],
+				["sr-ME", "sr"],
 				["cnr", "cnr"],
 				["en-GB", "en-GB"],
-				["en", "en-US"],
+				["en", "en"],
 				["", sourceLocale],
 			]) {
 				await localize.setLocale(tag);
 				assert.equal(localize.getLocale(), expected, tag);
 			}
-			for (const locale of ["ca-ES-valencia", "sr-ijekavsk", "am", "om", "so", "ti", "sw", "ha"]) {
+			for (const locale of ["ca-valencia", "sr", "am", "so", "sw", "ha", "vi", "de-AT", "de-CH"]) {
 				await localize.setLocale(locale);
 				assert.equal(localize.getLocale(), locale);
 				assert.notEqual(localize.msg("Choose a move:"), "Choose a move:", locale);
 			}
+			await localize.setLocale("om");
+			assert.equal(localize.getLocale(), sourceLocale, "Unsupported locales fall back to the source language");
+			assert.equal(localize.msg("Choose a move:"), "Choose a move:");
 			await Promise.all([localize.setLocale("de-DE"), localize.setLocale(sourceLocale)]);
 			assert.equal(localize.getLocale(), sourceLocale, "A late load cannot restore an earlier language");
 			host.remove();
@@ -1001,7 +1004,7 @@ describe("Simulation Tests", () => {
 				const first = await createConfiguredPDA();
 				const second = await createConfiguredPDA();
 				parent.append(first, second);
-				await Promise.all([waitForLocale(first, "de-DE"), waitForLocale(second, "de-DE")]);
+				await Promise.all([waitForLocale(first, "de"), waitForLocale(second, "de")]);
 				const editLabel = (widget: AutomatonComponent) =>
 					widget.shadowRoot!.querySelector(".mode_switch__label")!.textContent!.trim();
 				const stackLabel = (widget: AutomatonComponent) =>

@@ -21,49 +21,13 @@
         <source>Unknown error</source>
         <target>Bilinmeyen hata</target>
       </trans-unit>
-      <trans-unit id="s1b00cf75d5f4f616">
-        <source>Choose a move:</source>
-        <target>Bir hamle seçin:</target>
-      </trans-unit>
-      <trans-unit id="s6c80030e2762459d">
-        <source>push</source>
-        <target>itmek</target>
-      </trans-unit>
-      <trans-unit id="s779b5819564f2f50">
-        <source>pop</source>
-        <target>pop</target>
-      </trans-unit>
-      <trans-unit id="s904fefb3d01cb2ae">
-        <source>empty</source>
-        <target>boş</target>
-      </trans-unit>
-      <trans-unit id="s3c0d17bad169557b">
-        <source>none</source>
-        <target>Hiçbiri</target>
-      </trans-unit>
       <trans-unit id="sae4f7c13b7ec18ff">
         <source>Stack</source>
         <target>Yığın</target>
       </trans-unit>
-      <trans-unit id="s42b6431842b835b3">
-        <source>Language:</source>
-        <target>Dil:</target>
-      </trans-unit>
-      <trans-unit id="sa4088b649da557a5">
-        <source>Check Automaton</source>
-        <target>Otomatı Kontrol Et</target>
-      </trans-unit>
       <trans-unit id="sea4f20ea1ece70a0">
         <source>Definition</source>
         <target>Tanım</target>
-      </trans-unit>
-      <trans-unit id="s337a1e9022a8d19f">
-        <source>Table</source>
-        <target>Tablo</target>
-      </trans-unit>
-      <trans-unit id="sb80ac0a010cbc647">
-        <source>Automaton Type</source>
-        <target>Otomat Türü</target>
       </trans-unit>
       <trans-unit id="se033711991bc46ea">
         <source>DFA</source>
@@ -76,93 +40,6 @@
       <trans-unit id="s8d5ca919f3cad950">
         <source>PDA</source>
         <target>PDA</target>
-      </trans-unit>
-      <trans-unit id="h56d667fd1fb9d47d">
-        <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</source>
-        <target>Lütfen aşağıdakileri düzeltin 
-          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>hatalar
-          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> simülasyonu çalıştırmak için:
-        </target>
-      </trans-unit>
-      <trans-unit id="h6c2fe3d409d7ba36">
-        <source>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</source>
-        <target>Geçerli bir yol bulunamadı. Otomat 
-          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>reddediyor
-          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> kelime 
-          <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.
-        </target>
-      </trans-unit>
-      <trans-unit id="h25e62c96f8182fcc">
-        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
-        <target>
-          <x id="0" equiv-text="&lt;span&gt;"/>Otomat 
-          <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>kabul eder
-          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> kelime 
-          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
-          <x id="4" equiv-text="&lt;/span&gt;"/>
-        </target>
-      </trans-unit>
-      <trans-unit id="h28031e78bb7297a9">
-        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
-        <target>
-          <x id="0" equiv-text="&lt;span&gt;"/>Otomat 
-          <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>reddediyor
-          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> kelime 
-          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
-          <x id="4" equiv-text="&lt;/span&gt;"/>
-        </target>
-      </trans-unit>
-      <trans-unit id="s4f6476c3d1856c19">
-        <source>No further moves possible. Try a different path.</source>
-        <target>Başka hamle mümkün değil. Farklı bir yol deneyin.</target>
-      </trans-unit>
-      <trans-unit id="sed72ab193dd16a0a">
-        <source>Simulation paused.</source>
-        <target>Simülasyon durakladı.</target>
-      </trans-unit>
-      <trans-unit id="saad05eab0e59411c">
-        <source>Input Word e.g. aaabbb, step;step;stop</source>
-        <target>Giriş Sözcüğü örneğin aaabbb, adım; adım; dur</target>
-      </trans-unit>
-      <trans-unit id="s956c5a9fb7ee0b23">
-        <source>Manual</source>
-        <target>El Kitabı</target>
-      </trans-unit>
-      <trans-unit id="s61f0ff0bab2b8310">
-        <source>Animate</source>
-        <target>Canlandırma</target>
-      </trans-unit>
-      <trans-unit id="s36494e700fe1e5c6">
-        <source>Step by Step</source>
-        <target>Adım Adım</target>
-      </trans-unit>
-      <trans-unit id="s42cbd8dca939a9c7">
-        <source>Check</source>
-        <target>Kontrol et</target>
-      </trans-unit>
-      <trans-unit id="sc16e00a7a8b2fde2">
-        <source>Back</source>
-        <target>Geri</target>
-      </trans-unit>
-      <trans-unit id="s0fbf6dc6a1966408">
-        <source>Next</source>
-        <target>Sonraki</target>
-      </trans-unit>
-      <trans-unit id="s255857544a9d5ec0">
-        <source>Reset</source>
-        <target>Sıfırla</target>
-      </trans-unit>
-      <trans-unit id="s061cc20e3432dead">
-        <source>Pause</source>
-        <target>Duraklat</target>
-      </trans-unit>
-      <trans-unit id="scd105819b5a10243">
-        <source>Play</source>
-        <target>Oyun</target>
-      </trans-unit>
-      <trans-unit id="sd9ad53251f2330a5">
-        <source>Stop</source>
-        <target>Dur</target>
       </trans-unit>
       <trans-unit id="s05c44a5db696fcaf">
         <source>Editing</source>
@@ -179,14 +56,6 @@
       <trans-unit id="s2f64461723d3df5d">
         <source>Change</source>
         <target>Değişim</target>
-      </trans-unit>
-      <trans-unit id="s66bd1cc6d2f6b68d">
-        <source>Node</source>
-        <target>Düğüm</target>
-      </trans-unit>
-      <trans-unit id="s6503256c2de2745c">
-        <source>Edge</source>
-        <target>Kenar</target>
       </trans-unit>
       <trans-unit id="s860b83fc8a41ca5c">
         <source>Automaton Types</source>
@@ -268,30 +137,6 @@
         <source>Simulate</source>
         <target>Simüle Et</target>
       </trans-unit>
-      <trans-unit id="s5590dbf7e425789d">
-        <source>Label</source>
-        <target>Etiket</target>
-      </trans-unit>
-      <trans-unit id="sfb68cae41d749423">
-        <source>Initial</source>
-        <target>Başlangıç</target>
-      </trans-unit>
-      <trans-unit id="s8f1034e1a9d93097">
-        <source>Final</source>
-        <target>Final</target>
-      </trans-unit>
-      <trans-unit id="sd083d3aa96af5af1">
-        <source>Symbol</source>
-        <target>Sembol</target>
-      </trans-unit>
-      <trans-unit id="s09243007b5b91006">
-        <source>If</source>
-        <target>Eğer</target>
-      </trans-unit>
-      <trans-unit id="s3de7bee91528e5cc">
-        <source>Stack Actions</source>
-        <target>Yığın Eylemleri</target>
-      </trans-unit>
       <trans-unit id="s970d041a28d1067d">
         <source>Push</source>
         <target>İtme</target>
@@ -307,18 +152,6 @@
       <trans-unit id="sd60a7dde73859828">
         <source>Keep</source>
         <target>Sakla</target>
-      </trans-unit>
-      <trans-unit id="sba6693303903d6b8">
-        <source>Add symbol</source>
-        <target>Sembol ekle</target>
-      </trans-unit>
-      <trans-unit id="sc1611c0558728a2a">
-        <source>Position</source>
-        <target>Pozisyon</target>
-      </trans-unit>
-      <trans-unit id="sa0a141a796a5b36a">
-        <source>Bend</source>
-        <target>Bükülme</target>
       </trans-unit>
       <trans-unit id="s261af1b4598fef3f">
         <source>Allowed modes</source>
@@ -344,6 +177,233 @@
   <source>Remove stack items with ×</source>
   <target>× ile yığın öğelerini kaldırın</target>
 </trans-unit>
+<trans-unit id="s8a0ee3d87938f19a">
+  <source>Nodes</source>
+  <target>Düğümler</target>
+</trans-unit>
+<trans-unit id="se8dca0132c66ae03">
+  <source>Permissions</source>
+  <target>İzinler</target>
+</trans-unit>
+<trans-unit id="s699faf39e76b0a5c">
+  <source>Enable sink state</source>
+  <target>Emme durumunu etkinleştir</target>
+</trans-unit>
+<trans-unit id="s7815e752b14f6f96">
+  <source>Add sink state</source>
+  <target>Emici bir durum ekleyin</target>
+</trans-unit>
+<trans-unit id="se5113f4874d8494d">
+  <source>Starting stack</source>
+  <target>Yığının ilk içeriği</target>
+</trans-unit>
+<trans-unit id="s5798e7f4322a6963">
+  <source>Transitions</source>
+  <target>Geçişler</target>
+</trans-unit>
+<trans-unit id="sdb05063db77404d8">
+  <source>The automaton data block is invalid or uses an unsupported format.</source>
+  <target>Otomat veri bloğu geçersiz veya desteklenmeyen bir format kullanıyor.</target>
+</trans-unit>
+<trans-unit id="s93ef8405b9b83023">
+  <source>State diagram</source>
+  <target>Otomat durumlarının şeması</target>
+</trans-unit>
+<trans-unit id="s3a2084e9089a7fca">
+  <source>No states yet</source>
+  <target>Otomatın henüz durumu yok</target>
+</trans-unit>
+<trans-unit id="s521208df9ea3e694">
+  <source>Click or drag + to add a node</source>
+  <target>Düğüm eklemek için + öğesine tıklayın veya sürükleyin</target>
+</trans-unit>
+<trans-unit id="sc0bffa27613488fe">
+  <source>Select a node or transition to edit it</source>
+  <target>Düzenlemek için bir düğüm veya geçiş seçin</target>
+</trans-unit>
+<trans-unit id="s8a7f6fa052132a14">
+  <source>Warnings</source>
+  <target>Uyarılar</target>
+</trans-unit>
+<trans-unit id="se4c06056144c9044">
+  <source>This is not a JFLAP file.</source>
+  <target>Bu bir JFLAP dosyası değil.</target>
+</trans-unit>
+<trans-unit id="sb96a5d63b20eb653">
+  <source>Only JFLAP finite automata and pushdown automata can be imported.</source>
+  <target>Yalnızca JFLAP sonlu otomatları ve yığıtlı otomatları içe aktarılabilir.</target>
+</trans-unit>
+<trans-unit id="s712930d1235f18b5">
+  <source>The JFLAP file is incomplete or uses a feature the automaton cannot represent.</source>
+  <target>JFLAP dosyası eksik veya otomatın temsil edemeyeceği bir özellik kullanıyor.</target>
+</trans-unit>
+    <trans-unit id="s1b00cf75d5f4f616">
+        <source>Choose a move:</source>
+        <target>Bir hamle seçin:</target>
+      </trans-unit>
+<trans-unit id="s6c80030e2762459d">
+        <source>push</source>
+        <target>itmek</target>
+      </trans-unit>
+<trans-unit id="s779b5819564f2f50">
+        <source>pop</source>
+        <target>pop</target>
+      </trans-unit>
+<trans-unit id="s904fefb3d01cb2ae">
+        <source>empty</source>
+        <target>boş</target>
+      </trans-unit>
+<trans-unit id="s3c0d17bad169557b">
+        <source>none</source>
+        <target>Hiçbiri</target>
+      </trans-unit>
+<trans-unit id="s42b6431842b835b3">
+        <source>Language:</source>
+        <target>Dil:</target>
+      </trans-unit>
+<trans-unit id="sa4088b649da557a5">
+        <source>Check Automaton</source>
+        <target>Otomatı Kontrol Et</target>
+      </trans-unit>
+<trans-unit id="s337a1e9022a8d19f">
+        <source>Table</source>
+        <target>Tablo</target>
+      </trans-unit>
+<trans-unit id="sb80ac0a010cbc647">
+        <source>Automaton Type</source>
+        <target>Otomat Türü</target>
+      </trans-unit>
+<trans-unit id="h56d667fd1fb9d47d">
+        <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</source>
+        <target>Lütfen aşağıdakileri düzeltin 
+          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>hatalar
+          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> simülasyonu çalıştırmak için:
+        </target>
+      </trans-unit>
+<trans-unit id="h6c2fe3d409d7ba36">
+        <source>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</source>
+        <target>Geçerli bir yol bulunamadı. Otomat 
+          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>reddediyor
+          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> kelime 
+          <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.
+        </target>
+      </trans-unit>
+<trans-unit id="h25e62c96f8182fcc">
+        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+        <target>
+          <x id="0" equiv-text="&lt;span&gt;"/>Otomat 
+          <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>kabul eder
+          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> kelime 
+          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
+          <x id="4" equiv-text="&lt;/span&gt;"/>
+        </target>
+      </trans-unit>
+<trans-unit id="h28031e78bb7297a9">
+        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+        <target>
+          <x id="0" equiv-text="&lt;span&gt;"/>Otomat 
+          <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>reddediyor
+          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> kelime 
+          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
+          <x id="4" equiv-text="&lt;/span&gt;"/>
+        </target>
+      </trans-unit>
+<trans-unit id="s4f6476c3d1856c19">
+        <source>No further moves possible. Try a different path.</source>
+        <target>Başka hamle mümkün değil. Farklı bir yol deneyin.</target>
+      </trans-unit>
+<trans-unit id="sed72ab193dd16a0a">
+        <source>Simulation paused.</source>
+        <target>Simülasyon durakladı.</target>
+      </trans-unit>
+<trans-unit id="saad05eab0e59411c">
+        <source>Input Word e.g. aaabbb, step;step;stop</source>
+        <target>Giriş Sözcüğü örneğin aaabbb, adım; adım; dur</target>
+      </trans-unit>
+<trans-unit id="s956c5a9fb7ee0b23">
+        <source>Manual</source>
+        <target>El Kitabı</target>
+      </trans-unit>
+<trans-unit id="s61f0ff0bab2b8310">
+        <source>Animate</source>
+        <target>Canlandırma</target>
+      </trans-unit>
+<trans-unit id="s36494e700fe1e5c6">
+        <source>Step by Step</source>
+        <target>Adım Adım</target>
+      </trans-unit>
+<trans-unit id="s42cbd8dca939a9c7">
+        <source>Check</source>
+        <target>Kontrol et</target>
+      </trans-unit>
+<trans-unit id="sc16e00a7a8b2fde2">
+        <source>Back</source>
+        <target>Geri</target>
+      </trans-unit>
+<trans-unit id="s0fbf6dc6a1966408">
+        <source>Next</source>
+        <target>Sonraki</target>
+      </trans-unit>
+<trans-unit id="s255857544a9d5ec0">
+        <source>Reset</source>
+        <target>Sıfırla</target>
+      </trans-unit>
+<trans-unit id="s061cc20e3432dead">
+        <source>Pause</source>
+        <target>Duraklat</target>
+      </trans-unit>
+<trans-unit id="scd105819b5a10243">
+        <source>Play</source>
+        <target>Oyun</target>
+      </trans-unit>
+<trans-unit id="sd9ad53251f2330a5">
+        <source>Stop</source>
+        <target>Dur</target>
+      </trans-unit>
+<trans-unit id="s66bd1cc6d2f6b68d">
+        <source>Node</source>
+        <target>Düğüm</target>
+      </trans-unit>
+<trans-unit id="s6503256c2de2745c">
+        <source>Edge</source>
+        <target>Kenar</target>
+      </trans-unit>
+<trans-unit id="s5590dbf7e425789d">
+        <source>Label</source>
+        <target>Etiket</target>
+      </trans-unit>
+<trans-unit id="sfb68cae41d749423">
+        <source>Initial</source>
+        <target>Başlangıç</target>
+      </trans-unit>
+<trans-unit id="s8f1034e1a9d93097">
+        <source>Final</source>
+        <target>Final</target>
+      </trans-unit>
+<trans-unit id="sd083d3aa96af5af1">
+        <source>Symbol</source>
+        <target>Sembol</target>
+      </trans-unit>
+<trans-unit id="s09243007b5b91006">
+        <source>If</source>
+        <target>Eğer</target>
+      </trans-unit>
+<trans-unit id="s3de7bee91528e5cc">
+        <source>Stack Actions</source>
+        <target>Yığın Eylemleri</target>
+      </trans-unit>
+<trans-unit id="sba6693303903d6b8">
+        <source>Add symbol</source>
+        <target>Sembol ekle</target>
+      </trans-unit>
+<trans-unit id="sc1611c0558728a2a">
+        <source>Position</source>
+        <target>Pozisyon</target>
+      </trans-unit>
+<trans-unit id="sa0a141a796a5b36a">
+        <source>Bend</source>
+        <target>Bükülme</target>
+      </trans-unit>
 <trans-unit id="sfc513553a0d4ed1c">
   <source>Remove stack item</source>
   <target>Yığın öğesini kaldır</target>
@@ -408,25 +468,9 @@
   <source>Switch to PDA</source>
   <target>PDA'ya geç</target>
 </trans-unit>
-<trans-unit id="s8a0ee3d87938f19a">
-  <source>Nodes</source>
-  <target>Düğümler</target>
-</trans-unit>
-<trans-unit id="se8dca0132c66ae03">
-  <source>Permissions</source>
-  <target>İzinler</target>
-</trans-unit>
-<trans-unit id="s699faf39e76b0a5c">
-  <source>Enable sink state</source>
-  <target>Emme durumunu etkinleştir</target>
-</trans-unit>
 <trans-unit id="se63c78875f5b2178">
   <source>Add node</source>
   <target>Düğüm ekle</target>
-</trans-unit>
-<trans-unit id="s7815e752b14f6f96">
-  <source>Add sink state</source>
-  <target>Emici bir durum ekleyin</target>
 </trans-unit>
 <trans-unit id="s59329d2125467032">
   <source>Automaton definition</source>
@@ -455,14 +499,6 @@
 <trans-unit id="sb3fa6348186c2022">
   <source>Stack alphabet</source>
   <target>Yığın alfabesi</target>
-</trans-unit>
-<trans-unit id="se5113f4874d8494d">
-  <source>Starting stack</source>
-  <target>Yığının ilk içeriği</target>
-</trans-unit>
-<trans-unit id="s5798e7f4322a6963">
-  <source>Transitions</source>
-  <target>Geçişler</target>
 </trans-unit>
 <trans-unit id="sd07c6d5726032834">
   <source>No transitions yet</source>
@@ -516,30 +552,22 @@
   <source>Double click / long tap to add a node</source>
   <target>Düğüm eklemek için çift tıklayın / uzun dokunun</target>
 </trans-unit>
-<trans-unit id="sdb05063db77404d8">
-  <source>The automaton data block is invalid or uses an unsupported format.</source>
-  <target>Otomat veri bloğu geçersiz veya desteklenmeyen bir format kullanıyor.</target>
+<trans-unit id="s740d542bbe696de5">
+  <source>Read</source>
+  <target>Oku</target>
 </trans-unit>
-<trans-unit id="s93ef8405b9b83023">
-  <source>State diagram</source>
-  <target>Otomat durumlarının şeması</target>
+<trans-unit id="sa6ab5184d6315895">
+  <source>From</source>
+  <target>Kaynak</target>
 </trans-unit>
-<trans-unit id="s3a2084e9089a7fca">
-  <source>No states yet</source>
-  <target>Otomatın henüz durumu yok</target>
+<trans-unit id="s09353907b5c79284">
+  <source>To</source>
+  <target>Hedef</target>
 </trans-unit>
-<trans-unit id="s521208df9ea3e694">
-  <source>Click or drag + to add a node</source>
-  <target>Düğüm eklemek için + öğesine tıklayın veya sürükleyin</target>
+<trans-unit id="se06ad3e4a4e4639d">
+  <source>This automaton type is not allowed in this widget.</source>
+  <target>Bu araçta bu otomat türüne izin verilmez.</target>
 </trans-unit>
-<trans-unit id="sc0bffa27613488fe">
-  <source>Select a node or transition to edit it</source>
-  <target>Düzenlemek için bir düğüm veya geçiş seçin</target>
-</trans-unit>
-<trans-unit id="s8a7f6fa052132a14">
-  <source>Warnings</source>
-  <target>Uyarılar</target>
-</trans-unit>
-    </body>
+</body>
   </file>
 </xliff>

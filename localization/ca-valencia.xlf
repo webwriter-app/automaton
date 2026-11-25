@@ -1,37 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-<file target-language="ca-ES-valencia" source-language="en-US" original="lit-localize-inputs" datatype="plaintext">
+<file target-language="ca-valencia" source-language="en-US" original="lit-localize-inputs" datatype="plaintext">
 <body>
-<trans-unit id="s1b00cf75d5f4f616">
-  <source>Choose a move:</source>
-<target>Tria un moviment:</target></trans-unit>
-<trans-unit id="s6c80030e2762459d">
-  <source>push</source>
-<target>apilar</target></trans-unit>
-<trans-unit id="s779b5819564f2f50">
-  <source>pop</source>
-<target>desapilar</target></trans-unit>
-<trans-unit id="s904fefb3d01cb2ae">
-  <source>empty</source>
-<target>buida</target></trans-unit>
-<trans-unit id="s3c0d17bad169557b">
-  <source>none</source>
-<target>cap</target></trans-unit>
 <trans-unit id="sae4f7c13b7ec18ff">
   <source>Stack</source>
 <target>Pila</target></trans-unit>
 <trans-unit id="sc5a051b7aba488de">
   <source>Remove stack items with ×</source>
 <target>Elimina elements de la pila amb ×</target></trans-unit>
-<trans-unit id="sfc513553a0d4ed1c">
-  <source>Remove stack item</source>
-<target>Elimina un element de la pila</target></trans-unit>
-<trans-unit id="sba6693303903d6b8">
-  <source>Add symbol</source>
-<target>Afig un símbol</target></trans-unit>
-<trans-unit id="sc1611c0558728a2a">
-  <source>Position</source>
-<target>Posició</target></trans-unit>
 <trans-unit id="s7b72a2e6d7ff3291">
   <source>Move the elements by drag and drop</source>
 <target>Mou els elements arrossegant-los</target></trans-unit>
@@ -47,6 +23,186 @@
 <trans-unit id="sd60a7dde73859828">
   <source>Keep</source>
 <target>Mantín</target></trans-unit>
+<trans-unit id="s05c44a5db696fcaf">
+  <source>Editing</source>
+<target>Edició</target></trans-unit>
+<trans-unit id="s7f59f507e02a2f38">
+  <source>View</source>
+<target>Vista</target></trans-unit>
+<trans-unit id="s35f1dd3fd023476a">
+  <source>Automation</source>
+<target>Automatització</target></trans-unit>
+<trans-unit id="s8a0ee3d87938f19a">
+  <source>Nodes</source>
+<target>Nodes</target></trans-unit>
+<trans-unit id="sf9aee319a006c9b4">
+  <source>Add</source>
+<target>Afig</target></trans-unit>
+<trans-unit id="sdc673e73b5c13aea">
+  <source>Delete</source>
+<target>Elimina</target></trans-unit>
+<trans-unit id="s2f64461723d3df5d">
+  <source>Change</source>
+<target>Canvia</target></trans-unit>
+<trans-unit id="se8dca0132c66ae03">
+  <source>Permissions</source>
+<target>Permisos</target></trans-unit>
+<trans-unit id="s860b83fc8a41ca5c">
+  <source>Automaton Types</source>
+<target>Tipus d’autòmat</target></trans-unit>
+<trans-unit id="s699faf39e76b0a5c">
+  <source>Enable sink state</source>
+<target>Activa l’estat pou</target></trans-unit>
+<trans-unit id="s261af1b4598fef3f">
+  <source>Allowed modes</source>
+<target>Modes permesos</target></trans-unit>
+<trans-unit id="s64ef2a6c2dd1d3d1">
+  <source>Edit</source>
+<target>Edita</target></trans-unit>
+<trans-unit id="scfcffcf35292bc6f">
+  <source>Simulate</source>
+<target>Simula</target></trans-unit>
+<trans-unit id="sb508f35111b54817">
+  <source>Show Help</source>
+<target>Mostra l’ajuda</target></trans-unit>
+<trans-unit id="sf62fea3229bf87c8">
+  <source>Show Formal Definition</source>
+<target>Mostra la definició formal</target></trans-unit>
+<trans-unit id="s3050764b15c8baf0">
+  <source>Show Transitions Table</source>
+<target>Mostra la taula de transicions</target></trans-unit>
+<trans-unit id="s3e141c08e0ace321">
+  <source>Test Language</source>
+<target>Prova el llenguatge</target></trans-unit>
+<trans-unit id="scbb4cdb4d52edc80">
+  <source>Test Words</source>
+<target>Prova paraules</target></trans-unit>
+<trans-unit id="s8e3f9c3e183abbda">
+  <source>Predefined Alphabet</source>
+<target>Alfabet predefinit</target></trans-unit>
+<trans-unit id="s7815e752b14f6f96">
+  <source>Add sink state</source>
+<target>Afig un estat pou</target></trans-unit>
+<trans-unit id="s6d8c02aee480af7a">
+  <source>Menu</source>
+<target>Menú</target></trans-unit>
+<trans-unit id="sea4f20ea1ece70a0">
+  <source>Definition</source>
+<target>Definició</target></trans-unit>
+<trans-unit id="se033711991bc46ea">
+  <source>DFA</source>
+<target>AFD</target></trans-unit>
+<trans-unit id="s36dfd719c2d7c63c">
+  <source>NFA</source>
+<target>AFN</target></trans-unit>
+<trans-unit id="s8d5ca919f3cad950">
+  <source>PDA</source>
+<target>Autòmat de pila</target></trans-unit>
+<trans-unit id="se5113f4874d8494d">
+  <source>Starting stack</source>
+<target>Pila inicial</target></trans-unit>
+<trans-unit id="s5798e7f4322a6963">
+  <source>Transitions</source>
+<target>Transicions</target></trans-unit>
+<trans-unit id="sdb05063db77404d8">
+  <source>The automaton data block is invalid or uses an unsupported format.</source>
+<target>El bloc de dades de l’autòmat no és vàlid o té un format incompatible.</target></trans-unit>
+<trans-unit id="s93ef8405b9b83023">
+  <source>State diagram</source>
+<target>Diagrama d’estats</target></trans-unit>
+<trans-unit id="s3a2084e9089a7fca">
+  <source>No states yet</source>
+<target>Encara no hi ha estats</target></trans-unit>
+<trans-unit id="s7df224ba56fb8e1e">
+  <source>Mode Switch</source>
+<target>Canvia de mode</target></trans-unit>
+<trans-unit id="s4b10acae683d2978">
+  <source>Fullscreen</source>
+<target>Pantalla completa</target></trans-unit>
+<trans-unit id="sd2223afb7d6b100d">
+  <source>Type</source>
+<target>Tipus</target></trans-unit>
+<trans-unit id="s352719d86112de9a">
+  <source>Help</source>
+<target>Ajuda</target></trans-unit>
+<trans-unit id="sc725a41694d85bb0">
+  <source>Test Cases</source>
+<target>Casos de prova</target></trans-unit>
+<trans-unit id="s521208df9ea3e694">
+  <source>Click or drag + to add a node</source>
+<target>Fes clic en + o arrossega’l per a afegir un node</target></trans-unit>
+<trans-unit id="s9f4a96e81b296478">
+  <source>Add Transition by drag and drop</source>
+<target>Arrossega per a afegir una transició</target></trans-unit>
+<trans-unit id="sc0bffa27613488fe">
+  <source>Select a node or transition to edit it</source>
+<target>Selecciona un node o una transició per a editar-los</target></trans-unit>
+<trans-unit id="s71813a5a8d63ac81">
+  <source>Input word</source>
+<target>Paraula d’entrada</target></trans-unit>
+<trans-unit id="sa82cf626cfa888ac">
+  <source>Simulation Controls</source>
+<target>Controls de simulació</target></trans-unit>
+<trans-unit id="s9274cd474969c49c">
+  <source>Switch mode (Ctrl+M)</source>
+<target>Canvia de mode (Ctrl+M)</target></trans-unit>
+<trans-unit id="s8a7f6fa052132a14">
+  <source>Warnings</source>
+<target>Avisos</target></trans-unit>
+<trans-unit id="h2e7f32ac617924d0">
+  <source>Missing transition for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
+<target>Falta una transició per a <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></target></trans-unit>
+<trans-unit id="h5130af20b6d54f05">
+  <source>Multiple transitions for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
+<target>Hi ha diverses transicions per a <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></target></trans-unit>
+<trans-unit id="s2ea31ea953b32ee5">
+  <source>Transition with empty symbol</source>
+<target>Transició amb un símbol buit</target></trans-unit>
+<trans-unit id="s335050fdf97d8f6e">
+  <source>No initial state defined</source>
+<target>No s’ha definit cap estat inicial</target></trans-unit>
+<trans-unit id="s74a96f52fd23c3e8">
+  <source>Multiple initial states defined</source>
+<target>S’han definit diversos estats inicials</target></trans-unit>
+<trans-unit id="s5787e20cab57b383">
+  <source>Unknown error</source>
+<target>Error desconegut</target></trans-unit>
+<trans-unit id="se4c06056144c9044">
+  <source>This is not a JFLAP file.</source>
+  <target>Això no és un fitxer JFLAP.</target>
+</trans-unit>
+<trans-unit id="sb96a5d63b20eb653">
+  <source>Only JFLAP finite automata and pushdown automata can be imported.</source>
+  <target>Només es poden importar autòmats finits i autòmats de pila del JFLAP.</target>
+</trans-unit>
+<trans-unit id="s712930d1235f18b5">
+  <source>The JFLAP file is incomplete or uses a feature the automaton cannot represent.</source>
+  <target>El fitxer JFLAP és incomplet o fa servir una funció que l’autòmat no pot representar.</target>
+</trans-unit>
+<trans-unit id="s1b00cf75d5f4f616">
+  <source>Choose a move:</source>
+<target>Tria un moviment:</target></trans-unit>
+<trans-unit id="s6c80030e2762459d">
+  <source>push</source>
+<target>apilar</target></trans-unit>
+<trans-unit id="s779b5819564f2f50">
+  <source>pop</source>
+<target>desapilar</target></trans-unit>
+<trans-unit id="s904fefb3d01cb2ae">
+  <source>empty</source>
+<target>buida</target></trans-unit>
+<trans-unit id="s3c0d17bad169557b">
+  <source>none</source>
+<target>cap</target></trans-unit>
+<trans-unit id="sfc513553a0d4ed1c">
+  <source>Remove stack item</source>
+<target>Elimina un element de la pila</target></trans-unit>
+<trans-unit id="sba6693303903d6b8">
+  <source>Add symbol</source>
+<target>Afig un símbol</target></trans-unit>
+<trans-unit id="sc1611c0558728a2a">
+  <source>Position</source>
+<target>Posició</target></trans-unit>
 <trans-unit id="s66bd1cc6d2f6b68d">
   <source>Node</source>
 <target>Node</target></trans-unit>
@@ -119,63 +275,6 @@
 <trans-unit id="sc855ea9bc9a1cc6d">
   <source>Switch to PDA</source>
 <target>Canvia a autòmat de pila</target></trans-unit>
-<trans-unit id="s05c44a5db696fcaf">
-  <source>Editing</source>
-<target>Edició</target></trans-unit>
-<trans-unit id="s7f59f507e02a2f38">
-  <source>View</source>
-<target>Vista</target></trans-unit>
-<trans-unit id="s35f1dd3fd023476a">
-  <source>Automation</source>
-<target>Automatització</target></trans-unit>
-<trans-unit id="s8a0ee3d87938f19a">
-  <source>Nodes</source>
-<target>Nodes</target></trans-unit>
-<trans-unit id="sf9aee319a006c9b4">
-  <source>Add</source>
-<target>Afig</target></trans-unit>
-<trans-unit id="sdc673e73b5c13aea">
-  <source>Delete</source>
-<target>Elimina</target></trans-unit>
-<trans-unit id="s2f64461723d3df5d">
-  <source>Change</source>
-<target>Canvia</target></trans-unit>
-<trans-unit id="se8dca0132c66ae03">
-  <source>Permissions</source>
-<target>Permisos</target></trans-unit>
-<trans-unit id="s860b83fc8a41ca5c">
-  <source>Automaton Types</source>
-<target>Tipus d’autòmat</target></trans-unit>
-<trans-unit id="s699faf39e76b0a5c">
-  <source>Enable sink state</source>
-<target>Activa l’estat pou</target></trans-unit>
-<trans-unit id="s261af1b4598fef3f">
-  <source>Allowed modes</source>
-<target>Modes permesos</target></trans-unit>
-<trans-unit id="s64ef2a6c2dd1d3d1">
-  <source>Edit</source>
-<target>Edita</target></trans-unit>
-<trans-unit id="scfcffcf35292bc6f">
-  <source>Simulate</source>
-<target>Simula</target></trans-unit>
-<trans-unit id="sb508f35111b54817">
-  <source>Show Help</source>
-<target>Mostra l’ajuda</target></trans-unit>
-<trans-unit id="sf62fea3229bf87c8">
-  <source>Show Formal Definition</source>
-<target>Mostra la definició formal</target></trans-unit>
-<trans-unit id="s3050764b15c8baf0">
-  <source>Show Transitions Table</source>
-<target>Mostra la taula de transicions</target></trans-unit>
-<trans-unit id="s3e141c08e0ace321">
-  <source>Test Language</source>
-<target>Prova el llenguatge</target></trans-unit>
-<trans-unit id="scbb4cdb4d52edc80">
-  <source>Test Words</source>
-<target>Prova paraules</target></trans-unit>
-<trans-unit id="s8e3f9c3e183abbda">
-  <source>Predefined Alphabet</source>
-<target>Alfabet predefinit</target></trans-unit>
 <trans-unit id="h56d667fd1fb9d47d">
   <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;" />errors<x id="1" equiv-text="&lt;/sl-badge&gt;" /> to run the simulation:</source>
 <target>Corregix els <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;" />errors<x id="1" equiv-text="&lt;/sl-badge&gt;" /> següents per a executar la simulació:</target></trans-unit>
@@ -230,33 +329,15 @@
 <trans-unit id="se63c78875f5b2178">
   <source>Add node</source>
 <target>Afig un node</target></trans-unit>
-<trans-unit id="s7815e752b14f6f96">
-  <source>Add sink state</source>
-<target>Afig un estat pou</target></trans-unit>
-<trans-unit id="s6d8c02aee480af7a">
-  <source>Menu</source>
-<target>Menú</target></trans-unit>
 <trans-unit id="s42b6431842b835b3">
   <source>Language:</source>
 <target>Llenguatge:</target></trans-unit>
 <trans-unit id="sa4088b649da557a5">
   <source>Check Automaton</source>
 <target>Comprova l’autòmat</target></trans-unit>
-<trans-unit id="sea4f20ea1ece70a0">
-  <source>Definition</source>
-<target>Definició</target></trans-unit>
 <trans-unit id="sb80ac0a010cbc647">
   <source>Automaton Type</source>
 <target>Tipus d’autòmat</target></trans-unit>
-<trans-unit id="se033711991bc46ea">
-  <source>DFA</source>
-<target>AFD</target></trans-unit>
-<trans-unit id="s36dfd719c2d7c63c">
-  <source>NFA</source>
-<target>AFN</target></trans-unit>
-<trans-unit id="s8d5ca919f3cad950">
-  <source>PDA</source>
-<target>Autòmat de pila</target></trans-unit>
 <trans-unit id="s59329d2125467032">
   <source>Automaton definition</source>
 <target>Definició de l’autòmat</target></trans-unit>
@@ -281,12 +362,6 @@
 <trans-unit id="sb3fa6348186c2022">
   <source>Stack alphabet</source>
 <target>Alfabet de la pila</target></trans-unit>
-<trans-unit id="se5113f4874d8494d">
-  <source>Starting stack</source>
-<target>Pila inicial</target></trans-unit>
-<trans-unit id="s5798e7f4322a6963">
-  <source>Transitions</source>
-<target>Transicions</target></trans-unit>
 <trans-unit id="sd07c6d5726032834">
   <source>No transitions yet</source>
 <target>Encara no hi ha transicions</target></trans-unit>
@@ -326,69 +401,22 @@
 <trans-unit id="s02232ef4da5e61a7">
   <source>Double click / long tap to add a node</source>
 <target>Fes doble clic o mantín premut per a afegir un node</target></trans-unit>
-<trans-unit id="sdb05063db77404d8">
-  <source>The automaton data block is invalid or uses an unsupported format.</source>
-<target>El bloc de dades de l’autòmat no és vàlid o té un format incompatible.</target></trans-unit>
-<trans-unit id="s93ef8405b9b83023">
-  <source>State diagram</source>
-<target>Diagrama d’estats</target></trans-unit>
-<trans-unit id="s3a2084e9089a7fca">
-  <source>No states yet</source>
-<target>Encara no hi ha estats</target></trans-unit>
-<trans-unit id="s7df224ba56fb8e1e">
-  <source>Mode Switch</source>
-<target>Canvia de mode</target></trans-unit>
-<trans-unit id="s4b10acae683d2978">
-  <source>Fullscreen</source>
-<target>Pantalla completa</target></trans-unit>
-<trans-unit id="sd2223afb7d6b100d">
-  <source>Type</source>
-<target>Tipus</target></trans-unit>
-<trans-unit id="s352719d86112de9a">
-  <source>Help</source>
-<target>Ajuda</target></trans-unit>
-<trans-unit id="sc725a41694d85bb0">
-  <source>Test Cases</source>
-<target>Casos de prova</target></trans-unit>
-<trans-unit id="s521208df9ea3e694">
-  <source>Click or drag + to add a node</source>
-<target>Fes clic en + o arrossega’l per a afegir un node</target></trans-unit>
-<trans-unit id="s9f4a96e81b296478">
-  <source>Add Transition by drag and drop</source>
-<target>Arrossega per a afegir una transició</target></trans-unit>
-<trans-unit id="sc0bffa27613488fe">
-  <source>Select a node or transition to edit it</source>
-<target>Selecciona un node o una transició per a editar-los</target></trans-unit>
-<trans-unit id="s71813a5a8d63ac81">
-  <source>Input word</source>
-<target>Paraula d’entrada</target></trans-unit>
-<trans-unit id="sa82cf626cfa888ac">
-  <source>Simulation Controls</source>
-<target>Controls de simulació</target></trans-unit>
-<trans-unit id="s9274cd474969c49c">
-  <source>Switch mode (Ctrl+M)</source>
-<target>Canvia de mode (Ctrl+M)</target></trans-unit>
-<trans-unit id="s8a7f6fa052132a14">
-  <source>Warnings</source>
-<target>Avisos</target></trans-unit>
-<trans-unit id="h2e7f32ac617924d0">
-  <source>Missing transition for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;" /></source>
-<target>Falta una transició per a <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;" /></target></trans-unit>
-<trans-unit id="h5130af20b6d54f05">
-  <source>Multiple transitions for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;" /></source>
-<target>Hi ha diverses transicions per a <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;" /></target></trans-unit>
-<trans-unit id="s2ea31ea953b32ee5">
-  <source>Transition with empty symbol</source>
-<target>Transició amb un símbol buit</target></trans-unit>
-<trans-unit id="s335050fdf97d8f6e">
-  <source>No initial state defined</source>
-<target>No s’ha definit cap estat inicial</target></trans-unit>
-<trans-unit id="s74a96f52fd23c3e8">
-  <source>Multiple initial states defined</source>
-<target>S’han definit diversos estats inicials</target></trans-unit>
-<trans-unit id="s5787e20cab57b383">
-  <source>Unknown error</source>
-<target>Error desconegut</target></trans-unit>
+<trans-unit id="s740d542bbe696de5">
+  <source>Read</source>
+  <target>Llegeix</target>
+</trans-unit>
+<trans-unit id="sa6ab5184d6315895">
+  <source>From</source>
+  <target>De</target>
+</trans-unit>
+<trans-unit id="s09353907b5c79284">
+  <source>To</source>
+  <target>A</target>
+</trans-unit>
+<trans-unit id="se06ad3e4a4e4639d">
+  <source>This automaton type is not allowed in this widget.</source>
+  <target>Aquest tipus d’autòmat no està permès en aquest giny.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

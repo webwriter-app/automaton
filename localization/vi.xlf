@@ -518,6 +518,34 @@
   <source>Unknown error</source>
   <target>Lỗi không xác định</target>
 </trans-unit>
+<trans-unit id="s712930d1235f18b5">
+  <source>The JFLAP file is incomplete or uses a feature the automaton cannot represent.</source>
+  <target>Tệp JFLAP chưa hoàn chỉnh hoặc dùng tính năng mà ôtômat không thể biểu diễn.</target>
+</trans-unit>
+<trans-unit id="s740d542bbe696de5">
+  <source>Read</source>
+  <target>Đọc</target>
+</trans-unit>
+<trans-unit id="sb96a5d63b20eb653">
+  <source>Only JFLAP finite automata and pushdown automata can be imported.</source>
+  <target>Chỉ có thể nhập ôtômat hữu hạn và ôtômat đẩy xuống của JFLAP.</target>
+</trans-unit>
+<trans-unit id="sa6ab5184d6315895">
+  <source>From</source>
+  <target>Từ</target>
+</trans-unit>
+<trans-unit id="s09353907b5c79284">
+  <source>To</source>
+  <target>Đến</target>
+</trans-unit>
+<trans-unit id="se4c06056144c9044">
+  <source>This is not a JFLAP file.</source>
+  <target>Đây không phải là tệp JFLAP.</target>
+</trans-unit>
+<trans-unit id="se06ad3e4a4e4639d">
+  <source>This automaton type is not allowed in this widget.</source>
+  <target>Tiện ích này không cho phép loại ôtômat này.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

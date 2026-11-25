@@ -5,29 +5,9 @@
         <source>Stack</source>
         <target>Stack</target>
       </trans-unit>
-      <trans-unit id="s904fefb3d01cb2ae">
-        <source>empty</source>
-        <target>empty</target>
-      </trans-unit>
-      <trans-unit id="s42b6431842b835b3">
-        <source>Language:</source>
-        <target>Language:</target>
-      </trans-unit>
-      <trans-unit id="sa4088b649da557a5">
-        <source>Check Automaton</source>
-        <target>Check Automaton</target>
-      </trans-unit>
       <trans-unit id="sea4f20ea1ece70a0">
         <source>Definition</source>
         <target>Definition</target>
-      </trans-unit>
-      <trans-unit id="s337a1e9022a8d19f">
-        <source>Table</source>
-        <target>Table</target>
-      </trans-unit>
-      <trans-unit id="sb80ac0a010cbc647">
-        <source>Automaton Type</source>
-        <target>Automaton Type</target>
       </trans-unit>
       <trans-unit id="se033711991bc46ea">
         <source>DFA</source>
@@ -40,58 +20,6 @@
       <trans-unit id="s8d5ca919f3cad950">
         <source>PDA</source>
         <target>PDA</target>
-      </trans-unit>
-      <trans-unit id="s4f6476c3d1856c19">
-        <source>No further moves possible. Try a different path.</source>
-        <target>No further moves possible. Try a different path.</target>
-      </trans-unit>
-      <trans-unit id="sed72ab193dd16a0a">
-        <source>Simulation paused.</source>
-        <target>Simulation paused.</target>
-      </trans-unit>
-      <trans-unit id="saad05eab0e59411c">
-        <source>Input Word e.g. aaabbb, step;step;stop</source>
-        <target>Input Word e.g. aaabbb, step;step;stop</target>
-      </trans-unit>
-      <trans-unit id="s956c5a9fb7ee0b23">
-        <source>Manual</source>
-        <target>Manual</target>
-      </trans-unit>
-      <trans-unit id="s61f0ff0bab2b8310">
-        <source>Animate</source>
-        <target>Animate</target>
-      </trans-unit>
-      <trans-unit id="s36494e700fe1e5c6">
-        <source>Step by Step</source>
-        <target>Step by Step</target>
-      </trans-unit>
-      <trans-unit id="s42cbd8dca939a9c7">
-        <source>Check</source>
-        <target>Check</target>
-      </trans-unit>
-      <trans-unit id="sc16e00a7a8b2fde2">
-        <source>Back</source>
-        <target>Back</target>
-      </trans-unit>
-      <trans-unit id="s0fbf6dc6a1966408">
-        <source>Next</source>
-        <target>Next</target>
-      </trans-unit>
-      <trans-unit id="s255857544a9d5ec0">
-        <source>Reset</source>
-        <target>Reset</target>
-      </trans-unit>
-      <trans-unit id="s061cc20e3432dead">
-        <source>Pause</source>
-        <target>Pause</target>
-      </trans-unit>
-      <trans-unit id="scd105819b5a10243">
-        <source>Play</source>
-        <target>Play</target>
-      </trans-unit>
-      <trans-unit id="sd9ad53251f2330a5">
-        <source>Stop</source>
-        <target>Stop</target>
       </trans-unit>
       <trans-unit id="s05c44a5db696fcaf">
         <source>Editing</source>
@@ -108,14 +36,6 @@
       <trans-unit id="s2f64461723d3df5d">
         <source>Change</source>
         <target>Change</target>
-      </trans-unit>
-      <trans-unit id="s66bd1cc6d2f6b68d">
-        <source>Node</source>
-        <target>Node</target>
-      </trans-unit>
-      <trans-unit id="s6503256c2de2745c">
-        <source>Edge</source>
-        <target>Edge</target>
       </trans-unit>
       <trans-unit id="s860b83fc8a41ca5c">
         <source>Automaton Types</source>
@@ -197,30 +117,6 @@
         <source>Simulate</source>
         <target>Simulate</target>
       </trans-unit>
-      <trans-unit id="s5590dbf7e425789d">
-        <source>Label</source>
-        <target>Label</target>
-      </trans-unit>
-      <trans-unit id="sfb68cae41d749423">
-        <source>Initial</source>
-        <target>Initial</target>
-      </trans-unit>
-      <trans-unit id="s8f1034e1a9d93097">
-        <source>Final</source>
-        <target>Final</target>
-      </trans-unit>
-      <trans-unit id="sd083d3aa96af5af1">
-        <source>Symbol</source>
-        <target>Symbol</target>
-      </trans-unit>
-      <trans-unit id="s09243007b5b91006">
-        <source>If</source>
-        <target>If</target>
-      </trans-unit>
-      <trans-unit id="s3de7bee91528e5cc">
-        <source>Stack Actions</source>
-        <target>Stack Actions</target>
-      </trans-unit>
       <trans-unit id="s970d041a28d1067d">
         <source>Push</source>
         <target>Push</target>
@@ -237,22 +133,6 @@
         <source>Keep</source>
         <target>Keep</target>
       </trans-unit>
-      <trans-unit id="sba6693303903d6b8">
-        <source>Add symbol</source>
-        <target>Add symbol</target>
-      </trans-unit>
-      <trans-unit id="sc1611c0558728a2a">
-        <source>Position</source>
-        <target>Position</target>
-      </trans-unit>
-      <trans-unit id="sa0a141a796a5b36a">
-        <source>Bend</source>
-        <target>Bend</target>
-      </trans-unit>
-      <trans-unit id="h6c2fe3d409d7ba36">
-        <source>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</source>
-        <target>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</target>
-      </trans-unit>
       <trans-unit id="h2e7f32ac617924d0">
         <source>Missing transition for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
         <target>Missing transition for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></target>
@@ -268,34 +148,6 @@
       <trans-unit id="s5787e20cab57b383">
         <source>Unknown error</source>
         <target>Unknown error</target>
-      </trans-unit>
-      <trans-unit id="h56d667fd1fb9d47d">
-        <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</source>
-        <target>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</target>
-      </trans-unit>
-      <trans-unit id="h25e62c96f8182fcc">
-        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
-        <target><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></target>
-      </trans-unit>
-      <trans-unit id="h28031e78bb7297a9">
-        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
-        <target><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></target>
-      </trans-unit>
-      <trans-unit id="s1b00cf75d5f4f616">
-        <source>Choose a move:</source>
-        <target>Choose a move:</target>
-      </trans-unit>
-      <trans-unit id="s6c80030e2762459d">
-        <source>push</source>
-        <target>push</target>
-      </trans-unit>
-      <trans-unit id="s779b5819564f2f50">
-        <source>pop</source>
-        <target>pop</target>
-      </trans-unit>
-      <trans-unit id="s3c0d17bad169557b">
-        <source>none</source>
-        <target>none</target>
       </trans-unit>
       <trans-unit id="s261af1b4598fef3f">
         <source>Allowed modes</source>
@@ -321,6 +173,211 @@
   <source>Remove stack items with ×</source>
   <target>Remove stack items with ×</target>
 </trans-unit>
+<trans-unit id="s8a0ee3d87938f19a">
+  <source>Nodes</source>
+  <target>Nodes</target>
+</trans-unit>
+<trans-unit id="se8dca0132c66ae03">
+  <source>Permissions</source>
+  <target>Permissions</target>
+</trans-unit>
+<trans-unit id="s699faf39e76b0a5c">
+  <source>Enable sink state</source>
+  <target>Enable sink state</target>
+</trans-unit>
+<trans-unit id="s7815e752b14f6f96">
+  <source>Add sink state</source>
+  <target>Add sink state</target>
+</trans-unit>
+<trans-unit id="se5113f4874d8494d">
+  <source>Starting stack</source>
+  <target>Starting stack</target>
+</trans-unit>
+<trans-unit id="s5798e7f4322a6963">
+  <source>Transitions</source>
+  <target>Transitions</target>
+</trans-unit>
+<trans-unit id="sdb05063db77404d8">
+  <source>The automaton data block is invalid or uses an unsupported format.</source>
+  <target>The automaton data block is invalid or uses an unsupported format.</target>
+</trans-unit>
+<trans-unit id="s93ef8405b9b83023">
+  <source>State diagram</source>
+  <target>State diagram</target>
+</trans-unit>
+<trans-unit id="s3a2084e9089a7fca">
+  <source>No states yet</source>
+  <target>No states yet</target>
+</trans-unit>
+<trans-unit id="s521208df9ea3e694">
+  <source>Click or drag + to add a node</source>
+  <target>Click or drag + to add a node</target>
+</trans-unit>
+<trans-unit id="sc0bffa27613488fe">
+  <source>Select a node or transition to edit it</source>
+  <target>Select a node or transition to edit it</target>
+</trans-unit>
+<trans-unit id="s8a7f6fa052132a14">
+  <source>Warnings</source>
+  <target>Warnings</target>
+</trans-unit>
+<trans-unit id="se4c06056144c9044">
+  <source>This is not a JFLAP file.</source>
+</trans-unit>
+<trans-unit id="sb96a5d63b20eb653">
+  <source>Only JFLAP finite automata and pushdown automata can be imported.</source>
+</trans-unit>
+<trans-unit id="s712930d1235f18b5">
+  <source>The JFLAP file is incomplete or uses a feature the automaton cannot represent.</source>
+</trans-unit>
+    <trans-unit id="s904fefb3d01cb2ae">
+        <source>empty</source>
+        <target>empty</target>
+      </trans-unit>
+<trans-unit id="s42b6431842b835b3">
+        <source>Language:</source>
+        <target>Language:</target>
+      </trans-unit>
+<trans-unit id="sa4088b649da557a5">
+        <source>Check Automaton</source>
+        <target>Check Automaton</target>
+      </trans-unit>
+<trans-unit id="s337a1e9022a8d19f">
+        <source>Table</source>
+        <target>Table</target>
+      </trans-unit>
+<trans-unit id="sb80ac0a010cbc647">
+        <source>Automaton Type</source>
+        <target>Automaton Type</target>
+      </trans-unit>
+<trans-unit id="s4f6476c3d1856c19">
+        <source>No further moves possible. Try a different path.</source>
+        <target>No further moves possible. Try a different path.</target>
+      </trans-unit>
+<trans-unit id="sed72ab193dd16a0a">
+        <source>Simulation paused.</source>
+        <target>Simulation paused.</target>
+      </trans-unit>
+<trans-unit id="saad05eab0e59411c">
+        <source>Input Word e.g. aaabbb, step;step;stop</source>
+        <target>Input Word e.g. aaabbb, step;step;stop</target>
+      </trans-unit>
+<trans-unit id="s956c5a9fb7ee0b23">
+        <source>Manual</source>
+        <target>Manual</target>
+      </trans-unit>
+<trans-unit id="s61f0ff0bab2b8310">
+        <source>Animate</source>
+        <target>Animate</target>
+      </trans-unit>
+<trans-unit id="s36494e700fe1e5c6">
+        <source>Step by Step</source>
+        <target>Step by Step</target>
+      </trans-unit>
+<trans-unit id="s42cbd8dca939a9c7">
+        <source>Check</source>
+        <target>Check</target>
+      </trans-unit>
+<trans-unit id="sc16e00a7a8b2fde2">
+        <source>Back</source>
+        <target>Back</target>
+      </trans-unit>
+<trans-unit id="s0fbf6dc6a1966408">
+        <source>Next</source>
+        <target>Next</target>
+      </trans-unit>
+<trans-unit id="s255857544a9d5ec0">
+        <source>Reset</source>
+        <target>Reset</target>
+      </trans-unit>
+<trans-unit id="s061cc20e3432dead">
+        <source>Pause</source>
+        <target>Pause</target>
+      </trans-unit>
+<trans-unit id="scd105819b5a10243">
+        <source>Play</source>
+        <target>Play</target>
+      </trans-unit>
+<trans-unit id="sd9ad53251f2330a5">
+        <source>Stop</source>
+        <target>Stop</target>
+      </trans-unit>
+<trans-unit id="s66bd1cc6d2f6b68d">
+        <source>Node</source>
+        <target>Node</target>
+      </trans-unit>
+<trans-unit id="s6503256c2de2745c">
+        <source>Edge</source>
+        <target>Edge</target>
+      </trans-unit>
+<trans-unit id="s5590dbf7e425789d">
+        <source>Label</source>
+        <target>Label</target>
+      </trans-unit>
+<trans-unit id="sfb68cae41d749423">
+        <source>Initial</source>
+        <target>Initial</target>
+      </trans-unit>
+<trans-unit id="s8f1034e1a9d93097">
+        <source>Final</source>
+        <target>Final</target>
+      </trans-unit>
+<trans-unit id="sd083d3aa96af5af1">
+        <source>Symbol</source>
+        <target>Symbol</target>
+      </trans-unit>
+<trans-unit id="s09243007b5b91006">
+        <source>If</source>
+        <target>If</target>
+      </trans-unit>
+<trans-unit id="s3de7bee91528e5cc">
+        <source>Stack Actions</source>
+        <target>Stack Actions</target>
+      </trans-unit>
+<trans-unit id="sba6693303903d6b8">
+        <source>Add symbol</source>
+        <target>Add symbol</target>
+      </trans-unit>
+<trans-unit id="sc1611c0558728a2a">
+        <source>Position</source>
+        <target>Position</target>
+      </trans-unit>
+<trans-unit id="sa0a141a796a5b36a">
+        <source>Bend</source>
+        <target>Bend</target>
+      </trans-unit>
+<trans-unit id="h6c2fe3d409d7ba36">
+        <source>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</source>
+        <target>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</target>
+      </trans-unit>
+<trans-unit id="h56d667fd1fb9d47d">
+        <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</source>
+        <target>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</target>
+      </trans-unit>
+<trans-unit id="h25e62c96f8182fcc">
+        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+        <target><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></target>
+      </trans-unit>
+<trans-unit id="h28031e78bb7297a9">
+        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+        <target><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></target>
+      </trans-unit>
+<trans-unit id="s1b00cf75d5f4f616">
+        <source>Choose a move:</source>
+        <target>Choose a move:</target>
+      </trans-unit>
+<trans-unit id="s6c80030e2762459d">
+        <source>push</source>
+        <target>push</target>
+      </trans-unit>
+<trans-unit id="s779b5819564f2f50">
+        <source>pop</source>
+        <target>pop</target>
+      </trans-unit>
+<trans-unit id="s3c0d17bad169557b">
+        <source>none</source>
+        <target>none</target>
+      </trans-unit>
 <trans-unit id="sfc513553a0d4ed1c">
   <source>Remove stack item</source>
   <target>Remove stack item</target>
@@ -385,25 +442,9 @@
   <source>Switch to PDA</source>
   <target>Switch to PDA</target>
 </trans-unit>
-<trans-unit id="s8a0ee3d87938f19a">
-  <source>Nodes</source>
-  <target>Nodes</target>
-</trans-unit>
-<trans-unit id="se8dca0132c66ae03">
-  <source>Permissions</source>
-  <target>Permissions</target>
-</trans-unit>
-<trans-unit id="s699faf39e76b0a5c">
-  <source>Enable sink state</source>
-  <target>Enable sink state</target>
-</trans-unit>
 <trans-unit id="se63c78875f5b2178">
   <source>Add node</source>
   <target>Add node</target>
-</trans-unit>
-<trans-unit id="s7815e752b14f6f96">
-  <source>Add sink state</source>
-  <target>Add sink state</target>
 </trans-unit>
 <trans-unit id="s59329d2125467032">
   <source>Automaton definition</source>
@@ -432,14 +473,6 @@
 <trans-unit id="sb3fa6348186c2022">
   <source>Stack alphabet</source>
   <target>Stack alphabet</target>
-</trans-unit>
-<trans-unit id="se5113f4874d8494d">
-  <source>Starting stack</source>
-  <target>Starting stack</target>
-</trans-unit>
-<trans-unit id="s5798e7f4322a6963">
-  <source>Transitions</source>
-  <target>Transitions</target>
 </trans-unit>
 <trans-unit id="sd07c6d5726032834">
   <source>No transitions yet</source>
@@ -493,30 +526,18 @@
   <source>Double click / long tap to add a node</source>
   <target>Double-click or touch and hold to add a node</target>
 </trans-unit>
-<trans-unit id="sdb05063db77404d8">
-  <source>The automaton data block is invalid or uses an unsupported format.</source>
-  <target>The automaton data block is invalid or uses an unsupported format.</target>
+<trans-unit id="s740d542bbe696de5">
+  <source>Read</source>
 </trans-unit>
-<trans-unit id="s93ef8405b9b83023">
-  <source>State diagram</source>
-  <target>State diagram</target>
+<trans-unit id="sa6ab5184d6315895">
+  <source>From</source>
 </trans-unit>
-<trans-unit id="s3a2084e9089a7fca">
-  <source>No states yet</source>
-  <target>No states yet</target>
+<trans-unit id="s09353907b5c79284">
+  <source>To</source>
 </trans-unit>
-<trans-unit id="s521208df9ea3e694">
-  <source>Click or drag + to add a node</source>
-  <target>Click or drag + to add a node</target>
+<trans-unit id="se06ad3e4a4e4639d">
+  <source>This automaton type is not allowed in this widget.</source>
 </trans-unit>
-<trans-unit id="sc0bffa27613488fe">
-  <source>Select a node or transition to edit it</source>
-  <target>Select a node or transition to edit it</target>
-</trans-unit>
-<trans-unit id="s8a7f6fa052132a14">
-  <source>Warnings</source>
-  <target>Warnings</target>
-</trans-unit>
-    </body>
+</body>
   </file>
 </xliff>

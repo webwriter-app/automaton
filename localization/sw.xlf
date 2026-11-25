@@ -2,36 +2,12 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
 <file target-language="sw" source-language="en-US" original="lit-localize-inputs" datatype="plaintext">
 <body>
-<trans-unit id="s1b00cf75d5f4f616">
-  <source>Choose a move:</source>
-<target>Chagua hatua:</target></trans-unit>
-<trans-unit id="s6c80030e2762459d">
-  <source>push</source>
-<target>sukuma</target></trans-unit>
-<trans-unit id="s779b5819564f2f50">
-  <source>pop</source>
-<target>ondoa</target></trans-unit>
-<trans-unit id="s904fefb3d01cb2ae">
-  <source>empty</source>
-<target>tupu</target></trans-unit>
-<trans-unit id="s3c0d17bad169557b">
-  <source>none</source>
-<target>hakuna</target></trans-unit>
 <trans-unit id="sae4f7c13b7ec18ff">
   <source>Stack</source>
 <target>Rundo</target></trans-unit>
 <trans-unit id="sc5a051b7aba488de">
   <source>Remove stack items with ×</source>
 <target>Ondoa vipengee vya rundo kwa kutumia ×</target></trans-unit>
-<trans-unit id="sfc513553a0d4ed1c">
-  <source>Remove stack item</source>
-<target>Ondoa kipengee kwenye rundo</target></trans-unit>
-<trans-unit id="sba6693303903d6b8">
-  <source>Add symbol</source>
-<target>Ongeza alama</target></trans-unit>
-<trans-unit id="sc1611c0558728a2a">
-  <source>Position</source>
-<target>Nafasi</target></trans-unit>
 <trans-unit id="s7b72a2e6d7ff3291">
   <source>Move the elements by drag and drop</source>
 <target>Buruta na udondoshe vipengee ili kuvihamisha</target></trans-unit>
@@ -47,6 +23,186 @@
 <trans-unit id="sd60a7dde73859828">
   <source>Keep</source>
 <target>Hifadhi</target></trans-unit>
+<trans-unit id="s05c44a5db696fcaf">
+  <source>Editing</source>
+<target>Kuhariri</target></trans-unit>
+<trans-unit id="s7f59f507e02a2f38">
+  <source>View</source>
+<target>Mwonekano</target></trans-unit>
+<trans-unit id="s35f1dd3fd023476a">
+  <source>Automation</source>
+<target>Uendeshaji otomatiki</target></trans-unit>
+<trans-unit id="s8a0ee3d87938f19a">
+  <source>Nodes</source>
+<target>Nodi</target></trans-unit>
+<trans-unit id="sf9aee319a006c9b4">
+  <source>Add</source>
+<target>Ongeza</target></trans-unit>
+<trans-unit id="sdc673e73b5c13aea">
+  <source>Delete</source>
+<target>Futa</target></trans-unit>
+<trans-unit id="s2f64461723d3df5d">
+  <source>Change</source>
+<target>Badilisha</target></trans-unit>
+<trans-unit id="se8dca0132c66ae03">
+  <source>Permissions</source>
+<target>Ruhusa</target></trans-unit>
+<trans-unit id="s860b83fc8a41ca5c">
+  <source>Automaton Types</source>
+<target>Aina za otomatoni</target></trans-unit>
+<trans-unit id="s699faf39e76b0a5c">
+  <source>Enable sink state</source>
+<target>Washa hali ya kunasa</target></trans-unit>
+<trans-unit id="s261af1b4598fef3f">
+  <source>Allowed modes</source>
+<target>Hali zinazoruhusiwa</target></trans-unit>
+<trans-unit id="s64ef2a6c2dd1d3d1">
+  <source>Edit</source>
+<target>Hariri</target></trans-unit>
+<trans-unit id="scfcffcf35292bc6f">
+  <source>Simulate</source>
+<target>Endesha uigaji</target></trans-unit>
+<trans-unit id="sb508f35111b54817">
+  <source>Show Help</source>
+<target>Onyesha msaada</target></trans-unit>
+<trans-unit id="sf62fea3229bf87c8">
+  <source>Show Formal Definition</source>
+<target>Onyesha ufafanuzi rasmi</target></trans-unit>
+<trans-unit id="s3050764b15c8baf0">
+  <source>Show Transitions Table</source>
+<target>Onyesha jedwali la mipito</target></trans-unit>
+<trans-unit id="s3e141c08e0ace321">
+  <source>Test Language</source>
+<target>Jaribu lugha</target></trans-unit>
+<trans-unit id="scbb4cdb4d52edc80">
+  <source>Test Words</source>
+<target>Jaribu maneno</target></trans-unit>
+<trans-unit id="s8e3f9c3e183abbda">
+  <source>Predefined Alphabet</source>
+<target>Alfabeti iliyobainishwa mapema</target></trans-unit>
+<trans-unit id="s7815e752b14f6f96">
+  <source>Add sink state</source>
+<target>Ongeza hali ya kunasa</target></trans-unit>
+<trans-unit id="s6d8c02aee480af7a">
+  <source>Menu</source>
+<target>Menyu</target></trans-unit>
+<trans-unit id="sea4f20ea1ece70a0">
+  <source>Definition</source>
+<target>Ufafanuzi</target></trans-unit>
+<trans-unit id="se033711991bc46ea">
+  <source>DFA</source>
+<target>DFA</target></trans-unit>
+<trans-unit id="s36dfd719c2d7c63c">
+  <source>NFA</source>
+<target>NFA</target></trans-unit>
+<trans-unit id="s8d5ca919f3cad950">
+  <source>PDA</source>
+<target>PDA</target></trans-unit>
+<trans-unit id="se5113f4874d8494d">
+  <source>Starting stack</source>
+<target>Rundo la mwanzo</target></trans-unit>
+<trans-unit id="s5798e7f4322a6963">
+  <source>Transitions</source>
+<target>Mipito</target></trans-unit>
+<trans-unit id="sdb05063db77404d8">
+  <source>The automaton data block is invalid or uses an unsupported format.</source>
+<target>Kizuizi cha data cha otomatoni si halali au kinatumia umbizo lisilotumika.</target></trans-unit>
+<trans-unit id="s93ef8405b9b83023">
+  <source>State diagram</source>
+<target>Mchoro wa hali</target></trans-unit>
+<trans-unit id="s3a2084e9089a7fca">
+  <source>No states yet</source>
+<target>Bado hakuna hali</target></trans-unit>
+<trans-unit id="s7df224ba56fb8e1e">
+  <source>Mode Switch</source>
+<target>Kibadili hali</target></trans-unit>
+<trans-unit id="s4b10acae683d2978">
+  <source>Fullscreen</source>
+<target>Skrini nzima</target></trans-unit>
+<trans-unit id="sd2223afb7d6b100d">
+  <source>Type</source>
+<target>Aina</target></trans-unit>
+<trans-unit id="s352719d86112de9a">
+  <source>Help</source>
+<target>Msaada</target></trans-unit>
+<trans-unit id="sc725a41694d85bb0">
+  <source>Test Cases</source>
+<target>Majaribio</target></trans-unit>
+<trans-unit id="s521208df9ea3e694">
+  <source>Click or drag + to add a node</source>
+<target>Bofya au buruta + ili kuongeza nodi</target></trans-unit>
+<trans-unit id="s9f4a96e81b296478">
+  <source>Add Transition by drag and drop</source>
+<target>Ongeza mpito kwa kuburuta na kudondosha</target></trans-unit>
+<trans-unit id="sc0bffa27613488fe">
+  <source>Select a node or transition to edit it</source>
+<target>Chagua nodi au mpito ili kuhariri</target></trans-unit>
+<trans-unit id="s71813a5a8d63ac81">
+  <source>Input word</source>
+<target>Neno la kuingiza</target></trans-unit>
+<trans-unit id="sa82cf626cfa888ac">
+  <source>Simulation Controls</source>
+<target>Vidhibiti vya uigaji</target></trans-unit>
+<trans-unit id="s9274cd474969c49c">
+  <source>Switch mode (Ctrl+M)</source>
+<target>Badili hali (Ctrl+M)</target></trans-unit>
+<trans-unit id="s8a7f6fa052132a14">
+  <source>Warnings</source>
+<target>Maonyo</target></trans-unit>
+<trans-unit id="h2e7f32ac617924d0">
+  <source>Missing transition for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
+<target>Mpito wa <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/> haupo</target></trans-unit>
+<trans-unit id="h5130af20b6d54f05">
+  <source>Multiple transitions for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
+<target>Kuna mipito kadhaa kwa <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></target></trans-unit>
+<trans-unit id="s2ea31ea953b32ee5">
+  <source>Transition with empty symbol</source>
+<target>Mpito wenye alama tupu</target></trans-unit>
+<trans-unit id="s335050fdf97d8f6e">
+  <source>No initial state defined</source>
+<target>Hakuna hali ya mwanzo iliyobainishwa</target></trans-unit>
+<trans-unit id="s74a96f52fd23c3e8">
+  <source>Multiple initial states defined</source>
+<target>Hali kadhaa za mwanzo zimebainishwa</target></trans-unit>
+<trans-unit id="s5787e20cab57b383">
+  <source>Unknown error</source>
+<target>Hitilafu isiyojulikana</target></trans-unit>
+<trans-unit id="se4c06056144c9044">
+  <source>This is not a JFLAP file.</source>
+  <target>Hii si faili ya JFLAP.</target>
+</trans-unit>
+<trans-unit id="sb96a5d63b20eb653">
+  <source>Only JFLAP finite automata and pushdown automata can be imported.</source>
+  <target>Ni automata zenye hali kikomo na automata zenye rundo za JFLAP pekee zinaweza kuingizwa.</target>
+</trans-unit>
+<trans-unit id="s712930d1235f18b5">
+  <source>The JFLAP file is incomplete or uses a feature the automaton cannot represent.</source>
+  <target>Faili ya JFLAP haijakamilika au inatumia kipengele ambacho automaton haiwezi kuwakilisha.</target>
+</trans-unit>
+<trans-unit id="s1b00cf75d5f4f616">
+  <source>Choose a move:</source>
+<target>Chagua hatua:</target></trans-unit>
+<trans-unit id="s6c80030e2762459d">
+  <source>push</source>
+<target>sukuma</target></trans-unit>
+<trans-unit id="s779b5819564f2f50">
+  <source>pop</source>
+<target>ondoa</target></trans-unit>
+<trans-unit id="s904fefb3d01cb2ae">
+  <source>empty</source>
+<target>tupu</target></trans-unit>
+<trans-unit id="s3c0d17bad169557b">
+  <source>none</source>
+<target>hakuna</target></trans-unit>
+<trans-unit id="sfc513553a0d4ed1c">
+  <source>Remove stack item</source>
+<target>Ondoa kipengee kwenye rundo</target></trans-unit>
+<trans-unit id="sba6693303903d6b8">
+  <source>Add symbol</source>
+<target>Ongeza alama</target></trans-unit>
+<trans-unit id="sc1611c0558728a2a">
+  <source>Position</source>
+<target>Nafasi</target></trans-unit>
 <trans-unit id="s66bd1cc6d2f6b68d">
   <source>Node</source>
 <target>Nodi</target></trans-unit>
@@ -119,63 +275,6 @@
 <trans-unit id="sc855ea9bc9a1cc6d">
   <source>Switch to PDA</source>
 <target>Badili hadi PDA</target></trans-unit>
-<trans-unit id="s05c44a5db696fcaf">
-  <source>Editing</source>
-<target>Kuhariri</target></trans-unit>
-<trans-unit id="s7f59f507e02a2f38">
-  <source>View</source>
-<target>Mwonekano</target></trans-unit>
-<trans-unit id="s35f1dd3fd023476a">
-  <source>Automation</source>
-<target>Uendeshaji otomatiki</target></trans-unit>
-<trans-unit id="s8a0ee3d87938f19a">
-  <source>Nodes</source>
-<target>Nodi</target></trans-unit>
-<trans-unit id="sf9aee319a006c9b4">
-  <source>Add</source>
-<target>Ongeza</target></trans-unit>
-<trans-unit id="sdc673e73b5c13aea">
-  <source>Delete</source>
-<target>Futa</target></trans-unit>
-<trans-unit id="s2f64461723d3df5d">
-  <source>Change</source>
-<target>Badilisha</target></trans-unit>
-<trans-unit id="se8dca0132c66ae03">
-  <source>Permissions</source>
-<target>Ruhusa</target></trans-unit>
-<trans-unit id="s860b83fc8a41ca5c">
-  <source>Automaton Types</source>
-<target>Aina za otomatoni</target></trans-unit>
-<trans-unit id="s699faf39e76b0a5c">
-  <source>Enable sink state</source>
-<target>Washa hali ya kunasa</target></trans-unit>
-<trans-unit id="s261af1b4598fef3f">
-  <source>Allowed modes</source>
-<target>Hali zinazoruhusiwa</target></trans-unit>
-<trans-unit id="s64ef2a6c2dd1d3d1">
-  <source>Edit</source>
-<target>Hariri</target></trans-unit>
-<trans-unit id="scfcffcf35292bc6f">
-  <source>Simulate</source>
-<target>Endesha uigaji</target></trans-unit>
-<trans-unit id="sb508f35111b54817">
-  <source>Show Help</source>
-<target>Onyesha msaada</target></trans-unit>
-<trans-unit id="sf62fea3229bf87c8">
-  <source>Show Formal Definition</source>
-<target>Onyesha ufafanuzi rasmi</target></trans-unit>
-<trans-unit id="s3050764b15c8baf0">
-  <source>Show Transitions Table</source>
-<target>Onyesha jedwali la mipito</target></trans-unit>
-<trans-unit id="s3e141c08e0ace321">
-  <source>Test Language</source>
-<target>Jaribu lugha</target></trans-unit>
-<trans-unit id="scbb4cdb4d52edc80">
-  <source>Test Words</source>
-<target>Jaribu maneno</target></trans-unit>
-<trans-unit id="s8e3f9c3e183abbda">
-  <source>Predefined Alphabet</source>
-<target>Alfabeti iliyobainishwa mapema</target></trans-unit>
 <trans-unit id="h56d667fd1fb9d47d">
   <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;" />errors<x id="1" equiv-text="&lt;/sl-badge&gt;" /> to run the simulation:</source>
 <target>Rekebisha <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;" />makosa<x id="1" equiv-text="&lt;/sl-badge&gt;" /> yafuatayo ili kuendesha uigaji:</target></trans-unit>
@@ -230,33 +329,15 @@
 <trans-unit id="se63c78875f5b2178">
   <source>Add node</source>
 <target>Ongeza nodi</target></trans-unit>
-<trans-unit id="s7815e752b14f6f96">
-  <source>Add sink state</source>
-<target>Ongeza hali ya kunasa</target></trans-unit>
-<trans-unit id="s6d8c02aee480af7a">
-  <source>Menu</source>
-<target>Menyu</target></trans-unit>
 <trans-unit id="s42b6431842b835b3">
   <source>Language:</source>
 <target>Lugha:</target></trans-unit>
 <trans-unit id="sa4088b649da557a5">
   <source>Check Automaton</source>
 <target>Kagua otomatoni</target></trans-unit>
-<trans-unit id="sea4f20ea1ece70a0">
-  <source>Definition</source>
-<target>Ufafanuzi</target></trans-unit>
 <trans-unit id="sb80ac0a010cbc647">
   <source>Automaton Type</source>
 <target>Aina ya otomatoni</target></trans-unit>
-<trans-unit id="se033711991bc46ea">
-  <source>DFA</source>
-<target>DFA</target></trans-unit>
-<trans-unit id="s36dfd719c2d7c63c">
-  <source>NFA</source>
-<target>NFA</target></trans-unit>
-<trans-unit id="s8d5ca919f3cad950">
-  <source>PDA</source>
-<target>PDA</target></trans-unit>
 <trans-unit id="s59329d2125467032">
   <source>Automaton definition</source>
 <target>Ufafanuzi wa otomatoni</target></trans-unit>
@@ -281,12 +362,6 @@
 <trans-unit id="sb3fa6348186c2022">
   <source>Stack alphabet</source>
 <target>Alfabeti ya rundo</target></trans-unit>
-<trans-unit id="se5113f4874d8494d">
-  <source>Starting stack</source>
-<target>Rundo la mwanzo</target></trans-unit>
-<trans-unit id="s5798e7f4322a6963">
-  <source>Transitions</source>
-<target>Mipito</target></trans-unit>
 <trans-unit id="sd07c6d5726032834">
   <source>No transitions yet</source>
 <target>Bado hakuna mipito</target></trans-unit>
@@ -326,69 +401,22 @@
 <trans-unit id="s02232ef4da5e61a7">
   <source>Double click / long tap to add a node</source>
 <target>Bofya mara mbili au gusa na ushikilie ili kuongeza nodi</target></trans-unit>
-<trans-unit id="sdb05063db77404d8">
-  <source>The automaton data block is invalid or uses an unsupported format.</source>
-<target>Kizuizi cha data cha otomatoni si halali au kinatumia umbizo lisilotumika.</target></trans-unit>
-<trans-unit id="s93ef8405b9b83023">
-  <source>State diagram</source>
-<target>Mchoro wa hali</target></trans-unit>
-<trans-unit id="s3a2084e9089a7fca">
-  <source>No states yet</source>
-<target>Bado hakuna hali</target></trans-unit>
-<trans-unit id="s7df224ba56fb8e1e">
-  <source>Mode Switch</source>
-<target>Kibadili hali</target></trans-unit>
-<trans-unit id="s4b10acae683d2978">
-  <source>Fullscreen</source>
-<target>Skrini nzima</target></trans-unit>
-<trans-unit id="sd2223afb7d6b100d">
-  <source>Type</source>
-<target>Aina</target></trans-unit>
-<trans-unit id="s352719d86112de9a">
-  <source>Help</source>
-<target>Msaada</target></trans-unit>
-<trans-unit id="sc725a41694d85bb0">
-  <source>Test Cases</source>
-<target>Majaribio</target></trans-unit>
-<trans-unit id="s521208df9ea3e694">
-  <source>Click or drag + to add a node</source>
-<target>Bofya au buruta + ili kuongeza nodi</target></trans-unit>
-<trans-unit id="s9f4a96e81b296478">
-  <source>Add Transition by drag and drop</source>
-<target>Ongeza mpito kwa kuburuta na kudondosha</target></trans-unit>
-<trans-unit id="sc0bffa27613488fe">
-  <source>Select a node or transition to edit it</source>
-<target>Chagua nodi au mpito ili kuhariri</target></trans-unit>
-<trans-unit id="s71813a5a8d63ac81">
-  <source>Input word</source>
-<target>Neno la kuingiza</target></trans-unit>
-<trans-unit id="sa82cf626cfa888ac">
-  <source>Simulation Controls</source>
-<target>Vidhibiti vya uigaji</target></trans-unit>
-<trans-unit id="s9274cd474969c49c">
-  <source>Switch mode (Ctrl+M)</source>
-<target>Badili hali (Ctrl+M)</target></trans-unit>
-<trans-unit id="s8a7f6fa052132a14">
-  <source>Warnings</source>
-<target>Maonyo</target></trans-unit>
-<trans-unit id="h2e7f32ac617924d0">
-  <source>Missing transition for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;" /></source>
-<target>Mpito wa <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;" /> haupo</target></trans-unit>
-<trans-unit id="h5130af20b6d54f05">
-  <source>Multiple transitions for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;" /></source>
-<target>Kuna mipito kadhaa kwa <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;" /></target></trans-unit>
-<trans-unit id="s2ea31ea953b32ee5">
-  <source>Transition with empty symbol</source>
-<target>Mpito wenye alama tupu</target></trans-unit>
-<trans-unit id="s335050fdf97d8f6e">
-  <source>No initial state defined</source>
-<target>Hakuna hali ya mwanzo iliyobainishwa</target></trans-unit>
-<trans-unit id="s74a96f52fd23c3e8">
-  <source>Multiple initial states defined</source>
-<target>Hali kadhaa za mwanzo zimebainishwa</target></trans-unit>
-<trans-unit id="s5787e20cab57b383">
-  <source>Unknown error</source>
-<target>Hitilafu isiyojulikana</target></trans-unit>
+<trans-unit id="s740d542bbe696de5">
+  <source>Read</source>
+  <target>Soma</target>
+</trans-unit>
+<trans-unit id="sa6ab5184d6315895">
+  <source>From</source>
+  <target>Kutoka</target>
+</trans-unit>
+<trans-unit id="s09353907b5c79284">
+  <source>To</source>
+  <target>Kwenda</target>
+</trans-unit>
+<trans-unit id="se06ad3e4a4e4639d">
+  <source>This automaton type is not allowed in this widget.</source>
+  <target>Aina hii ya automaton hairuhusiwi kwenye wijeti hii.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

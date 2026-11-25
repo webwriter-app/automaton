@@ -21,49 +21,13 @@
         <source>Unknown error</source>
         <target>Eroare necunoscută</target>
       </trans-unit>
-      <trans-unit id="s1b00cf75d5f4f616">
-        <source>Choose a move:</source>
-        <target>Alegeți o mișcare:</target>
-      </trans-unit>
-      <trans-unit id="s6c80030e2762459d">
-        <source>push</source>
-        <target>împingere</target>
-      </trans-unit>
-      <trans-unit id="s779b5819564f2f50">
-        <source>pop</source>
-        <target>pop</target>
-      </trans-unit>
-      <trans-unit id="s904fefb3d01cb2ae">
-        <source>empty</source>
-        <target>gol</target>
-      </trans-unit>
-      <trans-unit id="s3c0d17bad169557b">
-        <source>none</source>
-        <target>niciunul</target>
-      </trans-unit>
       <trans-unit id="sae4f7c13b7ec18ff">
         <source>Stack</source>
         <target>Stivă</target>
       </trans-unit>
-      <trans-unit id="s42b6431842b835b3">
-        <source>Language:</source>
-        <target>Limba:</target>
-      </trans-unit>
-      <trans-unit id="sa4088b649da557a5">
-        <source>Check Automaton</source>
-        <target>Automat de verificare</target>
-      </trans-unit>
       <trans-unit id="sea4f20ea1ece70a0">
         <source>Definition</source>
         <target>Definiție</target>
-      </trans-unit>
-      <trans-unit id="s337a1e9022a8d19f">
-        <source>Table</source>
-        <target>Tabel</target>
-      </trans-unit>
-      <trans-unit id="sb80ac0a010cbc647">
-        <source>Automaton Type</source>
-        <target>Tip automat</target>
       </trans-unit>
       <trans-unit id="se033711991bc46ea">
         <source>DFA</source>
@@ -76,93 +40,6 @@
       <trans-unit id="s8d5ca919f3cad950">
         <source>PDA</source>
         <target>PDA</target>
-      </trans-unit>
-      <trans-unit id="h56d667fd1fb9d47d">
-        <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</source>
-        <target>Vă rugăm să corectați următoarele 
-          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>erori
-          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> pentru a rula simularea:
-        </target>
-      </trans-unit>
-      <trans-unit id="h6c2fe3d409d7ba36">
-        <source>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</source>
-        <target>Nu s-a găsit nicio cale validă. Automatul 
-          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>respinge
-          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> cuvântul 
-          <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.
-        </target>
-      </trans-unit>
-      <trans-unit id="h25e62c96f8182fcc">
-        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
-        <target>
-          <x id="0" equiv-text="&lt;span&gt;"/>Automatul 
-          <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>acceptă
-          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> cuvântul 
-          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
-          <x id="4" equiv-text="&lt;/span&gt;"/>
-        </target>
-      </trans-unit>
-      <trans-unit id="h28031e78bb7297a9">
-        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
-        <target>
-          <x id="0" equiv-text="&lt;span&gt;"/>Automatul 
-          <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>respinge
-          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> cuvântul 
-          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
-          <x id="4" equiv-text="&lt;/span&gt;"/>
-        </target>
-      </trans-unit>
-      <trans-unit id="s4f6476c3d1856c19">
-        <source>No further moves possible. Try a different path.</source>
-        <target>Nu sunt posibile alte mișcări. Încercați o altă cale.</target>
-      </trans-unit>
-      <trans-unit id="sed72ab193dd16a0a">
-        <source>Simulation paused.</source>
-        <target>Simulația a făcut o pauză.</target>
-      </trans-unit>
-      <trans-unit id="saad05eab0e59411c">
-        <source>Input Word e.g. aaabbb, step;step;stop</source>
-        <target>Cuvânt de intrare, de exemplu aaabbb, pas; pas; stop</target>
-      </trans-unit>
-      <trans-unit id="s956c5a9fb7ee0b23">
-        <source>Manual</source>
-        <target>Manual</target>
-      </trans-unit>
-      <trans-unit id="s61f0ff0bab2b8310">
-        <source>Animate</source>
-        <target>Animați</target>
-      </trans-unit>
-      <trans-unit id="s36494e700fe1e5c6">
-        <source>Step by Step</source>
-        <target>Pas cu pas</target>
-      </trans-unit>
-      <trans-unit id="s42cbd8dca939a9c7">
-        <source>Check</source>
-        <target>Verificare</target>
-      </trans-unit>
-      <trans-unit id="sc16e00a7a8b2fde2">
-        <source>Back</source>
-        <target>Înapoi</target>
-      </trans-unit>
-      <trans-unit id="s0fbf6dc6a1966408">
-        <source>Next</source>
-        <target>Următorul</target>
-      </trans-unit>
-      <trans-unit id="s255857544a9d5ec0">
-        <source>Reset</source>
-        <target>Resetare</target>
-      </trans-unit>
-      <trans-unit id="s061cc20e3432dead">
-        <source>Pause</source>
-        <target>Pauză</target>
-      </trans-unit>
-      <trans-unit id="scd105819b5a10243">
-        <source>Play</source>
-        <target>Joc</target>
-      </trans-unit>
-      <trans-unit id="sd9ad53251f2330a5">
-        <source>Stop</source>
-        <target>Oprire</target>
       </trans-unit>
       <trans-unit id="s05c44a5db696fcaf">
         <source>Editing</source>
@@ -179,14 +56,6 @@
       <trans-unit id="s2f64461723d3df5d">
         <source>Change</source>
         <target>Schimbare</target>
-      </trans-unit>
-      <trans-unit id="s66bd1cc6d2f6b68d">
-        <source>Node</source>
-        <target>Nod</target>
-      </trans-unit>
-      <trans-unit id="s6503256c2de2745c">
-        <source>Edge</source>
-        <target>Marginea</target>
       </trans-unit>
       <trans-unit id="s860b83fc8a41ca5c">
         <source>Automaton Types</source>
@@ -268,30 +137,6 @@
         <source>Simulate</source>
         <target>Simulați</target>
       </trans-unit>
-      <trans-unit id="s5590dbf7e425789d">
-        <source>Label</source>
-        <target>Etichetă</target>
-      </trans-unit>
-      <trans-unit id="sfb68cae41d749423">
-        <source>Initial</source>
-        <target>Inițial</target>
-      </trans-unit>
-      <trans-unit id="s8f1034e1a9d93097">
-        <source>Final</source>
-        <target>Final</target>
-      </trans-unit>
-      <trans-unit id="sd083d3aa96af5af1">
-        <source>Symbol</source>
-        <target>Simbol</target>
-      </trans-unit>
-      <trans-unit id="s09243007b5b91006">
-        <source>If</source>
-        <target>Dacă</target>
-      </trans-unit>
-      <trans-unit id="s3de7bee91528e5cc">
-        <source>Stack Actions</source>
-        <target>Acțiuni pe stivă</target>
-      </trans-unit>
       <trans-unit id="s970d041a28d1067d">
         <source>Push</source>
         <target>Împingeți</target>
@@ -307,18 +152,6 @@
       <trans-unit id="sd60a7dde73859828">
         <source>Keep</source>
         <target>Păstrați</target>
-      </trans-unit>
-      <trans-unit id="sba6693303903d6b8">
-        <source>Add symbol</source>
-        <target>Adăugați simbolul</target>
-      </trans-unit>
-      <trans-unit id="sc1611c0558728a2a">
-        <source>Position</source>
-        <target>Poziția</target>
-      </trans-unit>
-      <trans-unit id="sa0a141a796a5b36a">
-        <source>Bend</source>
-        <target>Îndoire</target>
       </trans-unit>
       <trans-unit id="s261af1b4598fef3f">
         <source>Allowed modes</source>
@@ -344,6 +177,233 @@
   <source>Remove stack items with ×</source>
   <target>Elimină elemente din stivă cu ×</target>
 </trans-unit>
+<trans-unit id="s8a0ee3d87938f19a">
+  <source>Nodes</source>
+  <target>Noduri</target>
+</trans-unit>
+<trans-unit id="se8dca0132c66ae03">
+  <source>Permissions</source>
+  <target>Permisiuni</target>
+</trans-unit>
+<trans-unit id="s699faf39e76b0a5c">
+  <source>Enable sink state</source>
+  <target>Activează starea capcană</target>
+</trans-unit>
+<trans-unit id="s7815e752b14f6f96">
+  <source>Add sink state</source>
+  <target>Adaugă stare capcană</target>
+</trans-unit>
+<trans-unit id="se5113f4874d8494d">
+  <source>Starting stack</source>
+  <target>Stivă inițială</target>
+</trans-unit>
+<trans-unit id="s5798e7f4322a6963">
+  <source>Transitions</source>
+  <target>Tranziții</target>
+</trans-unit>
+<trans-unit id="sdb05063db77404d8">
+  <source>The automaton data block is invalid or uses an unsupported format.</source>
+  <target>Blocul de date al automatului este nevalid sau folosește un format incompatibil.</target>
+</trans-unit>
+<trans-unit id="s93ef8405b9b83023">
+  <source>State diagram</source>
+  <target>Diagramă de stări</target>
+</trans-unit>
+<trans-unit id="s3a2084e9089a7fca">
+  <source>No states yet</source>
+  <target>Încă nu există stări</target>
+</trans-unit>
+<trans-unit id="s521208df9ea3e694">
+  <source>Click or drag + to add a node</source>
+  <target>Apasă pe + sau trage butonul pentru a adăuga un nod</target>
+</trans-unit>
+<trans-unit id="sc0bffa27613488fe">
+  <source>Select a node or transition to edit it</source>
+  <target>Selectează un nod sau o tranziție pentru editare</target>
+</trans-unit>
+<trans-unit id="s8a7f6fa052132a14">
+  <source>Warnings</source>
+  <target>Avertismente</target>
+</trans-unit>
+<trans-unit id="se4c06056144c9044">
+  <source>This is not a JFLAP file.</source>
+  <target>Acesta nu este un fișier JFLAP.</target>
+</trans-unit>
+<trans-unit id="sb96a5d63b20eb653">
+  <source>Only JFLAP finite automata and pushdown automata can be imported.</source>
+  <target>Se pot importa doar automate finite și automate cu stivă din JFLAP.</target>
+</trans-unit>
+<trans-unit id="s712930d1235f18b5">
+  <source>The JFLAP file is incomplete or uses a feature the automaton cannot represent.</source>
+  <target>Fișierul JFLAP este incomplet sau folosește o funcție pe care automatul nu o poate reprezenta.</target>
+</trans-unit>
+    <trans-unit id="s1b00cf75d5f4f616">
+        <source>Choose a move:</source>
+        <target>Alegeți o mișcare:</target>
+      </trans-unit>
+<trans-unit id="s6c80030e2762459d">
+        <source>push</source>
+        <target>împingere</target>
+      </trans-unit>
+<trans-unit id="s779b5819564f2f50">
+        <source>pop</source>
+        <target>pop</target>
+      </trans-unit>
+<trans-unit id="s904fefb3d01cb2ae">
+        <source>empty</source>
+        <target>gol</target>
+      </trans-unit>
+<trans-unit id="s3c0d17bad169557b">
+        <source>none</source>
+        <target>niciunul</target>
+      </trans-unit>
+<trans-unit id="s42b6431842b835b3">
+        <source>Language:</source>
+        <target>Limba:</target>
+      </trans-unit>
+<trans-unit id="sa4088b649da557a5">
+        <source>Check Automaton</source>
+        <target>Automat de verificare</target>
+      </trans-unit>
+<trans-unit id="s337a1e9022a8d19f">
+        <source>Table</source>
+        <target>Tabel</target>
+      </trans-unit>
+<trans-unit id="sb80ac0a010cbc647">
+        <source>Automaton Type</source>
+        <target>Tip automat</target>
+      </trans-unit>
+<trans-unit id="h56d667fd1fb9d47d">
+        <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>errors<x id="1" equiv-text="&lt;/sl-badge&gt;"/> to run the simulation:</source>
+        <target>Vă rugăm să corectați următoarele 
+          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>erori
+          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> pentru a rula simularea:
+        </target>
+      </trans-unit>
+<trans-unit id="h6c2fe3d409d7ba36">
+        <source>No valid path found. The automaton <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="1" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.</source>
+        <target>Nu s-a găsit nicio cale validă. Automatul 
+          <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>respinge
+          <x id="1" equiv-text="&lt;/sl-badge&gt;"/> cuvântul 
+          <x id="2" equiv-text="&lt;b&gt;${this._automaton.simulator.word}&lt;/b&gt;"/>.
+        </target>
+      </trans-unit>
+<trans-unit id="h25e62c96f8182fcc">
+        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>accepts<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+        <target>
+          <x id="0" equiv-text="&lt;span&gt;"/>Automatul 
+          <x id="1" equiv-text="&lt;sl-badge variant=&quot;success&quot;&gt;"/>acceptă
+          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> cuvântul 
+          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
+          <x id="4" equiv-text="&lt;/span&gt;"/>
+        </target>
+      </trans-unit>
+<trans-unit id="h28031e78bb7297a9">
+        <source><x id="0" equiv-text="&lt;span&gt;"/>The automaton <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>rejects<x id="2" equiv-text="&lt;/sl-badge&gt;"/> the word <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.<x id="4" equiv-text="&lt;/span&gt;"/></source>
+        <target>
+          <x id="0" equiv-text="&lt;span&gt;"/>Automatul 
+          <x id="1" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;"/>respinge
+          <x id="2" equiv-text="&lt;/sl-badge&gt;"/> cuvântul 
+          <x id="3" equiv-text="&lt;b&gt;${this._automaton.simulator.word || &quot;ε&quot;}&lt;/b&gt;"/>.
+          <x id="4" equiv-text="&lt;/span&gt;"/>
+        </target>
+      </trans-unit>
+<trans-unit id="s4f6476c3d1856c19">
+        <source>No further moves possible. Try a different path.</source>
+        <target>Nu sunt posibile alte mișcări. Încercați o altă cale.</target>
+      </trans-unit>
+<trans-unit id="sed72ab193dd16a0a">
+        <source>Simulation paused.</source>
+        <target>Simulația a făcut o pauză.</target>
+      </trans-unit>
+<trans-unit id="saad05eab0e59411c">
+        <source>Input Word e.g. aaabbb, step;step;stop</source>
+        <target>Cuvânt de intrare, de exemplu aaabbb, pas; pas; stop</target>
+      </trans-unit>
+<trans-unit id="s956c5a9fb7ee0b23">
+        <source>Manual</source>
+        <target>Manual</target>
+      </trans-unit>
+<trans-unit id="s61f0ff0bab2b8310">
+        <source>Animate</source>
+        <target>Animați</target>
+      </trans-unit>
+<trans-unit id="s36494e700fe1e5c6">
+        <source>Step by Step</source>
+        <target>Pas cu pas</target>
+      </trans-unit>
+<trans-unit id="s42cbd8dca939a9c7">
+        <source>Check</source>
+        <target>Verificare</target>
+      </trans-unit>
+<trans-unit id="sc16e00a7a8b2fde2">
+        <source>Back</source>
+        <target>Înapoi</target>
+      </trans-unit>
+<trans-unit id="s0fbf6dc6a1966408">
+        <source>Next</source>
+        <target>Următorul</target>
+      </trans-unit>
+<trans-unit id="s255857544a9d5ec0">
+        <source>Reset</source>
+        <target>Resetare</target>
+      </trans-unit>
+<trans-unit id="s061cc20e3432dead">
+        <source>Pause</source>
+        <target>Pauză</target>
+      </trans-unit>
+<trans-unit id="scd105819b5a10243">
+        <source>Play</source>
+        <target>Joc</target>
+      </trans-unit>
+<trans-unit id="sd9ad53251f2330a5">
+        <source>Stop</source>
+        <target>Oprire</target>
+      </trans-unit>
+<trans-unit id="s66bd1cc6d2f6b68d">
+        <source>Node</source>
+        <target>Nod</target>
+      </trans-unit>
+<trans-unit id="s6503256c2de2745c">
+        <source>Edge</source>
+        <target>Marginea</target>
+      </trans-unit>
+<trans-unit id="s5590dbf7e425789d">
+        <source>Label</source>
+        <target>Etichetă</target>
+      </trans-unit>
+<trans-unit id="sfb68cae41d749423">
+        <source>Initial</source>
+        <target>Inițial</target>
+      </trans-unit>
+<trans-unit id="s8f1034e1a9d93097">
+        <source>Final</source>
+        <target>Final</target>
+      </trans-unit>
+<trans-unit id="sd083d3aa96af5af1">
+        <source>Symbol</source>
+        <target>Simbol</target>
+      </trans-unit>
+<trans-unit id="s09243007b5b91006">
+        <source>If</source>
+        <target>Dacă</target>
+      </trans-unit>
+<trans-unit id="s3de7bee91528e5cc">
+        <source>Stack Actions</source>
+        <target>Acțiuni pe stivă</target>
+      </trans-unit>
+<trans-unit id="sba6693303903d6b8">
+        <source>Add symbol</source>
+        <target>Adăugați simbolul</target>
+      </trans-unit>
+<trans-unit id="sc1611c0558728a2a">
+        <source>Position</source>
+        <target>Poziția</target>
+      </trans-unit>
+<trans-unit id="sa0a141a796a5b36a">
+        <source>Bend</source>
+        <target>Îndoire</target>
+      </trans-unit>
 <trans-unit id="sfc513553a0d4ed1c">
   <source>Remove stack item</source>
   <target>Elimină elementul din stivă</target>
@@ -408,25 +468,9 @@
   <source>Switch to PDA</source>
   <target>Treci la PDA</target>
 </trans-unit>
-<trans-unit id="s8a0ee3d87938f19a">
-  <source>Nodes</source>
-  <target>Noduri</target>
-</trans-unit>
-<trans-unit id="se8dca0132c66ae03">
-  <source>Permissions</source>
-  <target>Permisiuni</target>
-</trans-unit>
-<trans-unit id="s699faf39e76b0a5c">
-  <source>Enable sink state</source>
-  <target>Activează starea capcană</target>
-</trans-unit>
 <trans-unit id="se63c78875f5b2178">
   <source>Add node</source>
   <target>Adaugă nod</target>
-</trans-unit>
-<trans-unit id="s7815e752b14f6f96">
-  <source>Add sink state</source>
-  <target>Adaugă stare capcană</target>
 </trans-unit>
 <trans-unit id="s59329d2125467032">
   <source>Automaton definition</source>
@@ -455,14 +499,6 @@
 <trans-unit id="sb3fa6348186c2022">
   <source>Stack alphabet</source>
   <target>Alfabetul stivei</target>
-</trans-unit>
-<trans-unit id="se5113f4874d8494d">
-  <source>Starting stack</source>
-  <target>Stivă inițială</target>
-</trans-unit>
-<trans-unit id="s5798e7f4322a6963">
-  <source>Transitions</source>
-  <target>Tranziții</target>
 </trans-unit>
 <trans-unit id="sd07c6d5726032834">
   <source>No transitions yet</source>
@@ -516,30 +552,22 @@
   <source>Double click / long tap to add a node</source>
   <target>Fă dublu clic sau apasă lung pentru a adăuga un nod</target>
 </trans-unit>
-<trans-unit id="sdb05063db77404d8">
-  <source>The automaton data block is invalid or uses an unsupported format.</source>
-  <target>Blocul de date al automatului este nevalid sau folosește un format incompatibil.</target>
+<trans-unit id="s740d542bbe696de5">
+  <source>Read</source>
+  <target>Citire</target>
 </trans-unit>
-<trans-unit id="s93ef8405b9b83023">
-  <source>State diagram</source>
-  <target>Diagramă de stări</target>
+<trans-unit id="sa6ab5184d6315895">
+  <source>From</source>
+  <target>De la</target>
 </trans-unit>
-<trans-unit id="s3a2084e9089a7fca">
-  <source>No states yet</source>
-  <target>Încă nu există stări</target>
+<trans-unit id="s09353907b5c79284">
+  <source>To</source>
+  <target>Către</target>
 </trans-unit>
-<trans-unit id="s521208df9ea3e694">
-  <source>Click or drag + to add a node</source>
-  <target>Apasă pe + sau trage butonul pentru a adăuga un nod</target>
+<trans-unit id="se06ad3e4a4e4639d">
+  <source>This automaton type is not allowed in this widget.</source>
+  <target>Acest tip de automat nu este permis în acest widget.</target>
 </trans-unit>
-<trans-unit id="sc0bffa27613488fe">
-  <source>Select a node or transition to edit it</source>
-  <target>Selectează un nod sau o tranziție pentru editare</target>
-</trans-unit>
-<trans-unit id="s8a7f6fa052132a14">
-  <source>Warnings</source>
-  <target>Avertismente</target>
-</trans-unit>
-    </body>
+</body>
   </file>
 </xliff>

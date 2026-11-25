@@ -2,36 +2,12 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
 <file target-language="zh" source-language="en-US" original="lit-localize-inputs" datatype="plaintext">
 <body>
-<trans-unit id="s1b00cf75d5f4f616">
-  <source>Choose a move:</source>
-<target>选择移动：</target></trans-unit>
-<trans-unit id="s6c80030e2762459d">
-  <source>push</source>
-<target>压栈</target></trans-unit>
-<trans-unit id="s779b5819564f2f50">
-  <source>pop</source>
-<target>出栈</target></trans-unit>
-<trans-unit id="s904fefb3d01cb2ae">
-  <source>empty</source>
-<target>空的</target></trans-unit>
-<trans-unit id="s3c0d17bad169557b">
-  <source>none</source>
-<target>无</target></trans-unit>
 <trans-unit id="sae4f7c13b7ec18ff">
   <source>Stack</source>
 <target>堆栈</target></trans-unit>
 <trans-unit id="sc5a051b7aba488de">
   <source>Remove stack items with ×</source>
 <target>用 × 删除堆栈项目</target></trans-unit>
-<trans-unit id="sfc513553a0d4ed1c">
-  <source>Remove stack item</source>
-<target>删除堆栈项</target></trans-unit>
-<trans-unit id="sba6693303903d6b8">
-  <source>Add symbol</source>
-<target>添加符号</target></trans-unit>
-<trans-unit id="sc1611c0558728a2a">
-  <source>Position</source>
-<target>职位</target></trans-unit>
 <trans-unit id="s7b72a2e6d7ff3291">
   <source>Move the elements by drag and drop</source>
 <target>通过拖放移动元素</target></trans-unit>
@@ -47,6 +23,190 @@
 <trans-unit id="sd60a7dde73859828">
   <source>Keep</source>
 <target>保持</target></trans-unit>
+<trans-unit id="s05c44a5db696fcaf">
+  <source>Editing</source>
+<target>编辑</target></trans-unit>
+<trans-unit id="s7f59f507e02a2f38">
+  <source>View</source>
+<target>查看</target></trans-unit>
+<trans-unit id="s35f1dd3fd023476a">
+  <source>Automation</source>
+<target>自动化</target></trans-unit>
+<trans-unit id="s8a0ee3d87938f19a">
+  <source>Nodes</source>
+<target>节点</target></trans-unit>
+<trans-unit id="sf9aee319a006c9b4">
+  <source>Add</source>
+<target>添加</target></trans-unit>
+<trans-unit id="sdc673e73b5c13aea">
+  <source>Delete</source>
+<target>删除</target></trans-unit>
+<trans-unit id="s2f64461723d3df5d">
+  <source>Change</source>
+<target>改变</target></trans-unit>
+<trans-unit id="se8dca0132c66ae03">
+  <source>Permissions</source>
+<target>权限</target></trans-unit>
+<trans-unit id="s860b83fc8a41ca5c">
+  <source>Automaton Types</source>
+<target>自动机类型</target></trans-unit>
+<trans-unit id="s699faf39e76b0a5c">
+  <source>Enable sink state</source>
+<target>启用吸收状态</target></trans-unit>
+<trans-unit id="s261af1b4598fef3f">
+  <source>Allowed modes</source>
+<target>允许的模式</target></trans-unit>
+<trans-unit id="s64ef2a6c2dd1d3d1">
+  <source>Edit</source>
+<target>编辑</target></trans-unit>
+<trans-unit id="scfcffcf35292bc6f">
+  <source>Simulate</source>
+<target>模拟</target></trans-unit>
+<trans-unit id="sb508f35111b54817">
+  <source>Show Help</source>
+<target>显示帮助</target></trans-unit>
+<trans-unit id="sf62fea3229bf87c8">
+  <source>Show Formal Definition</source>
+<target>显示正式定义</target></trans-unit>
+<trans-unit id="s3050764b15c8baf0">
+  <source>Show Transitions Table</source>
+<target>显示过渡表</target></trans-unit>
+<trans-unit id="s3e141c08e0ace321">
+  <source>Test Language</source>
+<target>测试语言</target></trans-unit>
+<trans-unit id="scbb4cdb4d52edc80">
+  <source>Test Words</source>
+<target>测试用语</target></trans-unit>
+<trans-unit id="s8e3f9c3e183abbda">
+  <source>Predefined Alphabet</source>
+<target>预定义字母</target></trans-unit>
+<trans-unit id="s7815e752b14f6f96">
+  <source>Add sink state</source>
+<target>添加吸收状态</target></trans-unit>
+<trans-unit id="s6d8c02aee480af7a">
+  <source>Menu</source>
+<target>菜单</target></trans-unit>
+<trans-unit id="sea4f20ea1ece70a0">
+  <source>Definition</source>
+<target>定义</target></trans-unit>
+<trans-unit id="se033711991bc46ea">
+  <source>DFA</source>
+<target>DFA</target></trans-unit>
+<trans-unit id="s36dfd719c2d7c63c">
+  <source>NFA</source>
+<target>NFA</target></trans-unit>
+<trans-unit id="s8d5ca919f3cad950">
+  <source>PDA</source>
+<target>PDA</target></trans-unit>
+<trans-unit id="se5113f4874d8494d">
+  <source>Starting stack</source>
+<target>初始栈</target></trans-unit>
+<trans-unit id="s5798e7f4322a6963">
+  <source>Transitions</source>
+<target>过渡</target></trans-unit>
+<trans-unit id="sdb05063db77404d8">
+  <source>The automaton data block is invalid or uses an unsupported format.</source>
+<target>自动机数据块无效或使用不受支持的格式。</target></trans-unit>
+<trans-unit id="s93ef8405b9b83023">
+  <source>State diagram</source>
+<target>状态图</target></trans-unit>
+<trans-unit id="s3a2084e9089a7fca">
+  <source>No states yet</source>
+<target>自动机还没有状态</target></trans-unit>
+<trans-unit id="s7df224ba56fb8e1e">
+  <source>Mode Switch</source>
+<target>模式开关</target></trans-unit>
+<trans-unit id="s4b10acae683d2978">
+  <source>Fullscreen</source>
+<target>全屏</target></trans-unit>
+<trans-unit id="sd2223afb7d6b100d">
+  <source>Type</source>
+<target>类型</target></trans-unit>
+<trans-unit id="s352719d86112de9a">
+  <source>Help</source>
+<target>帮助</target></trans-unit>
+<trans-unit id="sc725a41694d85bb0">
+  <source>Test Cases</source>
+<target>测试用例</target></trans-unit>
+<trans-unit id="s521208df9ea3e694">
+  <source>Click or drag + to add a node</source>
+<target>单击或拖动 + 添加节点</target></trans-unit>
+<trans-unit id="s9f4a96e81b296478">
+  <source>Add Transition by drag and drop</source>
+<target>通过拖放添加过渡效果</target></trans-unit>
+<trans-unit id="sc0bffa27613488fe">
+  <source>Select a node or transition to edit it</source>
+<target>选择一个节点或过渡进行编辑</target></trans-unit>
+<trans-unit id="s71813a5a8d63ac81">
+  <source>Input word</source>
+<target>输入字</target></trans-unit>
+<trans-unit id="sa82cf626cfa888ac">
+  <source>Simulation Controls</source>
+<target>模拟控制器</target></trans-unit>
+<trans-unit id="s9274cd474969c49c">
+  <source>Switch mode (Ctrl+M)</source>
+<target>切换模式（Ctrl+M）</target></trans-unit>
+<trans-unit id="s8a7f6fa052132a14">
+  <source>Warnings</source>
+<target>警告</target></trans-unit>
+<trans-unit id="h2e7f32ac617924d0">
+  <source>Missing transition for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
+<target>缺失的过渡
+          <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/>
+        </target></trans-unit>
+<trans-unit id="h5130af20b6d54f05">
+  <source>Multiple transitions for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/></source>
+<target>多重过渡
+          <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;"/>
+        </target></trans-unit>
+<trans-unit id="s2ea31ea953b32ee5">
+  <source>Transition with empty symbol</source>
+<target>带空符号的过渡</target></trans-unit>
+<trans-unit id="s335050fdf97d8f6e">
+  <source>No initial state defined</source>
+<target>未定义初始状态</target></trans-unit>
+<trans-unit id="s74a96f52fd23c3e8">
+  <source>Multiple initial states defined</source>
+<target>定义多个初始状态</target></trans-unit>
+<trans-unit id="s5787e20cab57b383">
+  <source>Unknown error</source>
+<target>未知错误</target></trans-unit>
+<trans-unit id="se4c06056144c9044">
+  <source>This is not a JFLAP file.</source>
+  <target>这不是 JFLAP 文件。</target>
+</trans-unit>
+<trans-unit id="sb96a5d63b20eb653">
+  <source>Only JFLAP finite automata and pushdown automata can be imported.</source>
+  <target>只能导入 JFLAP 有限自动机和下推自动机。</target>
+</trans-unit>
+<trans-unit id="s712930d1235f18b5">
+  <source>The JFLAP file is incomplete or uses a feature the automaton cannot represent.</source>
+  <target>JFLAP 文件不完整，或使用了自动机无法表示的功能。</target>
+</trans-unit>
+<trans-unit id="s1b00cf75d5f4f616">
+  <source>Choose a move:</source>
+<target>选择移动：</target></trans-unit>
+<trans-unit id="s6c80030e2762459d">
+  <source>push</source>
+<target>压栈</target></trans-unit>
+<trans-unit id="s779b5819564f2f50">
+  <source>pop</source>
+<target>出栈</target></trans-unit>
+<trans-unit id="s904fefb3d01cb2ae">
+  <source>empty</source>
+<target>空的</target></trans-unit>
+<trans-unit id="s3c0d17bad169557b">
+  <source>none</source>
+<target>无</target></trans-unit>
+<trans-unit id="sfc513553a0d4ed1c">
+  <source>Remove stack item</source>
+<target>删除堆栈项</target></trans-unit>
+<trans-unit id="sba6693303903d6b8">
+  <source>Add symbol</source>
+<target>添加符号</target></trans-unit>
+<trans-unit id="sc1611c0558728a2a">
+  <source>Position</source>
+<target>职位</target></trans-unit>
 <trans-unit id="s66bd1cc6d2f6b68d">
   <source>Node</source>
 <target>节点</target></trans-unit>
@@ -119,63 +279,6 @@
 <trans-unit id="sc855ea9bc9a1cc6d">
   <source>Switch to PDA</source>
 <target>切换到掌上电脑</target></trans-unit>
-<trans-unit id="s05c44a5db696fcaf">
-  <source>Editing</source>
-<target>编辑</target></trans-unit>
-<trans-unit id="s7f59f507e02a2f38">
-  <source>View</source>
-<target>查看</target></trans-unit>
-<trans-unit id="s35f1dd3fd023476a">
-  <source>Automation</source>
-<target>自动化</target></trans-unit>
-<trans-unit id="s8a0ee3d87938f19a">
-  <source>Nodes</source>
-<target>节点</target></trans-unit>
-<trans-unit id="sf9aee319a006c9b4">
-  <source>Add</source>
-<target>添加</target></trans-unit>
-<trans-unit id="sdc673e73b5c13aea">
-  <source>Delete</source>
-<target>删除</target></trans-unit>
-<trans-unit id="s2f64461723d3df5d">
-  <source>Change</source>
-<target>改变</target></trans-unit>
-<trans-unit id="se8dca0132c66ae03">
-  <source>Permissions</source>
-<target>权限</target></trans-unit>
-<trans-unit id="s860b83fc8a41ca5c">
-  <source>Automaton Types</source>
-<target>自动机类型</target></trans-unit>
-<trans-unit id="s699faf39e76b0a5c">
-  <source>Enable sink state</source>
-<target>启用吸收状态</target></trans-unit>
-<trans-unit id="s261af1b4598fef3f">
-  <source>Allowed modes</source>
-<target>允许的模式</target></trans-unit>
-<trans-unit id="s64ef2a6c2dd1d3d1">
-  <source>Edit</source>
-<target>编辑</target></trans-unit>
-<trans-unit id="scfcffcf35292bc6f">
-  <source>Simulate</source>
-<target>模拟</target></trans-unit>
-<trans-unit id="sb508f35111b54817">
-  <source>Show Help</source>
-<target>显示帮助</target></trans-unit>
-<trans-unit id="sf62fea3229bf87c8">
-  <source>Show Formal Definition</source>
-<target>显示正式定义</target></trans-unit>
-<trans-unit id="s3050764b15c8baf0">
-  <source>Show Transitions Table</source>
-<target>显示过渡表</target></trans-unit>
-<trans-unit id="s3e141c08e0ace321">
-  <source>Test Language</source>
-<target>测试语言</target></trans-unit>
-<trans-unit id="scbb4cdb4d52edc80">
-  <source>Test Words</source>
-<target>测试用语</target></trans-unit>
-<trans-unit id="s8e3f9c3e183abbda">
-  <source>Predefined Alphabet</source>
-<target>预定义字母</target></trans-unit>
 <trans-unit id="h56d667fd1fb9d47d">
   <source>Please fix the following <x id="0" equiv-text="&lt;sl-badge variant=&quot;danger&quot;&gt;" />errors<x id="1" equiv-text="&lt;/sl-badge&gt;" /> to run the simulation:</source>
 <target>请修复以下
@@ -249,33 +352,15 @@
 <trans-unit id="se63c78875f5b2178">
   <source>Add node</source>
 <target>添加节点</target></trans-unit>
-<trans-unit id="s7815e752b14f6f96">
-  <source>Add sink state</source>
-<target>添加吸收状态</target></trans-unit>
-<trans-unit id="s6d8c02aee480af7a">
-  <source>Menu</source>
-<target>菜单</target></trans-unit>
 <trans-unit id="s42b6431842b835b3">
   <source>Language:</source>
 <target>语言</target></trans-unit>
 <trans-unit id="sa4088b649da557a5">
   <source>Check Automaton</source>
 <target>自动检查</target></trans-unit>
-<trans-unit id="sea4f20ea1ece70a0">
-  <source>Definition</source>
-<target>定义</target></trans-unit>
 <trans-unit id="sb80ac0a010cbc647">
   <source>Automaton Type</source>
 <target>自动机类型</target></trans-unit>
-<trans-unit id="se033711991bc46ea">
-  <source>DFA</source>
-<target>DFA</target></trans-unit>
-<trans-unit id="s36dfd719c2d7c63c">
-  <source>NFA</source>
-<target>NFA</target></trans-unit>
-<trans-unit id="s8d5ca919f3cad950">
-  <source>PDA</source>
-<target>PDA</target></trans-unit>
 <trans-unit id="s59329d2125467032">
   <source>Automaton definition</source>
 <target>自动机定义</target></trans-unit>
@@ -300,12 +385,6 @@
 <trans-unit id="sb3fa6348186c2022">
   <source>Stack alphabet</source>
 <target>栈字母表</target></trans-unit>
-<trans-unit id="se5113f4874d8494d">
-  <source>Starting stack</source>
-<target>初始栈</target></trans-unit>
-<trans-unit id="s5798e7f4322a6963">
-  <source>Transitions</source>
-<target>过渡</target></trans-unit>
 <trans-unit id="sd07c6d5726032834">
   <source>No transitions yet</source>
 <target>还没有过渡</target></trans-unit>
@@ -345,73 +424,22 @@
 <trans-unit id="s02232ef4da5e61a7">
   <source>Double click / long tap to add a node</source>
 <target>双击/长按添加节点</target></trans-unit>
-<trans-unit id="sdb05063db77404d8">
-  <source>The automaton data block is invalid or uses an unsupported format.</source>
-<target>自动机数据块无效或使用不受支持的格式。</target></trans-unit>
-<trans-unit id="s93ef8405b9b83023">
-  <source>State diagram</source>
-<target>状态图</target></trans-unit>
-<trans-unit id="s3a2084e9089a7fca">
-  <source>No states yet</source>
-<target>自动机还没有状态</target></trans-unit>
-<trans-unit id="s7df224ba56fb8e1e">
-  <source>Mode Switch</source>
-<target>模式开关</target></trans-unit>
-<trans-unit id="s4b10acae683d2978">
-  <source>Fullscreen</source>
-<target>全屏</target></trans-unit>
-<trans-unit id="sd2223afb7d6b100d">
-  <source>Type</source>
-<target>类型</target></trans-unit>
-<trans-unit id="s352719d86112de9a">
-  <source>Help</source>
-<target>帮助</target></trans-unit>
-<trans-unit id="sc725a41694d85bb0">
-  <source>Test Cases</source>
-<target>测试用例</target></trans-unit>
-<trans-unit id="s521208df9ea3e694">
-  <source>Click or drag + to add a node</source>
-<target>单击或拖动 + 添加节点</target></trans-unit>
-<trans-unit id="s9f4a96e81b296478">
-  <source>Add Transition by drag and drop</source>
-<target>通过拖放添加过渡效果</target></trans-unit>
-<trans-unit id="sc0bffa27613488fe">
-  <source>Select a node or transition to edit it</source>
-<target>选择一个节点或过渡进行编辑</target></trans-unit>
-<trans-unit id="s71813a5a8d63ac81">
-  <source>Input word</source>
-<target>输入字</target></trans-unit>
-<trans-unit id="sa82cf626cfa888ac">
-  <source>Simulation Controls</source>
-<target>模拟控制器</target></trans-unit>
-<trans-unit id="s9274cd474969c49c">
-  <source>Switch mode (Ctrl+M)</source>
-<target>切换模式（Ctrl+M）</target></trans-unit>
-<trans-unit id="s8a7f6fa052132a14">
-  <source>Warnings</source>
-<target>警告</target></trans-unit>
-<trans-unit id="h2e7f32ac617924d0">
-  <source>Missing transition for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;" /></source>
-<target>缺失的过渡
-          <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;" />
-        </target></trans-unit>
-<trans-unit id="h5130af20b6d54f05">
-  <source>Multiple transitions for <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;" /></source>
-<target>多重过渡
-          <x id="0" equiv-text="&lt;b&gt;${this.letter}&lt;/b&gt;" />
-        </target></trans-unit>
-<trans-unit id="s2ea31ea953b32ee5">
-  <source>Transition with empty symbol</source>
-<target>带空符号的过渡</target></trans-unit>
-<trans-unit id="s335050fdf97d8f6e">
-  <source>No initial state defined</source>
-<target>未定义初始状态</target></trans-unit>
-<trans-unit id="s74a96f52fd23c3e8">
-  <source>Multiple initial states defined</source>
-<target>定义多个初始状态</target></trans-unit>
-<trans-unit id="s5787e20cab57b383">
-  <source>Unknown error</source>
-<target>未知错误</target></trans-unit>
+<trans-unit id="s740d542bbe696de5">
+  <source>Read</source>
+  <target>读取</target>
+</trans-unit>
+<trans-unit id="sa6ab5184d6315895">
+  <source>From</source>
+  <target>起点</target>
+</trans-unit>
+<trans-unit id="s09353907b5c79284">
+  <source>To</source>
+  <target>终点</target>
+</trans-unit>
+<trans-unit id="se06ad3e4a4e4639d">
+  <source>This automaton type is not allowed in this widget.</source>
+  <target>此组件不支持这种自动机类型。</target>
+</trans-unit>
 </body>
 </file>
 </xliff>
