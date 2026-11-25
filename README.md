@@ -1,7 +1,7 @@
 # Automaton (`@webwriter/automaton@4.1.0`)
 [License: MIT](LICENSE) | Version: 4.1.0
 
-Build, visualize, and interact with different kinds of automata (DFA, NFA, PDA).
+Design, visualize, and test finite automata and pushdown automata.
 
 ## Snippets
 [Snippets](https://webwriter.app/docs/snippets/snippets/) are examples and templates using the package's widgets.
@@ -113,4 +113,4 @@ npm install @webwriter/automaton
 
 
 ---
-*Generated with @webwriter/build@1.14.0*
+*Generated with @webwriter/build@1.15.0*

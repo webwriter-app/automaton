@@ -781,9 +781,7 @@
             "module": "/src/components/automaton-options"
           },
           "tagName": "webwriter-automaton",
-          "customElement": true,
-          "modulePath": "src/widgets/webwriter-automaton.ts",
-          "definitionPath": "src/widgets/webwriter-automaton.ts"
+          "customElement": true
         }
       ],
       "exports": [
