@@ -1,5 +1,5 @@
-# Automaton (`@webwriter/automaton@4.1.0`)
-[License: MIT](LICENSE) | Version: 4.1.0
+# Automaton (`@webwriter/automaton@4.1.1`)
+[License: MIT](LICENSE) | Version: 4.1.1
 
 Design, visualize, and test finite automata and pushdown automata.
 
