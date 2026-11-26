@@ -1,6 +1,6 @@
 {
   "name": "@webwriter/automaton",
-  "version": "4.1.1",
+  "version": "4.2.0",
   "repository": "https://github.com/webwriter-app/automaton",
   "description": "Design, visualize, and test finite automata and pushdown automata.",
   "keywords": [
@@ -186,6 +186,7 @@
       "default": "./dist/tests/simulation.*"
     },
     "./icon": "./icon.svg",
+    "./preview": "./assets/preview.mp4",
     "./editing-config.json": "./editing-config.json",
     "./custom-elements.json": "./custom-elements.json",
     "./tests/exchange.*": {
